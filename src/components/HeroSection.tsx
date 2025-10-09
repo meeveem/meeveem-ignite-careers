@@ -5,7 +5,7 @@ import { Sparkles, CheckCircle2 } from "lucide-react";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen pt-44 pb-16 overflow-hidden">
+    <section className="relative pt-44 pb-16 overflow-hidden">
       {/* Diagonal Gradient Background */}
       <div 
         className="absolute inset-0 bg-gradient-to-br from-[#F4FAFF] via-[#E8F4FF] to-[#E2F1FF]"
@@ -78,7 +78,7 @@ const HeroSection = () => {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex justify-center lg:justify-start pt-4">
+            <div className="flex justify-center pt-4">
               <Button variant="hero" size="xl" className="animate-scale-in" style={{ animationDelay: '0.6s' }}>
                 Get Early Access
               </Button>
