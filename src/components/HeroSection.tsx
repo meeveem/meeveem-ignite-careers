@@ -5,7 +5,7 @@ import { Sparkles, CheckCircle2 } from "lucide-react";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen pt-36 pb-16 overflow-hidden">
+    <section className="relative min-h-screen pt-44 pb-16 overflow-hidden">
       {/* Diagonal Gradient Background */}
       <div 
         className="absolute inset-0 bg-gradient-to-br from-[#F4FAFF] via-[#E8F4FF] to-[#E2F1FF]"
@@ -48,7 +48,7 @@ const HeroSection = () => {
 
             <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
               Smarter job matches.{" "}
-              <span className="text-gradient">Real careers</span>
+              <span className="text-gradient">Real careers.</span>
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -78,22 +78,10 @@ const HeroSection = () => {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-4 pt-4">
+            <div className="flex justify-center lg:justify-start pt-4">
               <Button variant="hero" size="xl" className="animate-scale-in" style={{ animationDelay: '0.6s' }}>
                 Get Early Access
               </Button>
-            </div>
-
-            {/* Social Proof */}
-            <div className="flex items-center gap-4 pt-4 animate-fade-in" style={{ animationDelay: '0.8s' }}>
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary border-2 border-background" />
-                ))}
-              </div>
-              <div className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">342 spots left</span> for early access
-              </div>
             </div>
           </div>
 

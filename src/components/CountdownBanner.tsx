@@ -39,10 +39,10 @@ const CountdownBanner = () => {
   const progress = ((totalSpots - spotsLeft) / totalSpots) * 100;
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-primary text-white py-3 px-6">
+    <div className="fixed top-16 left-0 right-0 z-40 bg-primary text-white py-3 px-6">
       <div className="container mx-auto flex items-center justify-between gap-4">
         <div className="flex items-center gap-2 flex-1">
-          <Rocket className="w-4 h-4 flex-shrink-0" />
+          <Rocket className="w-4 h-4 flex-shrink-0 text-yellow-400" />
           <span className="text-sm font-medium">
             Meeveem launches soon — join the first 1000 for early access.
           </span>
