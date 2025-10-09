@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import CountdownBanner from "./CountdownBanner";
+import EarlyAccessDialog from "./EarlyAccessDialog";
 
 const Navigation = () => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-md border-b border-border/50">
@@ -14,13 +17,13 @@ const Navigation = () => {
               <span className="text-xl font-bold text-foreground">Meeveem</span>
             </div>
             
-            <Button variant="gradient" size="lg">
+            <Button variant="gradient" size="lg" onClick={() => setDialogOpen(true)}>
               Get Early Access
             </Button>
           </div>
         </div>
       </nav>
-      <CountdownBanner />
+      <EarlyAccessDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </>
   );
 };

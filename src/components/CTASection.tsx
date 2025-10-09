@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
+import EarlyAccessDialog from "./EarlyAccessDialog";
 
 const CTASection = () => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Gradient Background */}
@@ -32,7 +35,12 @@ const CTASection = () => {
                 placeholder="Enter your email address"
                 className="flex-1 bg-white text-foreground border-0 h-14 text-lg focus-visible:ring-white/50"
               />
-              <Button variant="secondary" size="xl" className="whitespace-nowrap">
+              <Button 
+                variant="secondary" 
+                size="xl" 
+                className="whitespace-nowrap"
+                onClick={() => setDialogOpen(true)}
+              >
                 Get Early Access
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
@@ -40,6 +48,7 @@ const CTASection = () => {
           </div>
         </div>
       </div>
+      <EarlyAccessDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </section>
   );
 };

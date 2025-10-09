@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CountdownTimer from "./CountdownTimer";
 import heroImage from "@/assets/hero-candidate.jpg";
 import { Sparkles, CheckCircle2 } from "lucide-react";
+import EarlyAccessDialog from "./EarlyAccessDialog";
 
 const HeroSection = () => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   return (
-    <section className="relative pt-44 pb-16 overflow-hidden">
+    <section className="relative pt-32 pb-16 overflow-hidden">
       {/* Diagonal Gradient Background */}
       <div 
         className="absolute inset-0 bg-gradient-to-br from-[#F4FAFF] via-[#E8F4FF] to-[#E2F1FF]"
@@ -79,7 +82,13 @@ const HeroSection = () => {
 
             {/* CTA Buttons */}
             <div className="flex justify-center pt-4">
-              <Button variant="hero" size="xl" className="animate-scale-in" style={{ animationDelay: '0.6s' }}>
+              <Button 
+                variant="hero" 
+                size="xl" 
+                className="animate-scale-in" 
+                style={{ animationDelay: '0.6s' }}
+                onClick={() => setDialogOpen(true)}
+              >
                 Get Early Access
               </Button>
             </div>
@@ -105,6 +114,7 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+      <EarlyAccessDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </section>
   );
 };
