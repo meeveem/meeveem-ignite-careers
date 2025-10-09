@@ -25,7 +25,7 @@ const CTASection = () => {
           </div>
 
           {/* Email Signup Form */}
-          <div className="max-w-xl mx-auto mb-8 animate-scale-in" style={{ animationDelay: '0.2s' }}>
+          <div className="max-w-xl mx-auto animate-scale-in" style={{ animationDelay: '0.2s' }}>
             <div className="flex flex-col sm:flex-row gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20">
               <Input
                 type="email"
@@ -36,21 +36,6 @@ const CTASection = () => {
                 Get Early Access
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-8 text-white/90 text-sm animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-white" />
-              <span>No credit card required</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-white" />
-              <span>Free early access</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-white" />
-              <span>Cancel anytime</span>
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@ import { Sparkles, CheckCircle2 } from "lucide-react";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen pt-24 pb-16 overflow-hidden">
+    <section className="relative min-h-screen pt-36 pb-16 overflow-hidden">
       {/* Diagonal Gradient Background */}
       <div 
         className="absolute inset-0 bg-gradient-to-br from-[#F4FAFF] via-[#E8F4FF] to-[#E2F1FF]"
@@ -36,20 +36,6 @@ const HeroSection = () => {
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        {/* Announcement Banner */}
-        <div className="flex justify-center mb-8 animate-fade-in">
-          <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-sm rounded-full px-6 py-3 border border-primary/20">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-foreground">
-              Meeveem launches soon — join the first 500 for early access
-            </span>
-          </div>
-        </div>
-
-        {/* Countdown */}
-        <div className="flex justify-center mb-12 animate-scale-in" style={{ animationDelay: '0.1s' }}>
-          <CountdownTimer />
-        </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
           {/* Left Content */}
@@ -70,20 +56,23 @@ const HeroSection = () => {
             </p>
 
             {/* Key Features Grid */}
-            <div className="grid sm:grid-cols-2 gap-4 pt-4">
+            <div className="grid sm:grid-cols-2 gap-6 pt-4">
               {[
-                "Personalised AI Matches",
-                "Company Insights",
-                "Verified HealthTech Employers",
-                "No Endless Searching"
+                { title: "Personalised AI Matches", subtitle: "Roles that fit your skills and goals" },
+                { title: "Company Insights", subtitle: "Know each company before you apply" },
+                { title: "Verified HealthTech Employers", subtitle: "Let smart matches come to you" },
+                { title: "No Endless Searching", subtitle: "Let smart matches come to you" }
               ].map((feature, index) => (
                 <div 
-                  key={feature} 
+                  key={feature.title} 
                   className="flex items-start gap-3 animate-fade-in"
                   style={{ animationDelay: `${0.2 + index * 0.1}s` }}
                 >
-                  <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-1" />
-                  <span className="text-sm font-medium text-foreground">{feature}</span>
+                  <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-bold text-foreground mb-1">{feature.title}</div>
+                    <div className="text-sm text-muted-foreground">{feature.subtitle}</div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -92,9 +81,6 @@ const HeroSection = () => {
             <div className="flex flex-wrap gap-4 pt-4">
               <Button variant="hero" size="xl" className="animate-scale-in" style={{ animationDelay: '0.6s' }}>
                 Get Early Access
-              </Button>
-              <Button variant="outline" size="xl" className="animate-scale-in" style={{ animationDelay: '0.7s' }}>
-                Learn More
               </Button>
             </div>
 
