@@ -25,8 +25,7 @@ const CTASection = () => {
               Ready to launch your career in HealthTech?
             </h2>
             <p className="text-xl text-white/90 mb-12 leading-relaxed">
-              Join the first 500 members and get exclusive early access to Meeveem. Start finding your perfect role
-              today.
+              Join the first 1000 members and get exclusive early access to Meeveem.
             </p>
           </div>
 
