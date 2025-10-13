@@ -71,6 +71,22 @@ const HowItWorksSection = () => {
               );
             })}
           </div>
+
+          {/* Trust indicators */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mt-16 text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <span className="text-green-600">✅</span>
+              <span>No spam, unsubscribe anytime</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-green-600">✅</span>
+              <span>We'll never share your CV</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-green-600">✅</span>
+              <span>Always 100% free</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
