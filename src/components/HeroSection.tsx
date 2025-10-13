@@ -59,7 +59,7 @@ const HeroSection = () => {
             </p>
 
             {/* CTA Button */}
-            <div className="flex justify-start pt-6">
+            <div className="flex justify-center pt-6">
               <Button 
                 variant="hero" 
                 size="xl" 
