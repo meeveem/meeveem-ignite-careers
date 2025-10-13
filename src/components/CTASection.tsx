@@ -27,9 +27,9 @@ const CTASection = () => {
           {/* CTA Button */}
           <div className="flex justify-center animate-scale-in mt-8" style={{ animationDelay: "0.2s" }}>
             <Button 
-              variant="secondary" 
+              variant="hero" 
               size="xl" 
-              className="text-lg px-12 py-8 shadow-2xl" 
+              className="text-lg px-12 py-8" 
               onClick={() => setDialogOpen(true)}
             >
               Get Early Access

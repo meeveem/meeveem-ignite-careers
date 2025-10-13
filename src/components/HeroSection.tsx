@@ -50,7 +50,8 @@ const HeroSection = () => {
             </div>
 
             <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight">
-              <span className="text-foreground">Smarter matches.</span>{" "}
+              <span className="text-foreground">Smarter matches.</span>
+              <br />
               <span className="text-primary">Real careers.</span>
             </h1>
 
