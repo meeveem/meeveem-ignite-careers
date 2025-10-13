@@ -1,6 +1,38 @@
 import { Heart, Brain, Users, TrendingUp } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 
 const StayInLoopSection = () => {
+  const [visibleFeatures, setVisibleFeatures] = useState<boolean[]>([false, false, false, false]);
+  const featureRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const observers = featureRefs.current.map((ref, index) => {
+      if (!ref) return null;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setVisibleFeatures((prev) => {
+                const newVisible = [...prev];
+                newVisible[index] = true;
+                return newVisible;
+              });
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+
+      observer.observe(ref);
+      return observer;
+    });
+
+    return () => {
+      observers.forEach((observer) => observer?.disconnect());
+    };
+  }, []);
+
   const features = [
     {
       icon: Heart,
@@ -40,8 +72,14 @@ const StayInLoopSection = () => {
             return (
               <div
                 key={feature.title}
-                className="bg-card border border-border rounded-2xl p-8 hover:shadow-lg transition-all duration-300 animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                ref={(el) => (featureRefs.current[index] = el)}
+                className="bg-card border border-border rounded-2xl p-8 hover:shadow-lg transition-all duration-300"
+                style={{
+                  opacity: visibleFeatures[index] ? 1 : 0,
+                  transform: visibleFeatures[index] ? 'translateY(0)' : 'translateY(15px)',
+                  transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
+                  transitionDelay: `${index * 0.18}s`,
+                }}
               >
                 <div className="flex items-start gap-4">
                   <div className="w-14 h-14 rounded-xl gradient-primary flex items-center justify-center flex-shrink-0">
