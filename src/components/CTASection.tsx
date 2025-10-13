@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
 import EarlyAccessDialog from "./EarlyAccessDialog";
 
@@ -29,19 +28,17 @@ const CTASection = () => {
             </p>
           </div>
 
-          {/* Email Signup Form */}
-          <div className="max-w-xl mx-auto animate-scale-in" style={{ animationDelay: "0.2s" }}>
-            <div className="flex flex-col sm:flex-row gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20">
-              <Input
-                type="email"
-                placeholder="Enter your email address"
-                className="flex-1 bg-white text-foreground border-0 h-14 text-lg focus-visible:ring-white/50"
-              />
-              <Button variant="secondary" size="xl" className="whitespace-nowrap" onClick={() => setDialogOpen(true)}>
-                Get Early Access
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </div>
+          {/* CTA Button */}
+          <div className="flex justify-center animate-scale-in" style={{ animationDelay: "0.2s" }}>
+            <Button 
+              variant="secondary" 
+              size="xl" 
+              className="text-lg px-12 py-8 animate-pulse shadow-2xl hover:shadow-white/50" 
+              onClick={() => setDialogOpen(true)}
+            >
+              Get Early Access
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
           </div>
         </div>
       </div>
