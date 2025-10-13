@@ -34,7 +34,7 @@ const CompanyLogoBanner = () => {
                 <img
                   src={company.logo}
                   alt={company.name}
-                  className="h-full w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+                  className="h-full w-auto object-contain transition-all duration-300 opacity-80 hover:opacity-100"
                 />
               </div>
             ))}
@@ -47,7 +47,7 @@ const CompanyLogoBanner = () => {
                 <img
                   src={company.logo}
                   alt={company.name}
-                  className="h-full w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+                  className="h-full w-auto object-contain transition-all duration-300 opacity-80 hover:opacity-100"
                 />
               </div>
             ))}
