@@ -15,11 +15,11 @@ const CTASection = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="animate-fade-in gradient-primary rounded-3xl p-12">
-            <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6">
+          <div className="animate-fade-in">
+            <h2 className="text-4xl lg:text-6xl font-bold text-foreground mb-6">
               Ready to launch your career in HealthTech?
             </h2>
-            <p className="text-xl text-white/90 mb-12 leading-relaxed">
+            <p className="text-xl text-muted-foreground mb-12 leading-relaxed">
               Join the first 1000 members and get exclusive early access to Meeveem.
             </p>
           </div>
