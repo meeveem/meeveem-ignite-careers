@@ -50,8 +50,8 @@ const HeroSection = () => {
             </div>
 
             <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight">
-              Smarter job matches.{" "}
-              <span className="text-gradient">Real careers.</span>
+              <span className="text-foreground">Smarter matches.</span>{" "}
+              <span className="text-primary">Real careers.</span>
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
