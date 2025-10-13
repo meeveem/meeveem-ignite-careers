@@ -1,4 +1,5 @@
 import { Upload, Brain, Target } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const steps = [
   {
@@ -22,6 +23,37 @@ const steps = [
 ];
 
 const HowItWorksSection = () => {
+  const [visibleSteps, setVisibleSteps] = useState<Set<number>>(new Set());
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const observers = stepRefs.current.map((step, index) => {
+      if (!step) return null;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setVisibleSteps((prev) => new Set(prev).add(index));
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.2,
+          rootMargin: "0px",
+        }
+      );
+
+      observer.observe(step);
+      return observer;
+    });
+
+    return () => {
+      observers.forEach((observer) => observer?.disconnect());
+    };
+  }, []);
+
   return (
     <section className="py-24 bg-white relative overflow-hidden">
       {/* Decorative blob */}
@@ -42,11 +74,18 @@ const HowItWorksSection = () => {
           <div className="space-y-12">
             {steps.map((step, index) => {
               const Icon = step.icon;
+              const isVisible = visibleSteps.has(index);
               return (
                 <div
                   key={step.number}
-                  className="flex flex-col md:flex-row items-center gap-8 animate-slide-up"
-                  style={{ animationDelay: `${index * 0.15}s` }}
+                  ref={(el) => (stepRefs.current[index] = el)}
+                  className={`flex flex-col md:flex-row items-center gap-8 ${
+                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[15px]"
+                  }`}
+                  style={{
+                    transition: "opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                    transitionDelay: isVisible ? `${index * 0.2}s` : "0s",
+                  }}
                 >
                   {/* Number Badge */}
                   <div className="flex-shrink-0 w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
