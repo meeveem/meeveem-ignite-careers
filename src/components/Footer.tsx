@@ -1,5 +1,5 @@
 import logoIcon from "@/assets/logo-icon.png";
-import logoFull from "@/assets/logo-full.png";
+import logoFooter from "@/assets/logo-footer.png";
 
 const Footer = () => {
   return (
@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="flex flex-col items-center text-center space-y-4">
           <div className="flex items-center gap-3">
             <img src={logoIcon} alt="Meeveem" className="w-8 h-8" />
-            <img src={logoFull} alt="Meeveem" className="h-24 brightness-0 invert" />
+            <img src={logoFooter} alt="Meeveem" className="h-16" />
           </div>
           <p className="text-background/70 text-sm max-w-2xl">
             Building the bridge between talented professionals and innovative HealthTech companies.
