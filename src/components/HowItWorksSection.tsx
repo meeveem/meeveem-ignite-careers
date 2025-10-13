@@ -23,7 +23,7 @@ const steps = [
 
 const HowItWorksSection = () => {
   return (
-    <section className="py-24 gradient-hero relative overflow-hidden">
+    <section className="py-24 bg-background relative overflow-hidden">
       {/* Decorative blob */}
       <div className="absolute top-20 right-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-20 left-20 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />

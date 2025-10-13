@@ -6,20 +6,16 @@ import EarlyAccessDialog from "./EarlyAccessDialog";
 const CTASection = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   return (
-    <section className="py-24 relative overflow-hidden">
-      {/* Gradient Background */}
-      <div className="absolute inset-0 gradient-primary opacity-95" />
+    <section className="py-24 bg-background relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-10 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
 
       {/* Animated background elements */}
-      <div className="absolute top-10 left-10 w-72 h-72 bg-white/10 rounded-full blur-3xl animate-glow-pulse" />
-      <div
-        className="absolute bottom-10 right-10 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-glow-pulse"
-        style={{ animationDelay: "1s" }}
-      />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="animate-fade-in">
+          <div className="animate-fade-in gradient-primary rounded-3xl p-12">
             <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6">
               Ready to launch your career in HealthTech?
             </h2>
@@ -29,11 +25,11 @@ const CTASection = () => {
           </div>
 
           {/* CTA Button */}
-          <div className="flex justify-center animate-scale-in" style={{ animationDelay: "0.2s" }}>
+          <div className="flex justify-center animate-scale-in mt-8" style={{ animationDelay: "0.2s" }}>
             <Button 
               variant="secondary" 
               size="xl" 
-              className="text-lg px-12 py-8 animate-pulse shadow-2xl hover:shadow-white/50" 
+              className="text-lg px-12 py-8 shadow-2xl" 
               onClick={() => setDialogOpen(true)}
             >
               Get Early Access

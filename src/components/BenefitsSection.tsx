@@ -36,7 +36,7 @@ const benefits = [
 
 const BenefitsSection = () => {
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 gradient-hero">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">Why Professionals Choose Meeveem</h2>

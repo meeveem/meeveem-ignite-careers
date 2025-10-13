@@ -18,7 +18,7 @@ const companies = [
 
 const CompanyLogoBanner = () => {
   return (
-    <section className="py-12 bg-muted/30 overflow-hidden">
+    <section className="py-12 bg-background overflow-hidden">
       <div className="container mx-auto px-4">
         <p className="text-center text-sm text-muted-foreground mb-8">
           Trusted by professionals from leading HealthTech companies
