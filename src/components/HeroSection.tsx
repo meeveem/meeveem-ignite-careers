@@ -58,38 +58,30 @@ const HeroSection = () => {
               Our AI finds HealthTech roles that truly fit your skills and goals, as well as showing you what working there is really like.
             </p>
 
-            {/* CTA Button */}
-            <div className="flex justify-center pt-6">
-              <Button 
-                variant="hero" 
-                size="xl" 
-                className="animate-scale-in" 
-                style={{ animationDelay: '0.4s' }}
-                onClick={() => setDialogOpen(true)}
-              >
-                Get Early Access
-              </Button>
-            </div>
-
-            {/* Social Proof */}
-            <div className="flex items-center justify-center gap-2 pt-4 animate-fade-in" style={{ animationDelay: '0.5s' }}>
-              <div className="flex -space-x-2">
-                {['A', 'B', 'C', 'D', 'E'].map((initial, i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center text-white text-xs font-semibold border-2 border-background"
-                  >
-                    {initial}
-                  </div>
-                ))}
-              </div>
-              <span className="text-sm text-muted-foreground">
-                Join <span className="font-semibold text-foreground">847+ HealthTech professionals</span>
-              </span>
-            </div>
-
             {/* Key Features Grid */}
-            <div className="grid sm:grid-cols-2 gap-6 pt-8">
+            <div className="grid sm:grid-cols-2 gap-6 pt-4">
+              {[
+                { title: "Personalised AI Matches", subtitle: "Roles that fit your skills and goals" },
+                { title: "Company Insights", subtitle: "Know each company before you apply" },
+                { title: "Verified HealthTech Employers", subtitle: "Let smart matches come to you" },
+                { title: "No Endless Searching", subtitle: "Let smart matches come to you" }
+              ].map((feature, index) => (
+                <div 
+                  key={feature.title} 
+                  className="flex items-start gap-3 animate-fade-in"
+                  style={{ animationDelay: `${0.2 + index * 0.1}s` }}
+                >
+                  <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-bold text-foreground mb-1">{feature.title}</div>
+                    <div className="text-sm text-muted-foreground">{feature.subtitle}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex justify-center pt-4">
               <Button 
                 variant="hero" 
                 size="xl" 
