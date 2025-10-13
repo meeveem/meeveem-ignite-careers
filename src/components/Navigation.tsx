@@ -14,7 +14,7 @@ const Navigation = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img src={logoIcon} alt="Meeveem" className="w-8 h-8" />
-              <img src={logoFull} alt="Meeveem" className="h-6" />
+              <img src={logoFull} alt="Meeveem" className="h-24" />
             </div>
             
             <Button variant="gradient" size="lg" onClick={() => setDialogOpen(true)}>
