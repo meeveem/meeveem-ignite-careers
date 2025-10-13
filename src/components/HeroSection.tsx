@@ -49,7 +49,7 @@ const HeroSection = () => {
               </span>
             </div>
 
-            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
+            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight">
               Smarter job matches.{" "}
               <span className="text-gradient">Real careers.</span>
             </h1>
