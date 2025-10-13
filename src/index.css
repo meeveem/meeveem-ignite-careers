@@ -31,7 +31,7 @@ All colors MUST be HSL.
 
     /* Muted colors */
     --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 210 9% 19%; /* #2B2E34 - Dark neutral gray for body text */
 
     /* Accent - Cyan highlight */
     --accent: 189 100% 95%;
@@ -150,8 +150,7 @@ All colors MUST be HSL.
   }
 
   p {
-    @apply text-base leading-relaxed;
-    color: hsl(var(--muted-foreground));
+    @apply text-base leading-relaxed text-muted-foreground;
   }
 
   button {
