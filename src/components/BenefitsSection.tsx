@@ -5,33 +5,33 @@ import { useEffect, useRef, useState } from "react";
 const benefits = [
   {
     icon: Cpu,
-    title: "Instant CV Analysis",
-    description: "Upload your CV and see your best-fit roles instantly.",
+    title: "Stop wasting hours on irrelevant jobs",
+    description: "Our AI analyses your CV in seconds and finds HealthTech roles tailored to your strengths and experience.",
   },
   {
     icon: Search,
-    title: "Discover roles you didn't know existed",
-    description: "Find hidden HealthTech roles that match your skills automatically.",
+    title: "Find roles you never knew existed",
+    description: "Meeveem understands what makes you stand out and finds HealthTech roles that match you skills, opening door you hadn't considered.",
   },
   {
     icon: Award,
-    title: "Show your real strengths",
-    description: "We highlight what you're best at, so employers see your true potential.",
+    title: "Stand out for what really matters",
+    description: "Tired of being overlooked because of titles or keywords? Our AI highlights your true strengths so employers see your potential, not just your past roles.",
   },
   {
     icon: Scale,
-    title: "Fair, bias-free matching",
-    description: "AI matching focused on skills, not background or keywords.",
+    title: "Fair matches. Zero bias",
+    description: "No background filters of keyword traps. Meeveem AI matches based on your skills and ability, giving everyone a fair chance to be seen.",
   },
   {
     icon: Eye,
-    title: "See inside every company",
-    description: "Get insights on culture, teams, and real day to day work before applying.",
+    title: "Know the company before you apply",
+    description: "We show you what it's really like inside each company, so you can choose where you'll fit best.",
   },
   {
     icon: Shield,
-    title: "You're always in control",
-    description: "You decide who sees your profile and when to apply.",
+    title: "Take control of your job search",
+    description: "You decide who sees your profile and when to apply. No spam, just roles that fit you.",
   },
 ];
 
