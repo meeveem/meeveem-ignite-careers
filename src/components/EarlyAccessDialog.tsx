@@ -38,7 +38,10 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
             Join the HealthTech Career Network
           </DialogTitle>
           <p className="text-muted-foreground text-sm pt-1">
-            Be the first to hear about new roles, updates, and our launch.
+            Be the first to access 1000+ curated UK HealthTech jobs.
+          </p>
+          <p className="text-primary font-semibold text-sm pt-2">
+            Launching December 2025
           </p>
         </DialogHeader>
 
@@ -73,29 +76,12 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="cv" className="text-sm font-semibold">
-              Upload CV{" "}
-              <span className="text-primary font-normal">(Recommended)</span>
-            </Label>
-            <div className="relative">
-              <Input
-                id="cv"
-                type="file"
-                accept=".pdf,.doc,.docx"
-                onChange={handleFileChange}
-                className="h-12 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
-              />
-              <Upload className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-            </div>
-          </div>
-
           <Button type="submit" variant="gradient" size="lg" className="w-full h-12 text-base">
             Get Early Access
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">
-            No spam. Just smart job matches.
+            No spam. Just opportunities that matter.
           </p>
         </form>
       </DialogContent>
