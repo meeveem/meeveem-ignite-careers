@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 const benefits = [
   {
     icon: Cpu,
-    title: "Wasted hours on irrelevant jobs",
+    title: "Wasted hours on irrelevant jobs?",
     description:
       "Our AI analyses your CV in seconds and matches real, live HealthTech roles tailored to your strengths and experience.",
   },
@@ -17,7 +17,7 @@ const benefits = [
   },
   {
     icon: Award,
-    title: "Stand out for what really matters",
+    title: "Drowning in the job market?",
     description:
       "Tired of being overlooked because of titles or keywords? Our AI highlights your true strengths so employers see your potential, not just your past roles.",
   },
