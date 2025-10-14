@@ -1,4 +1,4 @@
-import { Upload, Brain, Target } from "lucide-react";
+import { Upload, Brain, Target, CheckCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const steps = [
@@ -111,15 +111,15 @@ const HowItWorksSection = () => {
           {/* Trust indicators */}
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mt-16 text-muted-foreground">
             <div className="flex items-center gap-2">
-              <span className="text-green-600">✅</span>
+              <CheckCircle className="w-5 h-5 text-primary" />
               <span>No spam, unsubscribe anytime</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-green-600">✅</span>
+              <CheckCircle className="w-5 h-5 text-primary" />
               <span>GDPR Compliant</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-green-600">✅</span>
+              <CheckCircle className="w-5 h-5 text-primary" />
               <span>Always 100% free</span>
             </div>
           </div>
