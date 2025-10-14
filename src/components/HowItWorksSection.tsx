@@ -42,7 +42,7 @@ const HowItWorksSection = () => {
         {
           threshold: 0.2,
           rootMargin: "0px",
-        }
+        },
       );
 
       observer.observe(step);
@@ -62,9 +62,7 @@ const HowItWorksSection = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-            Here's how it works
-          </h2>
+          <h2 className="text-4xl lg:text-5xl font-bold mb-6">Here's how it works</h2>
           <p className="text-xl text-muted-foreground">
             Meeveem instantly powers up your search, matching you with hyper relevant roles and companies that fit you.
           </p>
@@ -83,7 +81,8 @@ const HowItWorksSection = () => {
                     isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[15px]"
                   }`}
                   style={{
-                    transition: "opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                    transition:
+                      "opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
                     transitionDelay: isVisible ? `${index * 0.2}s` : "0s",
                   }}
                 >
@@ -100,9 +99,7 @@ const HowItWorksSection = () => {
                       </div>
                       <div>
                         <h3 className="text-2xl font-bold mb-3 text-foreground">{step.title}</h3>
-                        <p className="text-muted-foreground text-lg leading-relaxed">
-                          {step.description}
-                        </p>
+                        <p className="text-muted-foreground text-lg leading-relaxed">{step.description}</p>
                       </div>
                     </div>
                   </div>
@@ -119,7 +116,7 @@ const HowItWorksSection = () => {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-green-600">✅</span>
-              <span>We'll never share your CV</span>
+              <span>GDPR Compliant</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-green-600">✅</span>
