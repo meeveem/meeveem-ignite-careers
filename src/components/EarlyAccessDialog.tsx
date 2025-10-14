@@ -40,7 +40,7 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
           <p className="text-muted-foreground text-sm pt-1">
             Be the first to access 1000+ curated UK HealthTech jobs.
           </p>
-          <p className="text-primary font-semibold text-sm pt-2">
+          <p className="text-primary font-semibold text-sm pt-2 text-center">
             Launching December 2025
           </p>
         </DialogHeader>
