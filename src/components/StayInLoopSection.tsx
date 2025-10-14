@@ -1,4 +1,4 @@
-import { Heart, Brain, Users, TrendingUp } from "lucide-react";
+import { Rocket, Eye, Compass, Wrench } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 const StayInLoopSection = () => {
@@ -35,24 +35,24 @@ const StayInLoopSection = () => {
 
   const features = [
     {
-      icon: Heart,
-      title: "Built for Careers in HealthTech",
-      description: "We're built for people ready to shape the future of HealthTech.",
+      icon: Rocket,
+      title: "Get Matched First",
+      description: "Join the first wave of candidates to unlock AI-driven matches and stand out to HealthTech employers early",
     },
     {
-      icon: Brain,
-      title: "Smarter Matches with AI",
-      description: "No more endless searching. We connect you with roles that just make sense.",
+      icon: Eye,
+      title: "Access Exclusive Insights",
+      description: "Get early access to industry insights, role trends, and inside information on HealthTech companies before jobs go public.",
     },
     {
-      icon: Users,
-      title: "Many Skills, One Mission",
-      description: "Sales, Tech, Marketing, Legal, every skill has a place in HealthTech.",
+      icon: Compass,
+      title: "Stay Ahead Of The Curve",
+      description: "HealthTech is evolving fast. Join early to stay informed, inspired, and read for new opportunities as soon as they open.",
     },
     {
-      icon: TrendingUp,
-      title: "Stay Ahead",
-      description: "Stay ahead, stay inspired and never miss what's next.",
+      icon: Wrench,
+      title: "Shape The Platform With Us",
+      description: "As an early member, you'll help shape how Meeveem connects talent with HealthTech companies and redefine the future of hiring.",
     },
   ];
 
