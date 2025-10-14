@@ -5,9 +5,9 @@ import { useEffect, useRef, useState } from "react";
 const benefits = [
   {
     icon: Cpu,
-    title: "Stop wasting hours on irrelevant jobs",
+    title: "Wasted hours on irrelevant jobs",
     description:
-      "Our AI analyses your CV in seconds and finds HealthTech roles tailored to your strengths and experience.",
+      "Our AI analyses your CV in seconds and matches real, live HealthTech roles tailored to your strengths and experience.",
   },
   {
     icon: Search,
