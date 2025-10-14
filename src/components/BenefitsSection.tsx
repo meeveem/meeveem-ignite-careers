@@ -11,30 +11,30 @@ const benefits = [
   },
   {
     icon: Search,
-    title: "Find roles you never knew existed",
+    title: "Missing the roles meant for you?",
     description:
       "Meeveem understands what makes you stand out and finds HealthTech roles that match you skills, opening door you hadn't considered.",
   },
   {
     icon: Award,
-    title: "Drowning in the job market?",
+    title: "Feeling invisible in the job market?",
     description:
       "Tired of being overlooked because of titles or keywords? Our AI highlights your true strengths so employers see your potential, not just your past roles.",
   },
   {
     icon: Scale,
-    title: "Fair matches. Zero bias",
+    title: "Tired of unfair filters?",
     description:
       "No background filters of keyword traps. Meeveem AI matches based on your skills and ability, giving everyone a fair chance to be seen.",
   },
   {
     icon: Eye,
-    title: "Know the company before you apply",
+    title: "Wish you knew more about the company?",
     description: "We show you what it's really like inside each company, so you can choose where you'll fit best.",
   },
   {
     icon: Shield,
-    title: "Take control of your job search",
+    title: "Bombarded with irrelevant jobs?",
     description: "You decide who sees your profile and when to apply. No spam, just roles that fit you.",
   },
 ];
