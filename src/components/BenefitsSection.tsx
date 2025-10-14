@@ -13,7 +13,7 @@ const benefits = [
     icon: Search,
     title: "Missing the roles meant for you?",
     description:
-      "Meeveem understands what makes you stand out and finds HealthTech roles that match you skills, opening door you hadn't considered.",
+      "Meeveem understands what makes you stand out and finds HealthTech roles that match you skills, opening doors you hadn't considered.",
   },
   {
     icon: Award,
