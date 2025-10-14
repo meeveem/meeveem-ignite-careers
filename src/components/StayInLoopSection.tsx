@@ -21,7 +21,7 @@ const StayInLoopSection = () => {
             }
           });
         },
-        { threshold: 0.2 }
+        { threshold: 0.2 },
       );
 
       observer.observe(ref);
@@ -60,9 +60,9 @@ const StayInLoopSection = () => {
     <section className="py-24 gradient-hero">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">Why join now</h2>
+          <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">Join Early. Get Matched FIrst.</h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Because your skills deserve a platform built for the future of HealthTech
+            Join early to unlock smarter job matching, exclusive updates and first access to roles at launch.
           </p>
         </div>
 
@@ -76,8 +76,8 @@ const StayInLoopSection = () => {
                 className="bg-card border border-border rounded-2xl p-8 hover:shadow-lg transition-all duration-300"
                 style={{
                   opacity: visibleFeatures[index] ? 1 : 0,
-                  transform: visibleFeatures[index] ? 'translateY(0)' : 'translateY(15px)',
-                  transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
+                  transform: visibleFeatures[index] ? "translateY(0)" : "translateY(15px)",
+                  transition: "opacity 0.7s ease-out, transform 0.7s ease-out",
                   transitionDelay: `${index * 0.18}s`,
                 }}
               >
