@@ -62,7 +62,7 @@ const StayInLoopSection = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">Join Early. Get Matched First.</h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Join early to unlock smarter job matching, exclusive updates and first access to roles at launch.
+            Unlock smarter job matching, exclusive updates and first access to roles at launch.
           </p>
         </div>
 
