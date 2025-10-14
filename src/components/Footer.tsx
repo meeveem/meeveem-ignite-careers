@@ -1,4 +1,3 @@
-import logoIcon from "@/assets/logo-icon.png";
 import logoFull from "@/assets/logo-full.png";
 
 const Footer = () => {
@@ -6,8 +5,7 @@ const Footer = () => {
     <footer className="bg-foreground text-background py-12">
       <div className="container mx-auto px-6">
         <div className="flex flex-col items-center text-center space-y-4">
-          <div className="flex items-center gap-2">
-            <img src={logoIcon} alt="Meeveem" className="w-8 h-8" />
+          <div className="flex items-center">
             <img src={logoFull} alt="Meeveem" className="h-8 object-contain brightness-0 invert" />
           </div>
           <p className="text-background/70 text-sm max-w-2xl">
