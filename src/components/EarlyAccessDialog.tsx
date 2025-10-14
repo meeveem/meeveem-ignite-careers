@@ -30,7 +30,7 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">
+            <DialogTitle className="text-2xl font-bold text-center">
               Join the HealthTech Career Network
             </DialogTitle>
             <p className="text-muted-foreground text-sm pt-1 text-center">
