@@ -135,6 +135,36 @@ export default {
             opacity: "0.7",
           },
         },
+        "draw-circle": {
+          "0%": {
+            strokeDashoffset: "226",
+          },
+          "100%": {
+            strokeDashoffset: "0",
+          },
+        },
+        "draw-check": {
+          "0%": {
+            strokeDashoffset: "50",
+          },
+          "100%": {
+            strokeDashoffset: "0",
+          },
+        },
+        "success-glow": {
+          "0%": {
+            transform: "scale(1)",
+            opacity: "0",
+          },
+          "60%": {
+            transform: "scale(1.5)",
+            opacity: "1",
+          },
+          "100%": {
+            transform: "scale(1.5)",
+            opacity: "0",
+          },
+        },
       },
       animation: {
         scroll: "scroll 30s linear infinite",
@@ -144,6 +174,9 @@ export default {
         "scale-in": "scale-in 0.5s ease-out",
         "slide-up": "slide-up 0.8s ease-out",
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
+        "draw-circle": "draw-circle 0.6s ease-out",
+        "draw-check": "draw-check 0.4s ease-out 0.6s",
+        "success-glow": "success-glow 0.8s ease-out 0.6s forwards",
       },
     },
   },
