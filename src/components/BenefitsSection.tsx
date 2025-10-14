@@ -6,22 +6,26 @@ const benefits = [
   {
     icon: Cpu,
     title: "Stop wasting hours on irrelevant jobs",
-    description: "Our AI analyses your CV in seconds and finds HealthTech roles tailored to your strengths and experience.",
+    description:
+      "Our AI analyses your CV in seconds and finds HealthTech roles tailored to your strengths and experience.",
   },
   {
     icon: Search,
     title: "Find roles you never knew existed",
-    description: "Meeveem understands what makes you stand out and finds HealthTech roles that match you skills, opening door you hadn't considered.",
+    description:
+      "Meeveem understands what makes you stand out and finds HealthTech roles that match you skills, opening door you hadn't considered.",
   },
   {
     icon: Award,
     title: "Stand out for what really matters",
-    description: "Tired of being overlooked because of titles or keywords? Our AI highlights your true strengths so employers see your potential, not just your past roles.",
+    description:
+      "Tired of being overlooked because of titles or keywords? Our AI highlights your true strengths so employers see your potential, not just your past roles.",
   },
   {
     icon: Scale,
     title: "Fair matches. Zero bias",
-    description: "No background filters of keyword traps. Meeveem AI matches based on your skills and ability, giving everyone a fair chance to be seen.",
+    description:
+      "No background filters of keyword traps. Meeveem AI matches based on your skills and ability, giving everyone a fair chance to be seen.",
   },
   {
     icon: Eye,
@@ -71,7 +75,7 @@ const BenefitsSection = () => {
     <section className="py-24 gradient-hero">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6">Job Searching Is Broken. Meeveem Fixes It</h2>
+          <h2 className="text-4xl lg:text-5xl font-bold mb-6">Job Searching Is Broken Meeveem Fixes It</h2>
           <p className="text-xl text-muted-foreground">
             Endless scrolling, vague job descriptions and slow responses. Meeveem AI removes the guesswork and makes
             finding the right role fast, fair and personal.
