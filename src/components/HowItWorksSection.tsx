@@ -28,6 +28,7 @@ const HowItWorksSection = () => {
   const [visibleSteps, setVisibleSteps] = useState<Set<number>>(new Set());
   const [activeImage, setActiveImage] = useState(0);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const observers = stepRefs.current.map((step, index) => {
@@ -38,12 +39,6 @@ const HowItWorksSection = () => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               setVisibleSteps((prev) => new Set(prev).add(index));
-              // Change image based on which step is in view
-              if (index === 0 || index === 1) {
-                setActiveImage(0);
-              } else if (index === 2) {
-                setActiveImage(1);
-              }
               observer.unobserve(entry.target);
             }
           });
@@ -58,13 +53,38 @@ const HowItWorksSection = () => {
       return observer;
     });
 
+    // Observer to detect when section is leaving viewport (next section appearing)
+    const sectionObserver = sectionRef.current
+      ? new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              // When section is leaving viewport (intersectionRatio < 0.3), show second image
+              if (entry.intersectionRatio < 0.3) {
+                setActiveImage(1);
+              } else {
+                setActiveImage(0);
+              }
+            });
+          },
+          {
+            threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+            rootMargin: "0px",
+          },
+        )
+      : null;
+
+    if (sectionObserver && sectionRef.current) {
+      sectionObserver.observe(sectionRef.current);
+    }
+
     return () => {
       observers.forEach((observer) => observer?.disconnect());
+      sectionObserver?.disconnect();
     };
   }, []);
 
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
+    <section ref={sectionRef} className="py-24 bg-white relative overflow-hidden">
       {/* Decorative blob */}
       <div className="absolute top-20 right-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-20 left-20 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
