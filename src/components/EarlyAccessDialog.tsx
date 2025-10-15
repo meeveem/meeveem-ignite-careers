@@ -12,7 +12,8 @@ interface EarlyAccessDialogProps {
 
 const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
   const [formData, setFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     email: "",
   });
   const [showSuccess, setShowSuccess] = useState(false);
@@ -43,15 +44,30 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
 
           <form onSubmit={handleSubmit} className="space-y-5 pt-2">
             <div className="space-y-2">
-              <Label htmlFor="fullName" className="text-sm font-semibold">
-                Full Name
+              <Label htmlFor="firstName" className="text-sm font-semibold">
+                First Name
               </Label>
               <Input
-                id="fullName"
+                id="firstName"
                 type="text"
-                placeholder="John Doe"
-                value={formData.fullName}
-                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                placeholder="John"
+                value={formData.firstName}
+                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                className="h-12"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="lastName" className="text-sm font-semibold">
+                Last Name
+              </Label>
+              <Input
+                id="lastName"
+                type="text"
+                placeholder="Doe"
+                value={formData.lastName}
+                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                 className="h-12"
                 required
               />
