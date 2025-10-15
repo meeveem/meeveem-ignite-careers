@@ -6,7 +6,7 @@ const benefits = [
   {
     icon: Cpu,
     title: "Wasted hours on irrelevant jobs?",
-    description: "Stop scolling endlessly. We match you with roles that actually fit, fast.",
+    description: "Stop scrolling endlessly. We match you with roles that actually fit, fast.",
   },
   {
     icon: Search,
