@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CountdownTimer from "./CountdownTimer";
-import heroImage from "@/assets/hero-candidate.jpg";
+import HeroCarousel from "./HeroCarousel";
 import { Sparkles, CheckCircle2 } from "lucide-react";
 import EarlyAccessDialog from "./EarlyAccessDialog";
 
@@ -70,7 +70,7 @@ const HeroSection = () => {
           {/* Right Image and Features */}
           <div className="space-y-8">
             <div className="relative animate-scale-in" style={{ animationDelay: '0.3s' }}>
-              {/* Subtle radial glow behind image */}
+              {/* Subtle radial glow behind carousel */}
               <div 
                 className="absolute inset-0 rounded-3xl opacity-15 blur-3xl"
                 style={{
@@ -78,13 +78,7 @@ const HeroSection = () => {
                 }}
               />
               
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-card/50">
-                <img
-                  src={heroImage}
-                  alt="Healthcare professional working with technology"
-                  className="w-full h-auto object-cover"
-                />
-              </div>
+              <HeroCarousel />
             </div>
 
             {/* Key Features Grid */}
