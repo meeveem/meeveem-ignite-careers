@@ -6,32 +6,56 @@ const benefits = [
   {
     icon: Cpu,
     title: "Wasted hours on irrelevant jobs?",
-    description: "Stop scrolling endlessly. We match you with roles that actually fit, fast.",
+    description: (
+      <>
+        <span className="font-bold text-primary">Stop scrolling endlessly.</span> We match you with roles that actually fit, fast.
+      </>
+    ),
   },
   {
     icon: Search,
     title: "Missing the roles meant for you?",
-    description: "Dont miss out again. Discover real openings matched to your strengths.",
+    description: (
+      <>
+        <span className="font-bold text-primary">Don't miss out again.</span> Discover real openings matched to your strengths.
+      </>
+    ),
   },
   {
     icon: Award,
     title: "Feeling invisible in the job market?",
-    description: "Be seens for your potential. We help employers look beyond your job titles.",
+    description: (
+      <>
+        <span className="font-bold text-primary">Be seen for your potential.</span> We help employers look beyond your job titles.
+      </>
+    ),
   },
   {
     icon: Scale,
     title: "Tired of unfair filters?",
-    description: "No buzzwords. No bias. Just fair matches based on what you can do.",
+    description: (
+      <>
+        <span className="font-bold text-primary">No buzzwords. No bias.</span> Just fair matches based on what you can do.
+      </>
+    ),
   },
   {
     icon: Eye,
     title: "Wish you knew more about the company?",
-    description: "See behind the job ad. Get a real view of company culture before you apply.",
+    description: (
+      <>
+        <span className="font-bold text-primary">See behind the job ad.</span> Get a real view of company culture before you apply.
+      </>
+    ),
   },
   {
     icon: Shield,
     title: "Bombarded with irrelevant jobs?",
-    description: "Take control. Get matched only to roles that truly fit you.",
+    description: (
+      <>
+        <span className="font-bold text-primary">Take control.</span> Get matched only to roles that truly fit you.
+      </>
+    ),
   },
 ];
 
