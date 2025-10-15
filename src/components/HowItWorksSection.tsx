@@ -70,7 +70,7 @@ const HowItWorksSection = () => {
         </div>
 
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Steps Column */}
             <div className="space-y-8">
               {steps.map((step, index) => {
