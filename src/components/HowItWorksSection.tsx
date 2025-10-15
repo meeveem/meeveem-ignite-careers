@@ -1,5 +1,7 @@
 import { Upload, Brain, Target, CheckCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import dashboardPreview from "@/assets/dashboard-preview.png";
+import jobsPreview from "@/assets/jobs-preview.png";
 
 const steps = [
   {
@@ -24,6 +26,7 @@ const steps = [
 
 const HowItWorksSection = () => {
   const [visibleSteps, setVisibleSteps] = useState<Set<number>>(new Set());
+  const [activeImage, setActiveImage] = useState(0);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -35,12 +38,18 @@ const HowItWorksSection = () => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               setVisibleSteps((prev) => new Set(prev).add(index));
+              // Change image based on which step is in view
+              if (index === 0 || index === 1) {
+                setActiveImage(0);
+              } else if (index === 2) {
+                setActiveImage(1);
+              }
               observer.unobserve(entry.target);
             }
           });
         },
         {
-          threshold: 0.2,
+          threshold: 0.5,
           rootMargin: "0px",
         },
       );
@@ -68,8 +77,10 @@ const HowItWorksSection = () => {
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto">
-          <div className="space-y-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            {/* Steps Column */}
+            <div className="space-y-12">
             {steps.map((step, index) => {
               const Icon = step.icon;
               const isVisible = visibleSteps.has(index);
@@ -106,6 +117,29 @@ const HowItWorksSection = () => {
                 </div>
               );
             })}
+            </div>
+
+            {/* Image Carousel Column - Sticky */}
+            <div className="hidden lg:block sticky top-24">
+              <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-border/50">
+                {/* Dashboard Image */}
+                <img
+                  src={dashboardPreview}
+                  alt="Meeveem Dashboard Preview"
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+                    activeImage === 0 ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+                {/* Jobs Image */}
+                <img
+                  src={jobsPreview}
+                  alt="Meeveem Jobs Preview"
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+                    activeImage === 1 ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              </div>
+            </div>
           </div>
 
           {/* Trust indicators */}
