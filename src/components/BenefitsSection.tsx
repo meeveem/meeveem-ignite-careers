@@ -95,7 +95,7 @@ const BenefitsSection = () => {
     <section className="py-24 gradient-hero">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6">Job Searching Is Broken Meeveem Fixes It</h2>
+          <h2 className="text-4xl lg:text-5xl font-bold mb-6">Searching Smarter Starts Here</h2>
           <p className="text-xl text-muted-foreground">
             Endless scrolling, vague job descriptions and slow responses. Meeveem AI removes the guesswork and makes
             finding the right role fast, fair and personal.
