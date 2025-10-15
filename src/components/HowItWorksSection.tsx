@@ -1,5 +1,6 @@
 import { Upload, Brain, Target, CheckCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import StepsCarousel from "./StepsCarousel";
 
 const steps = [
   {
@@ -68,44 +69,50 @@ const HowItWorksSection = () => {
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto">
-          <div className="space-y-12">
-            {steps.map((step, index) => {
-              const Icon = step.icon;
-              const isVisible = visibleSteps.has(index);
-              return (
-                <div
-                  key={step.number}
-                  ref={(el) => (stepRefs.current[index] = el)}
-                  className={`flex flex-col md:flex-row items-center gap-8 ${
-                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[15px]"
-                  }`}
-                  style={{
-                    transition:
-                      "opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
-                    transitionDelay: isVisible ? `${index * 0.2}s` : "0s",
-                  }}
-                >
-                  {/* Number Badge */}
-                  <div className="flex-shrink-0 w-20 h-20 rounded-2xl gradient-primary flex items-center justify-center shadow-glow">
-                    <span className="text-3xl font-bold text-white">{step.number}</span>
-                  </div>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+            {/* Steps Column */}
+            <div className="space-y-8">
+              {steps.map((step, index) => {
+                const Icon = step.icon;
+                const isVisible = visibleSteps.has(index);
+                return (
+                  <div
+                    key={step.number}
+                    ref={(el) => (stepRefs.current[index] = el)}
+                    className={`flex items-start gap-6 ${
+                      isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[15px]"
+                    }`}
+                    style={{
+                      transition:
+                        "opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                      transitionDelay: isVisible ? `${index * 0.2}s` : "0s",
+                    }}
+                  >
+                    {/* Number Badge */}
+                    <div className="flex-shrink-0 w-16 h-16 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
+                      <span className="text-2xl font-bold text-white">{step.number}</span>
+                    </div>
 
-                  {/* Content Card */}
-                  <div className="flex-1 bg-card/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-border/50">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center flex-shrink-0">
-                        <Icon className="w-6 h-6 text-primary" />
+                    {/* Content */}
+                    <div className="flex-1 pt-1">
+                      <div className="flex items-start gap-3 mb-3">
+                        <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-5 h-5 text-primary" />
+                        </div>
+                        <h3 className="text-xl font-bold text-foreground pt-1">{step.title}</h3>
                       </div>
-                      <div>
-                        <h3 className="text-2xl font-bold mb-3 text-foreground">{step.title}</h3>
-                        <p className="text-muted-foreground text-lg leading-relaxed">{step.description}</p>
-                      </div>
+                      <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+
+            {/* Carousel Column */}
+            <div className="lg:sticky lg:top-24">
+              <StepsCarousel />
+            </div>
           </div>
 
           {/* Trust indicators */}
