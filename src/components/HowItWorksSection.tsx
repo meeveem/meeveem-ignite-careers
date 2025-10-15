@@ -90,19 +90,21 @@ const HowItWorksSection = () => {
                     }}
                   >
                     {/* Number Badge */}
-                    <div className="flex-shrink-0 w-16 h-16 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
-                      <span className="text-2xl font-bold text-white">{step.number}</span>
+                    <div className="flex-shrink-0 w-12 h-12 rounded-lg gradient-primary flex items-center justify-center shadow-glow">
+                      <span className="text-xl font-bold text-white">{step.number}</span>
                     </div>
 
                     {/* Content */}
-                    <div className="flex-1 pt-1">
-                      <div className="flex items-start gap-3 mb-3">
+                    <div className="flex-1">
+                      <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center flex-shrink-0">
                           <Icon className="w-5 h-5 text-primary" />
                         </div>
-                        <h3 className="text-xl font-bold text-foreground pt-1">{step.title}</h3>
+                        <div>
+                          <h3 className="text-xl font-bold text-foreground mb-2">{step.title}</h3>
+                          <p className="text-muted-foreground leading-relaxed">{step.description}</p>
+                        </div>
                       </div>
-                      <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                     </div>
                   </div>
                 );
