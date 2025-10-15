@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import SuccessDialog from "./SuccessDialog";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface EarlyAccessDialogProps {
   open: boolean;
@@ -17,13 +19,77 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
     email: "",
   });
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
-    onOpenChange(false);
-    setShowSuccess(true);
+    setIsLoading(true);
+
+    try {
+      // Validate input
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        toast({
+          title: "Invalid email",
+          description: "Please enter a valid email address",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      if (formData.firstName.length > 100 || formData.lastName.length > 100) {
+        toast({
+          title: "Invalid input",
+          description: "Names must be less than 100 characters",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      // Call the edge function
+      const { data, error } = await supabase.functions.invoke('add-brevo-contact', {
+        body: {
+          firstName: formData.firstName.trim(),
+          lastName: formData.lastName.trim(),
+          email: formData.email.trim(),
+        },
+      });
+
+      if (error) {
+        console.error("Error adding contact:", error);
+        toast({
+          title: "Something went wrong",
+          description: "Failed to sign up. Please try again.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      console.log("Contact added successfully:", data);
+      
+      // Reset form
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+      });
+      
+      onOpenChange(false);
+      setShowSuccess(true);
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -90,8 +156,14 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
               />
             </div>
 
-            <Button type="submit" variant="gradient" size="lg" className="w-full h-12 text-base">
-              Get Early Access
+            <Button 
+              type="submit" 
+              variant="gradient" 
+              size="lg" 
+              className="w-full h-12 text-base"
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing up..." : "Get Early Access"}
             </Button>
 
             <p className="text-center text-sm text-muted-foreground">

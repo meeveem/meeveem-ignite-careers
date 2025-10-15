@@ -1,1 +1,4 @@
 project_id = "dbcdysrhsgdcmiqifijl"
+
+[functions.add-brevo-contact]
+verify_jwt = false
