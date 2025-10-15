@@ -59,7 +59,7 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
         },
       });
 
-      if (error) {
+      if (error && !data?.success) {
         console.error("Error adding contact:", error);
         toast({
           title: "Something went wrong",
@@ -70,17 +70,27 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
         return;
       }
 
-      console.log("Contact added successfully:", data);
-      
-      // Reset form
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-      });
-      
-      onOpenChange(false);
-      setShowSuccess(true);
+      // Check if successful (either from data.success or no error)
+      if (data?.success || !error) {
+        console.log("Contact added successfully:", data);
+        
+        // Reset form
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+        });
+        
+        onOpenChange(false);
+        setShowSuccess(true);
+      } else {
+        // Fallback error handling
+        toast({
+          title: "Something went wrong",
+          description: "Failed to sign up. Please try again.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error("Unexpected error:", error);
       toast({
