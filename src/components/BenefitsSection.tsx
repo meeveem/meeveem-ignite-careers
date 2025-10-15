@@ -6,36 +6,32 @@ const benefits = [
   {
     icon: Cpu,
     title: "Wasted hours on irrelevant jobs?",
-    description:
-      "Our AI analyses your CV in seconds and matches real, live HealthTech roles tailored to your strengths and experience.",
+    description: "Stop scolling endlessly. We match you with roles that actually fit, fast.",
   },
   {
     icon: Search,
     title: "Missing the roles meant for you?",
-    description:
-      "Meeveem understands what makes you stand out and finds HealthTech roles that match you skills, opening doors you hadn't considered.",
+    description: "Dont miss out again. Discover real openings matched to your strengths.",
   },
   {
     icon: Award,
     title: "Feeling invisible in the job market?",
-    description:
-      "Tired of being overlooked because of titles or keywords? Our AI highlights your true strengths so employers see your potential, not just your past roles.",
+    description: "Be seens for your potential. We help employers look beyond your job titles.",
   },
   {
     icon: Scale,
     title: "Tired of unfair filters?",
-    description:
-      "No background filters of keyword traps. Meeveem AI matches based on your skills and ability, giving everyone a fair chance to be seen.",
+    description: "No buzzwords. No bias. Just fair matches based on what you can do.",
   },
   {
     icon: Eye,
     title: "Wish you knew more about the company?",
-    description: "We show you what it's really like inside each company, so you can choose where you'll fit best.",
+    description: "See behind the job ad. Get a real view of company culture before you apply.",
   },
   {
     icon: Shield,
     title: "Bombarded with irrelevant jobs?",
-    description: "You decide who sees your profile and when to apply. No spam, just roles that fit you.",
+    description: "Take control. Get matched only to roles that truly fit you.",
   },
 ];
 
