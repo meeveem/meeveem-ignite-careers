@@ -16,7 +16,7 @@ const SuccessDialogGlobal = () => {
       const shouldTest = window.location.hash === "#test-success" ||
         new URLSearchParams(window.location.search).get("test") === "success";
       if (shouldTest) {
-        setTimeout(() => window.dispatchEvent(new Event("successdialog")), 300);
+        setTimeout(() => setOpen(true), 200);
       }
     }
 

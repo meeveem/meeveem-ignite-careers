@@ -82,7 +82,7 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
         });
         
         onOpenChange(false);
-        setTimeout(() => window.dispatchEvent(new Event('successdialog')), 200);
+        setTimeout(() => window.dispatchEvent(new Event('successdialog')), 360);
       } else {
         // Fallback error handling
         toast({

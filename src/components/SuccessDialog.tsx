@@ -19,7 +19,7 @@ const SuccessDialog = ({ open, onOpenChange }: SuccessDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[480px] w-[92vw] max-h-[90vh] overflow-auto text-center relative">{" "}
+      <DialogContent className="z-[100] sm:max-w-[480px] w-[92vw] max-h-[90vh] overflow-auto text-center relative">
         {/* Glow effect */}
         <div 
           className="absolute inset-0 pointer-events-none"
