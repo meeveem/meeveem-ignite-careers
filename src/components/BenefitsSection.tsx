@@ -6,37 +6,43 @@ const benefits = [
   {
     icon: Hourglass,
     title: "Wasted hours on irrelevant jobs?",
-    description: "Stop scrolling endlessly. We match you with roles that actually fit, fast.",
+    keyPhrase: "Stop scrolling endlessly.",
+    description: " We match you with roles that actually fit, fast.",
     iconColor: "bg-blue-500",
   },
   {
     icon: Search,
     title: "Missing the roles meant for you?",
-    description: "Don't miss out again. Discover real openings matched to your strengths.",
+    keyPhrase: "Don't miss out again.",
+    description: " Discover real openings matched to your strengths.",
     iconColor: "bg-indigo-500",
   },
   {
     icon: Eye,
     title: "Feeling invisible in the job market?",
-    description: "Be seen for your potential. We help employers look beyond your job titles.",
+    keyPhrase: "Be seen for your potential.",
+    description: " We help employers look beyond your job titles.",
     iconColor: "bg-blue-500",
   },
   {
     icon: Scale,
     title: "Tired of unfair filters?",
-    description: "No buzzwords. No bias. Just fair matches based on what you can do.",
+    keyPhrase: "No buzzwords. No bias.",
+    description: " Just fair matches based on what you can do.",
     iconColor: "bg-indigo-500",
   },
   {
     icon: Building2,
     title: "Wish you knew more about the company?",
-    description: "See behind the job ad. Get a real view of company culture before you apply.",
+    keyPhrase: "See behind the job ad.",
+    description: " Get a real view of company culture before you apply.",
     iconColor: "bg-blue-500",
   },
   {
     icon: Shield,
     title: "Bombarded with irrelevant jobs?",
-    description: "Take control. Get matched only to roles that truly fit you.",
+    keyPhrase: "Take control.",
+    description: " Get matched only to roles that truly fit you.",
     iconColor: "bg-indigo-500",
   },
 ];
@@ -97,7 +103,7 @@ const BenefitsSection = () => {
                 <Card
                   key={benefit.title}
                   ref={(el) => (cardRefs.current[index] = el)}
-                  className={`p-7 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 bg-white backdrop-blur-sm h-full ${
+                  className={`py-8 px-7 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 bg-white backdrop-blur-sm h-full ${
                     isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                   }`}
                   style={{
@@ -108,10 +114,11 @@ const BenefitsSection = () => {
                   <div className={`w-12 h-12 rounded-xl ${benefit.iconColor} flex items-center justify-center mb-6 shadow-lg`}>
                     <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold mb-3 text-foreground leading-snug min-h-[3.5rem]">
+                  <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: '#1E293B' }}>
                     {benefit.title}
                   </h3>
-                  <p className="text-base text-slate-600 leading-relaxed font-normal">
+                  <p className="text-[15px] leading-relaxed font-normal" style={{ color: '#475569' }}>
+                    <span className="font-medium" style={{ color: '#2563EB', fontSize: '16px' }}>{benefit.keyPhrase}</span>
                     {benefit.description}
                   </p>
                 </Card>
@@ -129,7 +136,7 @@ const BenefitsSection = () => {
                 <Card
                   key={benefit.title}
                   ref={(el) => (cardRefs.current[actualIndex] = el)}
-                  className={`p-7 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 backdrop-blur-sm h-full ${
+                  className={`py-8 px-7 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 backdrop-blur-sm h-full ${
                     isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                   }`}
                   style={{
@@ -141,10 +148,11 @@ const BenefitsSection = () => {
                   <div className={`w-12 h-12 rounded-xl ${benefit.iconColor} flex items-center justify-center mb-6 shadow-lg`}>
                     <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold mb-3 text-foreground leading-snug min-h-[3.5rem]">
+                  <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: '#1E293B' }}>
                     {benefit.title}
                   </h3>
-                  <p className="text-base text-slate-600 leading-relaxed font-normal">
+                  <p className="text-[15px] leading-relaxed font-normal" style={{ color: '#475569' }}>
+                    <span className="font-medium" style={{ color: '#2563EB', fontSize: '16px' }}>{benefit.keyPhrase}</span>
                     {benefit.description}
                   </p>
                 </Card>
