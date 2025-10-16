@@ -101,12 +101,14 @@ const BenefitsSection = () => {
                   transitionDelay: isVisible ? `${index * 0.15}s` : "0s",
                 }}
               >
-                <div className={`w-12 h-12 rounded-xl ${benefit.iconColor} flex items-center justify-center mb-6 shadow-lg`}>
-                  <Icon className="w-6 h-6 text-white" />
+                <div className="flex items-start gap-4 mb-4">
+                  <div className={`w-12 h-12 rounded-xl ${benefit.iconColor} flex items-center justify-center shadow-lg flex-shrink-0`}>
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground leading-snug pt-1">
+                    {benefit.title}
+                  </h3>
                 </div>
-                <h3 className="text-lg font-bold mb-3 text-foreground leading-snug min-h-[3.5rem]">
-                  {benefit.title}
-                </h3>
                 <p className="text-base text-slate-600 leading-relaxed font-normal">
                   {benefit.description}
                 </p>
