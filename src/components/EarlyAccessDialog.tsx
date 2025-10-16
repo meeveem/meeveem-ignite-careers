@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import SuccessDialog from "./SuccessDialog";
+// Removed local SuccessDialog; using global event-based success dialog
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -18,7 +18,7 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
     lastName: "",
     email: "",
   });
-  const [showSuccess, setShowSuccess] = useState(false);
+  
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -82,7 +82,7 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
         });
         
         onOpenChange(false);
-        setTimeout(() => setShowSuccess(true), 10);
+        setTimeout(() => window.dispatchEvent(new Event('successdialog')), 200);
       } else {
         // Fallback error handling
         toast({
@@ -183,9 +183,7 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
           </form>
         </DialogContent>
       </Dialog>
-
-      <SuccessDialog open={showSuccess} onOpenChange={setShowSuccess} />
-    </>
+      </>
   );
 };
 
