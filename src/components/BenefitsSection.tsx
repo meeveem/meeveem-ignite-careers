@@ -1,40 +1,40 @@
 import { Card } from "@/components/ui/card";
-import { Cpu, Search, Award, Scale, Eye, Shield } from "lucide-react";
+import { Target, Compass, Eye, Scale, Building2, Shield } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const benefits = [
   {
-    icon: Search,
+    icon: Target,
     title: "Wasted hours on irrelevant jobs?",
     description: "Stop scrolling endlessly. We match you with roles that actually fit, fast.",
     iconColor: "bg-blue-500",
   },
   {
-    icon: Scale,
+    icon: Compass,
     title: "Missing the roles meant for you?",
     description: "Don't miss out again. Discover real openings matched to your strengths.",
-    iconColor: "bg-teal-500",
-  },
-  {
-    icon: Award,
-    title: "Feeling invisible in the job market?",
-    description: "Be seen for your potential. We help employers look beyond your job titles.",
     iconColor: "bg-indigo-500",
   },
   {
-    icon: Shield,
-    title: "Tired of unfair filters?",
-    description: "No buzzwords. No bias. Just fair matches based on what you can do.",
+    icon: Eye,
+    title: "Feeling invisible in the job market?",
+    description: "Be seen for your potential. We help employers look beyond your job titles.",
     iconColor: "bg-blue-500",
   },
   {
-    icon: Eye,
-    title: "Wish you knew more about the company?",
-    description: "See behind the job ad. Get a real view of company culture before you apply.",
-    iconColor: "bg-teal-500",
+    icon: Scale,
+    title: "Tired of unfair filters?",
+    description: "No buzzwords. No bias. Just fair matches based on what you can do.",
+    iconColor: "bg-indigo-500",
   },
   {
-    icon: Cpu,
+    icon: Building2,
+    title: "Wish you knew more about the company?",
+    description: "See behind the job ad. Get a real view of company culture before you apply.",
+    iconColor: "bg-blue-500",
+  },
+  {
+    icon: Shield,
     title: "Bombarded with irrelevant jobs?",
     description: "Take control. Get matched only to roles that truly fit you.",
     iconColor: "bg-indigo-500",
