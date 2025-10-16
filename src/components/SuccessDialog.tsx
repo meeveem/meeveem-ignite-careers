@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
 
 interface SuccessDialogProps {
@@ -19,12 +19,15 @@ const SuccessDialog = ({ open, onOpenChange }: SuccessDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[480px] text-center relative overflow-hidden">
+      <DialogContent className="sm:max-w-[480px] w-[92vw] max-h-[90vh] overflow-auto text-center relative">{" "}
         {/* Glow effect */}
         <div 
-          className={`absolute inset-0 pointer-events-none ${showAnimation ? 'animate-success-glow' : ''}`}
+          className="absolute inset-0 pointer-events-none"
           style={{
             background: 'radial-gradient(circle at center, hsl(207 100% 85% / 0.25) 0%, transparent 70%)',
+            transform: showAnimation ? 'scale(1.5)' : 'scale(0.9)',
+            opacity: showAnimation ? 0 : 0.25,
+            transition: 'transform 0.8s ease-out 0.6s, opacity 0.8s ease-out 0.6s',
           }}
         />
         
@@ -74,15 +77,14 @@ const SuccessDialog = ({ open, onOpenChange }: SuccessDialogProps) => {
             </div>
           </div>
 
-          {/* Title */}
-          <h2 className="text-3xl font-bold mb-3">
-            You're in!
-          </h2>
-
-          {/* Subtext */}
-          <p className="text-muted-foreground text-base mb-4 px-4">
-            Thanks for joining Meeveem. You'll be among the first to access smarter AI job matching and exclusive HealthTech roles when we launch.
-          </p>
+          <DialogHeader>
+            <DialogTitle className="text-3xl font-bold mb-3">
+              You're in!
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground text-base mb-4 px-4">
+              Thanks for joining Meeveem. You'll be among the first to access smarter AI job matching and exclusive HealthTech roles when we launch.
+            </DialogDescription>
+          </DialogHeader>
 
           {/* Bottom text */}
           <p className="text-primary font-semibold text-base">

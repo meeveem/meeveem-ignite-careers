@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -82,7 +82,7 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
         });
         
         onOpenChange(false);
-        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(true), 10);
       } else {
         // Fallback error handling
         toast({
@@ -111,9 +111,9 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
             <DialogTitle className="text-2xl font-bold text-center">
               Join the HealthTech Career Network
             </DialogTitle>
-            <p className="text-muted-foreground text-sm pt-1 text-center">
+            <DialogDescription className="text-muted-foreground text-sm pt-1 text-center">
               Be the first to access 1000+ curated UK HealthTech jobs.
-            </p>
+            </DialogDescription>
             <p className="text-primary font-semibold text-sm pt-2 text-center">
               Launching December 2025
             </p>
