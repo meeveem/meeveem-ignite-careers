@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import SuccessDialog from "./SuccessDialog";
+import SuccessOverlay from "./SuccessOverlay";
 
 const SuccessDialogGlobal = () => {
   const [open, setOpen] = useState(false);
@@ -23,7 +23,7 @@ const SuccessDialogGlobal = () => {
     return () => window.removeEventListener("successdialog", handler as EventListener);
   }, []);
 
-  return <SuccessDialog open={open} onOpenChange={setOpen} />;
+  return <SuccessOverlay open={open} onOpenChange={setOpen} />;
 };
 
 export default SuccessDialogGlobal;
