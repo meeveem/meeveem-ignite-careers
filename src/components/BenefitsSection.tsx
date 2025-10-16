@@ -1,16 +1,16 @@
 import { Card } from "@/components/ui/card";
-import { Target, Compass, Eye, Scale, Building2, Shield } from "lucide-react";
+import { Hourglass, Search, Eye, Scale, Building2, Shield } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const benefits = [
   {
-    icon: Target,
+    icon: Hourglass,
     title: "Wasted hours on irrelevant jobs?",
     description: "Stop scrolling endlessly. We match you with roles that actually fit, fast.",
     iconColor: "bg-blue-500",
   },
   {
-    icon: Compass,
+    icon: Search,
     title: "Missing the roles meant for you?",
     description: "Don't miss out again. Discover real openings matched to your strengths.",
     iconColor: "bg-indigo-500",
