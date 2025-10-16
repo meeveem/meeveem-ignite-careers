@@ -73,6 +73,9 @@ const BenefitsSection = () => {
     };
   }, []);
 
+  const firstRow = benefits.slice(0, 3);
+  const secondRow = benefits.slice(3, 6);
+
   return (
     <section className="py-24 gradient-hero">
       <div className="container mx-auto px-6">
@@ -84,35 +87,70 @@ const BenefitsSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 max-w-7xl mx-auto">
-          {benefits.map((benefit, index) => {
-            const Icon = benefit.icon;
-            const isVisible = visibleCards.has(index);
-            const isAlternate = index % 2 === 1;
-            return (
-              <Card
-                key={benefit.title}
-                ref={(el) => (cardRefs.current[index] = el)}
-                className={`p-7 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 bg-white backdrop-blur-sm ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                }`}
-                style={{
-                  transition: "opacity 0.7s ease-out, transform 0.7s ease-out",
-                  transitionDelay: isVisible ? `${index * 0.15}s` : "0s",
-                }}
-              >
-                <div className={`w-12 h-12 rounded-xl ${benefit.iconColor} flex items-center justify-center mb-6 shadow-lg`}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-lg font-bold mb-3 text-foreground leading-snug min-h-[3.5rem]">
-                  {benefit.title}
-                </h3>
-                <p className="text-base text-slate-600 leading-relaxed font-normal">
-                  {benefit.description}
-                </p>
-              </Card>
-            );
-          })}
+        <div className="max-w-7xl mx-auto space-y-14">
+          {/* First Row - White Background */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {firstRow.map((benefit, index) => {
+              const Icon = benefit.icon;
+              const isVisible = visibleCards.has(index);
+              return (
+                <Card
+                  key={benefit.title}
+                  ref={(el) => (cardRefs.current[index] = el)}
+                  className={`p-7 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 bg-white backdrop-blur-sm h-full ${
+                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  }`}
+                  style={{
+                    transition: "opacity 0.7s ease-out, transform 0.7s ease-out",
+                    transitionDelay: isVisible ? `${index * 0.15}s` : "0s",
+                  }}
+                >
+                  <div className={`w-12 h-12 rounded-xl ${benefit.iconColor} flex items-center justify-center mb-6 shadow-lg`}>
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-3 text-foreground leading-snug min-h-[3.5rem]">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-base text-slate-600 leading-relaxed font-normal">
+                    {benefit.description}
+                  </p>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Second Row - Pale Blue Background, Staggered Up */}
+          <div className="grid md:grid-cols-3 gap-8 -mt-5">
+            {secondRow.map((benefit, index) => {
+              const Icon = benefit.icon;
+              const actualIndex = index + 3;
+              const isVisible = visibleCards.has(actualIndex);
+              return (
+                <Card
+                  key={benefit.title}
+                  ref={(el) => (cardRefs.current[actualIndex] = el)}
+                  className={`p-7 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 backdrop-blur-sm h-full ${
+                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  }`}
+                  style={{
+                    backgroundColor: "#F8FAFC",
+                    transition: "opacity 0.7s ease-out, transform 0.7s ease-out",
+                    transitionDelay: isVisible ? `${actualIndex * 0.15}s` : "0s",
+                  }}
+                >
+                  <div className={`w-12 h-12 rounded-xl ${benefit.iconColor} flex items-center justify-center mb-6 shadow-lg`}>
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-3 text-foreground leading-snug min-h-[3.5rem]">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-base text-slate-600 leading-relaxed font-normal">
+                    {benefit.description}
+                  </p>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
