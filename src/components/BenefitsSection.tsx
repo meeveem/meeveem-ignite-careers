@@ -4,58 +4,40 @@ import { useEffect, useRef, useState } from "react";
 
 const benefits = [
   {
-    icon: Cpu,
+    icon: Search,
     title: "Wasted hours on irrelevant jobs?",
-    description: (
-      <>
-        <span className="font-bold text-primary">Stop scrolling endlessly.</span> We match you with roles that actually fit, fast.
-      </>
-    ),
+    description: "Stop scrolling endlessly. We match you with roles that actually fit, fast.",
+    iconColor: "bg-blue-500",
   },
   {
-    icon: Search,
+    icon: Scale,
     title: "Missing the roles meant for you?",
-    description: (
-      <>
-        <span className="font-bold text-primary">Don't miss out again.</span> Discover real openings matched to your strengths.
-      </>
-    ),
+    description: "Don't miss out again. Discover real openings matched to your strengths.",
+    iconColor: "bg-teal-500",
   },
   {
     icon: Award,
     title: "Feeling invisible in the job market?",
-    description: (
-      <>
-        <span className="font-bold text-primary">Be seen for your potential.</span> We help employers look beyond your job titles.
-      </>
-    ),
+    description: "Be seen for your potential. We help employers look beyond your job titles.",
+    iconColor: "bg-indigo-500",
   },
   {
-    icon: Scale,
+    icon: Shield,
     title: "Tired of unfair filters?",
-    description: (
-      <>
-        <span className="font-bold text-primary">No buzzwords. No bias.</span> Just fair matches based on what you can do.
-      </>
-    ),
+    description: "No buzzwords. No bias. Just fair matches based on what you can do.",
+    iconColor: "bg-blue-500",
   },
   {
     icon: Eye,
     title: "Wish you knew more about the company?",
-    description: (
-      <>
-        <span className="font-bold text-primary">See behind the job ad.</span> Get a real view of company culture before you apply.
-      </>
-    ),
+    description: "See behind the job ad. Get a real view of company culture before you apply.",
+    iconColor: "bg-teal-500",
   },
   {
-    icon: Shield,
+    icon: Cpu,
     title: "Bombarded with irrelevant jobs?",
-    description: (
-      <>
-        <span className="font-bold text-primary">Take control.</span> Get matched only to roles that truly fit you.
-      </>
-    ),
+    description: "Take control. Get matched only to roles that truly fit you.",
+    iconColor: "bg-indigo-500",
   },
 ];
 
@@ -102,15 +84,18 @@ const BenefitsSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 max-w-7xl mx-auto">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             const isVisible = visibleCards.has(index);
+            const isAlternate = index % 2 === 1;
             return (
               <Card
                 key={benefit.title}
                 ref={(el) => (cardRefs.current[index] = el)}
-                className={`p-8 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 bg-card/50 backdrop-blur-sm ${
+                className={`p-7 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 ${
+                  isAlternate ? "bg-white" : "bg-blue-50/50"
+                } backdrop-blur-sm ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
                 style={{
@@ -118,11 +103,15 @@ const BenefitsSection = () => {
                   transitionDelay: isVisible ? `${index * 0.15}s` : "0s",
                 }}
               >
-                <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center mb-6 shadow-glow">
+                <div className={`w-12 h-12 rounded-xl ${benefit.iconColor} flex items-center justify-center mb-6 shadow-lg`}>
                   <Icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-foreground">{benefit.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{benefit.description}</p>
+                <h3 className="text-lg font-bold mb-3 text-foreground leading-snug min-h-[3.5rem]">
+                  {benefit.title}
+                </h3>
+                <p className="text-sm text-slate-600 leading-relaxed font-normal">
+                  {benefit.description}
+                </p>
               </Card>
             );
           })}
