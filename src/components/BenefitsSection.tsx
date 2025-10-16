@@ -107,7 +107,7 @@ const BenefitsSection = () => {
                 <h3 className="text-lg font-bold mb-3 text-foreground leading-snug min-h-[3.5rem]">
                   {benefit.title}
                 </h3>
-                <p className="text-[15px] text-slate-600 leading-relaxed font-normal">
+                <p className="text-base text-slate-600 leading-relaxed font-normal">
                   {benefit.description}
                 </p>
               </Card>
