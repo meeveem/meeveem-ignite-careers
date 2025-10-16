@@ -93,9 +93,7 @@ const BenefitsSection = () => {
               <Card
                 key={benefit.title}
                 ref={(el) => (cardRefs.current[index] = el)}
-                className={`p-7 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 ${
-                  isAlternate ? "bg-white" : "bg-blue-50/50"
-                } backdrop-blur-sm ${
+                className={`p-7 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 bg-white backdrop-blur-sm ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
                 style={{
