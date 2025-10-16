@@ -8,42 +8,36 @@ const benefits = [
     title: "Wasted hours on irrelevant jobs?",
     description: "Stop scrolling endlessly. We match you with roles that actually fit, fast.",
     iconColor: "bg-blue-500",
-    bgColor: "bg-blue-100/80",
   },
   {
     icon: Search,
     title: "Missing the roles meant for you?",
     description: "Don't miss out again. Discover real openings matched to your strengths.",
     iconColor: "bg-indigo-500",
-    bgColor: "bg-white",
   },
   {
     icon: Eye,
     title: "Feeling invisible in the job market?",
     description: "Be seen for your potential. We help employers look beyond your job titles.",
     iconColor: "bg-blue-500",
-    bgColor: "bg-indigo-100/80",
   },
   {
     icon: Scale,
     title: "Tired of unfair filters?",
     description: "No buzzwords. No bias. Just fair matches based on what you can do.",
     iconColor: "bg-indigo-500",
-    bgColor: "bg-blue-100/80",
   },
   {
     icon: Building2,
     title: "Wish you knew more about the company?",
     description: "See behind the job ad. Get a real view of company culture before you apply.",
     iconColor: "bg-blue-500",
-    bgColor: "bg-white",
   },
   {
     icon: Shield,
     title: "Bombarded with irrelevant jobs?",
     description: "Take control. Get matched only to roles that truly fit you.",
     iconColor: "bg-indigo-500",
-    bgColor: "bg-indigo-100/80",
   },
 ];
 
@@ -94,12 +88,13 @@ const BenefitsSection = () => {
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             const isVisible = visibleCards.has(index);
+            const isAlternate = index % 2 === 1;
             return (
               <Card
                 key={benefit.title}
                 ref={(el) => (cardRefs.current[index] = el)}
                 className={`p-7 hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-primary/20 ${
-                  benefit.bgColor
+                  isAlternate ? "bg-white" : "bg-blue-50/50"
                 } backdrop-blur-sm ${
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
