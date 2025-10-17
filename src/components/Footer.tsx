@@ -1,4 +1,4 @@
-import logoFull from "@/assets/logo-full.png";
+import logoFooter from "@/assets/logo-footer.png";
 
 const Footer = () => {
   return (
@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-col items-center text-center space-y-4">
           <div className="flex items-center">
-            <img src={logoFull} alt="Meeveem" className="h-8 object-contain brightness-0 invert" />
+            <img src={logoFooter} alt="Meeveem" className="h-8 object-contain" />
           </div>
           <p className="text-background/70 text-sm max-w-2xl">
             Building the bridge between talented professionals and innovative HealthTech companies.
