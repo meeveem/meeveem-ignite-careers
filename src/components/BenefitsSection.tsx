@@ -116,10 +116,10 @@ const BenefitsSection = () => {
                   <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: "#1E293B" }}>
                     {benefit.title}
                   </h3>
-                  <p className="font-medium text-[16px] mb-2" style={{ color: "#2563EB" }}>
+                  <p className="font-medium text-[17px] mb-2" style={{ color: "#2563EB" }}>
                     {benefit.keyPhrase}
                   </p>
-                  <p className="text-[15px] leading-relaxed font-normal" style={{ color: "#475569" }}>
+                  <p className="text-[16px] leading-relaxed font-normal" style={{ color: "#475569" }}>
                     {benefit.description}
                   </p>
                 </Card>
@@ -157,10 +157,10 @@ const BenefitsSection = () => {
                   <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: "#1E293B" }}>
                     {benefit.title}
                   </h3>
-                  <p className="font-medium text-[16px] mb-2" style={{ color: "#2563EB" }}>
+                  <p className="font-medium text-[17px] mb-2" style={{ color: "#2563EB" }}>
                     {benefit.keyPhrase}
                   </p>
-                  <p className="text-[15px] leading-relaxed font-normal" style={{ color: "#475569" }}>
+                  <p className="text-[16px] leading-relaxed font-normal" style={{ color: "#475569" }}>
                     {benefit.description}
                   </p>
                 </Card>
