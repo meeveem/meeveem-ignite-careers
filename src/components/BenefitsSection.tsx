@@ -31,7 +31,7 @@ const benefits = [
     icon: DoorOpen,
     title: "Wish you knew the work vibe?",
     keyPhrase: "See behind the job ad.",
-    description: " Get a real view of company culture before you apply.",
+    description: " Get the inside view before you hit apply.",
   },
   {
     icon: Target,
