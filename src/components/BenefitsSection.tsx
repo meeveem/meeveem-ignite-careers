@@ -29,7 +29,7 @@ const benefits = [
   },
   {
     icon: DoorOpen,
-    title: "Wish you knew more about the company?",
+    title: "Wish you knew the work vibe?",
     keyPhrase: "See behind the job ad.",
     description: " Get a real view of company culture before you apply.",
   },
@@ -105,21 +105,21 @@ const BenefitsSection = () => {
                     transitionDelay: isVisible ? `${index * 0.15}s` : "0s",
                   }}
                 >
-                  <div 
+                  <div
                     className="w-12 h-12 rounded-full flex items-center justify-center mb-6"
                     style={{
-                      background: 'radial-gradient(circle, #E0F2FE 0%, transparent 100%)',
+                      background: "radial-gradient(circle, #E0F2FE 0%, transparent 100%)",
                     }}
                   >
                     <Icon className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: '#1E293B' }}>
+                  <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: "#1E293B" }}>
                     {benefit.title}
                   </h3>
-                  <p className="font-medium text-[16px] mb-2" style={{ color: '#2563EB' }}>
+                  <p className="font-medium text-[16px] mb-2" style={{ color: "#2563EB" }}>
                     {benefit.keyPhrase}
                   </p>
-                  <p className="text-[15px] leading-relaxed font-normal" style={{ color: '#475569' }}>
+                  <p className="text-[15px] leading-relaxed font-normal" style={{ color: "#475569" }}>
                     {benefit.description}
                   </p>
                 </Card>
@@ -146,21 +146,21 @@ const BenefitsSection = () => {
                     transitionDelay: isVisible ? `${actualIndex * 0.15}s` : "0s",
                   }}
                 >
-                  <div 
+                  <div
                     className="w-12 h-12 rounded-full flex items-center justify-center mb-6"
                     style={{
-                      background: 'radial-gradient(circle, #E0F2FE 0%, transparent 100%)',
+                      background: "radial-gradient(circle, #E0F2FE 0%, transparent 100%)",
                     }}
                   >
                     <Icon className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: '#1E293B' }}>
+                  <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: "#1E293B" }}>
                     {benefit.title}
                   </h3>
-                  <p className="font-medium text-[16px] mb-2" style={{ color: '#2563EB' }}>
+                  <p className="font-medium text-[16px] mb-2" style={{ color: "#2563EB" }}>
                     {benefit.keyPhrase}
                   </p>
-                  <p className="text-[15px] leading-relaxed font-normal" style={{ color: '#475569' }}>
+                  <p className="text-[15px] leading-relaxed font-normal" style={{ color: "#475569" }}>
                     {benefit.description}
                   </p>
                 </Card>
