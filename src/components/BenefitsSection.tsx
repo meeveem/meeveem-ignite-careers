@@ -105,13 +105,8 @@ const BenefitsSection = () => {
                     transitionDelay: isVisible ? `${index * 0.15}s` : "0s",
                   }}
                 >
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center mb-6"
-                    style={{
-                      background: "radial-gradient(circle, #E0F2FE 0%, transparent 100%)",
-                    }}
-                  >
-                    <Icon className="w-6 h-6 text-primary" />
+                  <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center mb-6">
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: "#1E293B" }}>
                     {benefit.title}
@@ -146,13 +141,8 @@ const BenefitsSection = () => {
                     transitionDelay: isVisible ? `${actualIndex * 0.15}s` : "0s",
                   }}
                 >
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center mb-6"
-                    style={{
-                      background: "radial-gradient(circle, #E0F2FE 0%, transparent 100%)",
-                    }}
-                  >
-                    <Icon className="w-6 h-6 text-primary" />
+                  <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center mb-6">
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: "#1E293B" }}>
                     {benefit.title}
