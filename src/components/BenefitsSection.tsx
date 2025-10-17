@@ -13,7 +13,7 @@ const benefits = [
     icon: Radar,
     title: "Missing the roles meant for you?",
     keyPhrase: "Don't miss out again.",
-    description: " Discover real openings matched to your strengths.",
+    description: " Discover real roles matched to your strengths.",
   },
   {
     icon: Eye,
