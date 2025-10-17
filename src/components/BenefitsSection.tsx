@@ -1,49 +1,43 @@
 import { Card } from "@/components/ui/card";
-import { Hourglass, Search, Eye, Scale, Building2, Shield } from "lucide-react";
+import { SearchX, Radar, Eye, Scale, DoorOpen, Target } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const benefits = [
   {
-    icon: Hourglass,
+    icon: SearchX,
     title: "Wasted hours on irrelevant jobs?",
     keyPhrase: "Stop scrolling endlessly.",
     description: " We match you with roles that actually fit, fast.",
-    iconColor: "bg-blue-500",
   },
   {
-    icon: Search,
+    icon: Radar,
     title: "Missing the roles meant for you?",
     keyPhrase: "Don't miss out again.",
     description: " Discover real openings matched to your strengths.",
-    iconColor: "bg-indigo-500",
   },
   {
     icon: Eye,
     title: "Feeling invisible in the job market?",
     keyPhrase: "Be seen for your potential.",
     description: " We help employers look beyond your job titles.",
-    iconColor: "bg-blue-500",
   },
   {
     icon: Scale,
     title: "Tired of unfair filters?",
     keyPhrase: "No buzzwords. No bias.",
     description: " Just fair matches based on what you can do.",
-    iconColor: "bg-indigo-500",
   },
   {
-    icon: Building2,
+    icon: DoorOpen,
     title: "Wish you knew more about the company?",
     keyPhrase: "See behind the job ad.",
     description: " Get a real view of company culture before you apply.",
-    iconColor: "bg-blue-500",
   },
   {
-    icon: Shield,
+    icon: Target,
     title: "Bombarded with irrelevant jobs?",
     keyPhrase: "Take control.",
     description: " Get matched only to roles that truly fit you.",
-    iconColor: "bg-indigo-500",
   },
 ];
 
@@ -111,8 +105,13 @@ const BenefitsSection = () => {
                     transitionDelay: isVisible ? `${index * 0.15}s` : "0s",
                   }}
                 >
-                  <div className={`w-12 h-12 rounded-xl ${benefit.iconColor} flex items-center justify-center mb-6 shadow-lg`}>
-                    <Icon className="w-6 h-6 text-white" />
+                  <div 
+                    className="w-12 h-12 rounded-full flex items-center justify-center mb-6"
+                    style={{
+                      background: 'radial-gradient(circle, #E0F2FE 0%, transparent 100%)',
+                    }}
+                  >
+                    <Icon className="w-6 h-6 text-primary" />
                   </div>
                   <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: '#1E293B' }}>
                     {benefit.title}
@@ -147,8 +146,13 @@ const BenefitsSection = () => {
                     transitionDelay: isVisible ? `${actualIndex * 0.15}s` : "0s",
                   }}
                 >
-                  <div className={`w-12 h-12 rounded-xl ${benefit.iconColor} flex items-center justify-center mb-6 shadow-lg`}>
-                    <Icon className="w-6 h-6 text-white" />
+                  <div 
+                    className="w-12 h-12 rounded-full flex items-center justify-center mb-6"
+                    style={{
+                      background: 'radial-gradient(circle, #E0F2FE 0%, transparent 100%)',
+                    }}
+                  >
+                    <Icon className="w-6 h-6 text-primary" />
                   </div>
                   <h3 className="text-[21px] font-bold mb-4 leading-snug" style={{ color: '#1E293B' }}>
                     {benefit.title}
