@@ -104,7 +104,7 @@ const BenefitsSection = () => {
     const isPastHeader = sectionTop <= window.innerHeight * 0.15;
     const isBeforeEnd = sectionBottom > viewportBottom * 0.5;
 
-    if (isPastHeader && isBeforeEnd && scrollProgress < 0.995) {
+    if (isPastHeader && isBeforeEnd && scrollProgress < 1.0) {
       setIsInStepsZone(true);
       setShowDots(true);
 
@@ -294,7 +294,7 @@ const BenefitsSection = () => {
       >
         {/* Scroll Indicator - Absolute positioned within sticky container */}
         <div
-          className="absolute left-12 top-[45%] -translate-y-1/2 z-50 hidden lg:block transition-opacity duration-600"
+          className="absolute left-12 top-1/2 -translate-y-1/2 z-50 hidden lg:block transition-opacity duration-600"
           style={{
             opacity: isInStepsZone && showDots ? 1 : 0,
             pointerEvents: isInStepsZone && showDots ? "auto" : "none",
