@@ -1,5 +1,5 @@
 import { SearchX, Radar, Eye, Scale, DoorOpen, Target } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import dashboardStep1 from "@/assets/dashboard-step1.png";
 import dashboardStep2 from "@/assets/dashboard-step2.png";
 import dashboardStep3 from "@/assets/dashboard-step3.png";
@@ -52,57 +52,156 @@ const benefits = [
   },
 ];
 
+const SEGMENT_DURATION = 1 / 6;
+
 const BenefitsSection = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isInStepsZone, setIsInStepsZone] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mediaQuery.matches);
+    setIsMobile(window.innerWidth < 1024);
 
     const handleChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    
     mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    window.addEventListener("resize", handleResize);
+    
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Preload images
+  useEffect(() => {
+    benefits.forEach((benefit) => {
+      const img = new Image();
+      img.src = benefit.image;
+    });
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    if (!sectionRef.current) return;
+
+    const section = sectionRef.current;
+    const rect = section.getBoundingClientRect();
+    const sectionTop = rect.top;
+
+    const headerHeight = window.innerHeight;
+    const stepsHeight = window.innerHeight * 6;
+
+    // On est dans la zone des steps ?
+    if (sectionTop <= 0 && Math.abs(sectionTop) >= headerHeight) {
+      setIsInStepsZone(true);
+
+      // Progress de 0 à 1 sur les 600vh
+      const stepsScroll = Math.abs(sectionTop) - headerHeight;
+      const progress = Math.min(1, Math.max(0, stepsScroll / stepsHeight));
+      setScrollProgress(progress);
+    } else {
+      setIsInStepsZone(false);
+      if (sectionTop > 0) {
+        setScrollProgress(0);
+      } else if (Math.abs(sectionTop) > headerHeight + stepsHeight) {
+        setScrollProgress(1);
+      }
+    }
   }, []);
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (isMobile || reducedMotion) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.intersectionRatio > 0.5) {
-            const index = Number(entry.target.getAttribute("data-index"));
-            if (!isNaN(index)) {
-              setActiveIndex(index);
-            }
-          }
-        });
-      },
-      { threshold: [0, 0.25, 0.5, 0.75, 1] }
-    );
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial check
 
-    cardRefs.current.forEach((card) => {
-      if (card) observer.observe(card);
-    });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll, isMobile, reducedMotion]);
 
-    return () => {
-      cardRefs.current.forEach((card) => {
-        if (card) observer.unobserve(card);
-      });
-    };
-  }, [reducedMotion]);
+  const calculateTextOpacity = (progress: number, stepIndex: number): number => {
+    const segmentStart = stepIndex * SEGMENT_DURATION;
+    const segmentEnd = (stepIndex + 1) * SEGMENT_DURATION;
+    const segmentMid = (segmentStart + segmentEnd) / 2;
 
-  const navigateToStep = (stepIndex: number) => {
-    const card = cardRefs.current[stepIndex];
-    if (card) {
-      card.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (progress < segmentStart || progress > segmentEnd) return 0;
+
+    // Fade in
+    if (progress < segmentMid) {
+      return (progress - segmentStart) / (SEGMENT_DURATION * 0.5);
+    }
+    // Fade out
+    else {
+      return 1 - (progress - segmentMid) / (SEGMENT_DURATION * 0.5);
     }
   };
 
-  if (reducedMotion) {
-    // Fallback: simple vertical stack
+  const calculateTextTranslate = (progress: number, stepIndex: number): number => {
+    const segmentStart = stepIndex * SEGMENT_DURATION;
+    const segmentEnd = (stepIndex + 1) * SEGMENT_DURATION;
+    const segmentMid = (segmentStart + segmentEnd) / 2;
+
+    if (progress < segmentStart) return 20;
+    if (progress > segmentEnd) return -20;
+
+    // Slide in
+    if (progress < segmentMid) {
+      return 20 * (1 - (progress - segmentStart) / (SEGMENT_DURATION * 0.5));
+    }
+    // Slide out
+    else {
+      return -20 * ((progress - segmentMid) / (SEGMENT_DURATION * 0.5));
+    }
+  };
+
+  const calculateImageOpacity = (progress: number, stepIndex: number): number => {
+    const segmentStart = stepIndex * SEGMENT_DURATION;
+    const segmentEnd = (stepIndex + 1) * SEGMENT_DURATION;
+    const segmentMid = (segmentStart + segmentEnd) / 2;
+
+    if (progress < segmentStart || progress > segmentEnd) return 0;
+
+    // Fade in
+    if (progress < segmentMid) {
+      return (progress - segmentStart) / (SEGMENT_DURATION * 0.5);
+    }
+    // Fade out
+    else {
+      return 1 - (progress - segmentMid) / (SEGMENT_DURATION * 0.5);
+    }
+  };
+
+  const calculateImageScale = (progress: number, stepIndex: number): number => {
+    const opacity = calculateImageOpacity(progress, stepIndex);
+    return 0.98 + 0.02 * opacity;
+  };
+
+  const scrollToStep = (stepIndex: number) => {
+    if (!sectionRef.current) return;
+
+    const section = sectionRef.current;
+    const rect = section.getBoundingClientRect();
+    const currentScrollY = window.scrollY;
+
+    const sectionTop = currentScrollY + rect.top;
+    const headerHeight = window.innerHeight;
+    const targetProgress = stepIndex / 6;
+    const stepsHeight = window.innerHeight * 6;
+
+    const targetScroll = sectionTop + headerHeight + targetProgress * stepsHeight;
+
+    window.scrollTo({
+      top: targetScroll,
+      behavior: "smooth",
+    });
+  };
+
+  // Mobile/Reduced Motion Fallback
+  if (isMobile || reducedMotion) {
     return (
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6 max-w-[1200px]">
@@ -135,7 +234,7 @@ const BenefitsSection = () => {
                     >
                       {benefit.title}
                     </h3>
-                    <p 
+                    <p
                       className="font-semibold text-[17px] sm:text-[18px] mb-3 px-3 py-1 rounded-md inline-block"
                       style={{ color: "#2563EB", backgroundColor: "rgba(37, 99, 235, 0.08)" }}
                     >
@@ -166,89 +265,103 @@ const BenefitsSection = () => {
     );
   }
 
+  const currentStepIndex = Math.floor(scrollProgress * 6);
+
   return (
-    <section className="bg-white py-16" id="feature-scroll">
-      {/* Header Section - Normal, Static */}
-      <div className="container mx-auto px-8 max-w-[1200px] mb-24">
-        <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
-            Searching Smarter Starts Here
-          </h2>
-          <p className="text-lg lg:text-xl" style={{ color: "#334155" }}>
-            Endless scrolling, vague job descriptions and slow responses. Meeveem AI removes the guesswork and makes
-            finding the right role fast, fair and personal.
-          </p>
+    <section
+      ref={sectionRef}
+      className="relative bg-white"
+      style={{ height: "700vh" }}
+      aria-label="Interactive product showcase"
+    >
+      {/* Header statique - 100vh */}
+      <div className="h-screen flex items-center justify-center">
+        <div className="container mx-auto px-8 max-w-[1200px]">
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
+              Searching Smarter Starts Here
+            </h2>
+            <p className="text-lg lg:text-xl" style={{ color: "#334155" }}>
+              Endless scrolling, vague job descriptions and slow responses. Meeveem AI removes the guesswork and makes
+              finding the right role fast, fair and personal.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="fixed left-12 top-1/2 -translate-y-1/2 z-50 hidden lg:block">
-        <div className="flex flex-col gap-6">
-          {benefits.map((benefit, idx) => {
-            const isActive = activeIndex === idx;
-            return (
-              <button
-                key={idx}
-                onClick={() => navigateToStep(idx)}
-                className="group flex items-center gap-3 transition-all duration-300"
-                aria-label={`Navigate to ${benefit.title}`}
-              >
-                <div
-                  className="w-2 h-2 rounded-full transition-all duration-300"
-                  style={{
-                    backgroundColor: isActive ? "#2563EB" : "#CBD5E1",
-                    transform: isActive ? "scale(1.5)" : "scale(1)",
-                  }}
-                />
-                <span
-                  className="text-xs font-medium whitespace-nowrap transition-all duration-300 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0"
-                  style={{
-                    color: isActive ? "#0F172A" : "#64748B",
-                  }}
+      {/* Scroll Indicator - Only visible when in steps zone */}
+      {isInStepsZone && (
+        <div
+          className="fixed left-12 top-1/2 -translate-y-1/2 z-50 hidden lg:block"
+          style={{
+            opacity: isInStepsZone ? 1 : 0,
+            transition: "opacity 0.3s ease-out",
+            pointerEvents: isInStepsZone ? "auto" : "none",
+          }}
+        >
+          <div className="flex flex-col gap-6">
+            {benefits.map((benefit, idx) => {
+              const isActive = currentStepIndex === idx;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => scrollToStep(idx)}
+                  className="group flex items-center gap-3 transition-all duration-300"
+                  aria-label={`Navigate to step ${idx + 1}: ${benefit.keyPhrase}`}
                 >
-                  {benefit.keyPhrase}
-                </span>
-              </button>
-            );
-          })}
+                  <div
+                    className="w-3 h-3 rounded-full transition-all duration-300"
+                    style={{
+                      backgroundColor: isActive ? "#2563EB" : "#CBD5E1",
+                      transform: isActive ? "scale(1.25)" : "scale(1)",
+                      boxShadow: isActive ? "0 0 12px rgba(37, 99, 235, 0.5)" : "none",
+                    }}
+                  />
+                  <span
+                    className="text-sm whitespace-nowrap transition-all duration-200"
+                    style={{
+                      color: isActive ? "#0F172A" : "#64748B",
+                      opacity: isActive ? 1 : 0,
+                      transform: isActive ? "translateX(0)" : "translateX(-8px)",
+                    }}
+                  >
+                    {benefit.keyPhrase}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Steps Container with Scroll-Snap */}
-      <div 
-        className="scroll-snap-container"
+      {/* Container sticky - verrouillé pendant 600vh */}
+      <div
+        className="sticky top-0 h-screen overflow-hidden"
         style={{
-          scrollSnapType: "y mandatory",
-          scrollBehavior: "smooth"
+          position: "sticky",
+          top: 0,
+          height: "100vh",
         }}
       >
-        {benefits.map((benefit, index) => {
-          const Icon = benefit.icon;
-          const isActive = activeIndex === index;
+        <div className="container mx-auto px-8 max-w-[1200px] h-full">
+          <div className="grid lg:grid-cols-12 gap-12 h-full items-center">
+            {/* Textes stacked avec cross-fade - 5 colonnes */}
+            <div className="lg:col-span-5 relative h-full flex items-center">
+              {benefits.map((benefit, idx) => {
+                const Icon = benefit.icon;
+                const opacity = calculateTextOpacity(scrollProgress, idx);
+                const translateY = calculateTextTranslate(scrollProgress, idx);
 
-          return (
-            <div
-              key={index}
-              ref={(el) => (cardRefs.current[index] = el)}
-              data-index={index}
-              className="snap-center min-h-screen flex items-center"
-              style={{
-                scrollSnapAlign: "center",
-                scrollSnapStop: "always"
-              }}
-              role="region"
-              aria-label={`Step ${index + 1}: ${benefit.title}`}
-            >
-              <div className="container mx-auto px-8 max-w-[1200px] w-full">
-                <div className="grid lg:grid-cols-12 gap-12 items-center">
-                  {/* Text - Left Column */}
-                  <div 
-                    className="lg:col-span-5"
+                return (
+                  <div
+                    key={idx}
+                    className="absolute inset-0 flex flex-col justify-center"
                     style={{
-                      opacity: isActive ? 1 : 0.3,
-                      transform: isActive ? "translateY(0)" : "translateY(20px)",
-                      transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
-                      contentVisibility: isActive ? "auto" : "hidden"
+                      opacity: opacity,
+                      transform: `translateY(${translateY}px)`,
+                      transition: reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
+                      pointerEvents: opacity > 0 ? "auto" : "none",
+                      contentVisibility: Math.abs(idx - currentStepIndex) > 1 ? "hidden" : "auto",
                     }}
                   >
                     <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center mb-6">
@@ -273,30 +386,38 @@ const BenefitsSection = () => {
                       {benefit.description}
                     </p>
                   </div>
+                );
+              })}
+            </div>
 
-                  {/* Image - Right Column */}
-                  <div 
-                    className="lg:col-span-7"
-                    style={{
-                      opacity: isActive ? 1 : 0.3,
-                      transform: isActive ? "scale(1)" : "scale(0.98)",
-                      transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
-                      contentVisibility: isActive ? "auto" : "hidden"
-                    }}
-                  >
+            {/* Images stacked avec cross-fade - 7 colonnes */}
+            <div className="lg:col-span-7 relative h-full flex items-center">
+              <div className="relative w-full" style={{ aspectRatio: "16 / 10" }}>
+                {benefits.map((benefit, idx) => {
+                  const opacity = calculateImageOpacity(scrollProgress, idx);
+                  const scale = calculateImageScale(scrollProgress, idx);
+
+                  return (
                     <img
+                      key={idx}
                       src={benefit.image}
                       alt={`Dashboard for ${benefit.title}`}
-                      className="w-full rounded-[24px]"
-                      style={{ boxShadow: "0 20px 40px rgba(0,0,0,0.15)" }}
-                      loading={index === 0 ? "eager" : "lazy"}
+                      className="absolute inset-0 w-full h-full object-contain rounded-[24px]"
+                      style={{
+                        opacity: opacity,
+                        transform: `scale(${scale})`,
+                        transition: reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
+                        boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+                        contentVisibility: Math.abs(idx - currentStepIndex) > 1 ? "hidden" : "auto",
+                      }}
+                      loading={idx === 0 ? "eager" : "lazy"}
                     />
-                  </div>
-                </div>
+                  );
+                })}
               </div>
             </div>
-          );
-        })}
+          </div>
+        </div>
       </div>
     </section>
   );
