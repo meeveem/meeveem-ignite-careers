@@ -56,10 +56,11 @@ const SEGMENT_DURATION = 1 / 6;
 
 const BenefitsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isInStepsZone, setIsInStepsZone] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -86,37 +87,45 @@ const BenefitsSection = () => {
     });
   }, []);
 
+  // IntersectionObserver for sticky behavior
+  useEffect(() => {
+    if (isMobile || reducedMotion || !containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsSticky(entry.isIntersecting);
+        });
+      },
+      {
+        root: null,
+        rootMargin: "-50% 0px -50% 0px",
+        threshold: 0,
+      }
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => observer.disconnect();
+  }, [isMobile, reducedMotion]);
+
+  // Scroll progress calculation
   const handleScroll = useCallback(() => {
-    if (!sectionRef.current) return;
+    if (!sectionRef.current || !isSticky) return;
 
     const section = sectionRef.current;
     const rect = section.getBoundingClientRect();
     const sectionTop = rect.top;
     const sectionBottom = sectionTop + rect.height;
-    const viewportBottom = window.innerHeight;
+    const viewportHeight = window.innerHeight;
 
-    const headerHeight = 0;
-    const stepsHeight = window.innerHeight * 3.5;
-
-    // Check if we're in the steps zone AND still within section bounds
-    const isPastHeader = sectionTop <= 0;
-    const isBeforeEnd = sectionBottom > viewportBottom * 0.5;
-
-    if (isPastHeader && isBeforeEnd && scrollProgress < 0.95) {
-      setIsInStepsZone(true);
-
-      const stepsScroll = Math.abs(sectionTop) - headerHeight;
-      const progress = Math.min(1, Math.max(0, stepsScroll / stepsHeight));
-      setScrollProgress(progress);
-    } else {
-      setIsInStepsZone(false);
-      if (sectionTop > 0) {
-        setScrollProgress(0.1);
-      } else if (!isBeforeEnd) {
-        setScrollProgress(1);
-      }
-    }
-  }, []);
+    // Calculate scroll progress through the section
+    const scrollableHeight = rect.height - viewportHeight;
+    const scrolled = -sectionTop;
+    const progress = Math.min(1, Math.max(0, scrolled / scrollableHeight));
+    
+    setScrollProgress(progress);
+  }, [isSticky]);
 
   useEffect(() => {
     if (isMobile || reducedMotion) return;
@@ -192,11 +201,10 @@ const BenefitsSection = () => {
     const currentScrollY = window.scrollY;
 
     const sectionTop = currentScrollY + rect.top;
-    const headerHeight = window.innerHeight * 0.2;
     const targetProgress = (stepIndex + 0.5) / 6;
-    const stepsHeight = window.innerHeight * 3.5;
+    const scrollableHeight = rect.height - window.innerHeight;
 
-    const targetScroll = sectionTop + headerHeight + targetProgress * stepsHeight;
+    const targetScroll = sectionTop + targetProgress * scrollableHeight;
 
     window.scrollTo({
       top: targetScroll,
@@ -274,18 +282,18 @@ const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-white"
-      style={{ height: "420vh" }}
+      className="smart-search relative bg-white"
+      style={{ minHeight: "400vh" }}
       aria-label="Interactive product showcase"
     >
-      {/* Scroll Indicator - Only visible when in steps zone */}
-      {isInStepsZone && (
+      {/* Scroll Indicator - Only visible when sticky */}
+      {isSticky && (
         <div
           className="fixed left-12 top-[45%] -translate-y-1/2 z-50 hidden lg:block"
           style={{
-            opacity: isInStepsZone ? 1 : 0,
+            opacity: isSticky ? 1 : 0,
             transition: "opacity 0.3s ease-out",
-            pointerEvents: isInStepsZone ? "auto" : "none",
+            pointerEvents: isSticky ? "auto" : "none",
           }}
         >
           <div className="flex flex-col gap-6">
@@ -313,12 +321,12 @@ const BenefitsSection = () => {
         </div>
       )}
 
-      {/* Container sticky with header and cards */}
+      {/* Container with IntersectionObserver trigger */}
       <div
-        className="sticky top-0 h-screen overflow-hidden"
+        ref={containerRef}
+        className={`${isSticky ? 'is-sticky' : ''} top-[20vh] md:top-[25vh] lg:top-[35vh] h-screen overflow-hidden`}
         style={{
-          position: "sticky",
-          top: 0,
+          position: isSticky ? 'sticky' : 'relative',
           height: "100vh",
         }}
       >
