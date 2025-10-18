@@ -57,6 +57,7 @@ const SEGMENT_DURATION = 1 / 6;
 const BenefitsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isInStepsZone, setIsInStepsZone] = useState(false);
+  const [showDots, setShowDots] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -103,8 +104,9 @@ const BenefitsSection = () => {
     const isPastHeader = sectionTop <= window.innerHeight * 0.15;
     const isBeforeEnd = sectionBottom > viewportBottom * 0.5;
 
-    if (isPastHeader && isBeforeEnd && scrollProgress < 0.99) {
+    if (isPastHeader && isBeforeEnd && scrollProgress < 0.98) {
       setIsInStepsZone(true);
+      setShowDots(true);
 
       const stepsScroll = Math.abs(sectionTop - window.innerHeight * 0.15);
       const progress = Math.min(1, Math.max(0, stepsScroll / stepsHeight));
@@ -113,8 +115,10 @@ const BenefitsSection = () => {
       setIsInStepsZone(false);
       if (sectionTop > 0) {
         setScrollProgress(0.1);
+        setShowDots(true); // Fade back in when scrolling up
       } else if (!isBeforeEnd) {
         setScrollProgress(1);
+        setShowDots(false); // Fade out when unpinning
       }
     }
   }, []);
@@ -279,14 +283,21 @@ const BenefitsSection = () => {
       style={{ height: "350vh" }}
       aria-label="Interactive product showcase"
     >
-      {/* Scroll Indicator - Only visible when in steps zone */}
-      {isInStepsZone && (
+
+      {/* Container sticky with header and cards */}
+      <div
+        className="sticky top-[10vh] md:top-[12vh] lg:top-[15vh] h-screen overflow-hidden"
+        style={{
+          position: "sticky",
+          height: "100vh",
+        }}
+      >
+        {/* Scroll Indicator - Absolute positioned within sticky container */}
         <div
-          className="fixed left-12 top-[45%] -translate-y-1/2 z-50 hidden lg:block"
+          className="absolute left-12 top-[45%] -translate-y-1/2 z-50 hidden lg:block transition-opacity duration-600"
           style={{
-            opacity: isInStepsZone ? 1 : 0,
-            transition: "opacity 0.3s ease-out",
-            pointerEvents: isInStepsZone ? "auto" : "none",
+            opacity: isInStepsZone && showDots ? 1 : 0,
+            pointerEvents: isInStepsZone && showDots ? "auto" : "none",
           }}
         >
           <div className="flex flex-col gap-6">
@@ -312,16 +323,7 @@ const BenefitsSection = () => {
             })}
           </div>
         </div>
-      )}
 
-      {/* Container sticky with header and cards */}
-      <div
-        className="sticky top-[10vh] md:top-[12vh] lg:top-[15vh] h-screen overflow-hidden"
-        style={{
-          position: "sticky",
-          height: "100vh",
-        }}
-      >
         <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col">
           {/* Header inside sticky container */}
           <div className="pt-8 md:pt-10 pb-2 text-center mb-16">
