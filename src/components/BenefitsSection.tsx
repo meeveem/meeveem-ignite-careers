@@ -337,8 +337,8 @@ const BenefitsSection = () => {
           height: "100vh",
         }}
       >
-        <div className="container mx-auto px-8 max-w-[1200px] h-full">
-          <div className="grid lg:grid-cols-12 gap-12 h-full items-center">
+        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 h-full items-center pt-4 lg:pt-8">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
             <div className="lg:col-span-5 relative h-full flex items-center">
               {benefits.map((benefit, idx) => {
