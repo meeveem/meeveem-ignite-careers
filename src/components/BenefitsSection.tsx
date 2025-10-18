@@ -99,14 +99,14 @@ const BenefitsSection = () => {
     const stepsHeight = window.innerHeight * 3.5;
 
     // Check if we're in the steps zone AND still within section bounds
-    // Pin when section is centered (top at 40% of viewport ensures content is centered)
-    const isPastHeader = sectionTop <= window.innerHeight * 0.4;
+    // Pin when section top reaches 15% of viewport to keep title visible
+    const isPastHeader = sectionTop <= window.innerHeight * 0.15;
     const isBeforeEnd = sectionBottom > viewportBottom * 0.5;
 
     if (isPastHeader && isBeforeEnd && scrollProgress < 0.95) {
       setIsInStepsZone(true);
 
-      const stepsScroll = Math.abs(sectionTop) - headerHeight;
+      const stepsScroll = Math.abs(sectionTop - window.innerHeight * 0.15);
       const progress = Math.min(1, Math.max(0, stepsScroll / stepsHeight));
       setScrollProgress(progress);
     } else {
@@ -316,10 +316,9 @@ const BenefitsSection = () => {
 
       {/* Container sticky with header and cards */}
       <div
-        className="sticky top-0 h-screen overflow-hidden"
+        className="sticky top-[10vh] md:top-[12vh] lg:top-[15vh] h-screen overflow-hidden"
         style={{
           position: "sticky",
-          top: 0,
           height: "100vh",
         }}
       >
