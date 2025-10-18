@@ -269,7 +269,7 @@ const BenefitsSection = () => {
     );
   }
 
-  const currentStepIndex = Math.floor(scrollProgress * 6);
+  const currentStepIndex = Math.round(scrollProgress * 6 - 0.5);
 
   return (
     <section
