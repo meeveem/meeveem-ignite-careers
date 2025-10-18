@@ -324,7 +324,7 @@ const BenefitsSection = () => {
       >
         <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col">
           {/* Header inside sticky container */}
-          <div className="py-8 md:py-10 text-center">
+          <div className="pt-8 md:pt-10 pb-4 md:pb-6 text-center">
             <h2 className="text-4xl lg:text-5xl font-bold mb-3" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
