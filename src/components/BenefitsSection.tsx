@@ -92,15 +92,19 @@ const BenefitsSection = () => {
     const section = sectionRef.current;
     const rect = section.getBoundingClientRect();
     const sectionTop = rect.top;
+    const sectionBottom = sectionTop + rect.height;
+    const viewportBottom = window.innerHeight;
 
-    const headerHeight = window.innerHeight;
-    const stepsHeight = window.innerHeight * 6;
+    const headerHeight = window.innerHeight * 0.4;
+    const stepsHeight = window.innerHeight * 2.6;
 
-    // On est dans la zone des steps ?
-    if (sectionTop <= 0 && Math.abs(sectionTop) >= headerHeight) {
+    // Check if we're in the steps zone AND still within section bounds
+    const isPastHeader = sectionTop <= 0 && Math.abs(sectionTop) >= headerHeight;
+    const isBeforeEnd = sectionBottom > viewportBottom * 0.5;
+
+    if (isPastHeader && isBeforeEnd) {
       setIsInStepsZone(true);
 
-      // Progress de 0 à 1 sur les 600vh
       const stepsScroll = Math.abs(sectionTop) - headerHeight;
       const progress = Math.min(1, Math.max(0, stepsScroll / stepsHeight));
       setScrollProgress(progress);
@@ -108,7 +112,7 @@ const BenefitsSection = () => {
       setIsInStepsZone(false);
       if (sectionTop > 0) {
         setScrollProgress(0);
-      } else if (Math.abs(sectionTop) > headerHeight + stepsHeight) {
+      } else if (!isBeforeEnd) {
         setScrollProgress(1);
       }
     }
@@ -188,9 +192,9 @@ const BenefitsSection = () => {
     const currentScrollY = window.scrollY;
 
     const sectionTop = currentScrollY + rect.top;
-    const headerHeight = window.innerHeight;
+    const headerHeight = window.innerHeight * 0.4;
     const targetProgress = stepIndex / 6;
-    const stepsHeight = window.innerHeight * 6;
+    const stepsHeight = window.innerHeight * 2.6;
 
     const targetScroll = sectionTop + headerHeight + targetProgress * stepsHeight;
 
@@ -271,11 +275,11 @@ const BenefitsSection = () => {
     <section
       ref={sectionRef}
       className="relative bg-white"
-      style={{ height: "700vh" }}
+      style={{ height: "300vh" }}
       aria-label="Interactive product showcase"
     >
-      {/* Header statique - 100vh */}
-      <div className="h-screen flex items-center justify-center">
+      {/* Header statique - 40vh */}
+      <div className="h-[40vh] flex items-center justify-center">
         <div className="container mx-auto px-8 max-w-[1200px]">
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
@@ -306,7 +310,7 @@ const BenefitsSection = () => {
                 <button
                   key={idx}
                   onClick={() => scrollToStep(idx)}
-                  className="group flex items-center gap-3 transition-all duration-300"
+                  className="group transition-all duration-300 hover:scale-110"
                   aria-label={`Navigate to step ${idx + 1}: ${benefit.keyPhrase}`}
                 >
                   <div
@@ -317,16 +321,6 @@ const BenefitsSection = () => {
                       boxShadow: isActive ? "0 0 12px rgba(37, 99, 235, 0.5)" : "none",
                     }}
                   />
-                  <span
-                    className="text-sm whitespace-nowrap transition-all duration-200"
-                    style={{
-                      color: isActive ? "#0F172A" : "#64748B",
-                      opacity: isActive ? 1 : 0,
-                      transform: isActive ? "translateX(0)" : "translateX(-8px)",
-                    }}
-                  >
-                    {benefit.keyPhrase}
-                  </span>
                 </button>
               );
             })}
