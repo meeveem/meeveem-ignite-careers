@@ -324,7 +324,7 @@ const BenefitsSection = () => {
       >
         <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col">
           {/* Header inside sticky container */}
-          <div className="pt-8 md:pt-10 pb-4 md:pb-6 text-center">
+          <div className="pt-8 md:pt-10 pb-2 md:pb-3 text-center">
             <h2 className="text-4xl lg:text-5xl font-bold mb-3" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
@@ -334,7 +334,7 @@ const BenefitsSection = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 flex-1 items-center">
+          <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 flex-1 items-center">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
             <div className="lg:col-span-5 relative h-full flex items-center">
               {benefits.map((benefit, idx) => {
