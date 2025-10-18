@@ -278,11 +278,11 @@ const BenefitsSection = () => {
       style={{ height: "300vh" }}
       aria-label="Interactive product showcase"
     >
-      {/* Header statique - 40vh */}
-      <div className="h-[40vh] flex items-center justify-center">
-        <div className="container mx-auto px-8 max-w-[1200px]">
+      {/* Header statique */}
+      <div className="py-8 md:py-10 flex items-center justify-center">
+        <div className="container mx-auto px-6 md:px-8 max-w-[1100px]">
           <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
+            <h2 className="text-4xl lg:text-5xl font-bold mb-3" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
             <p className="text-lg lg:text-xl" style={{ color: "#334155" }}>
