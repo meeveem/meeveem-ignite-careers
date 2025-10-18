@@ -99,7 +99,8 @@ const BenefitsSection = () => {
     const stepsHeight = window.innerHeight * 3.5;
 
     // Check if we're in the steps zone AND still within section bounds
-    const isPastHeader = sectionTop <= 0;
+    // Pin when section is centered (top at 40% of viewport ensures content is centered)
+    const isPastHeader = sectionTop <= window.innerHeight * 0.4;
     const isBeforeEnd = sectionBottom > viewportBottom * 0.5;
 
     if (isPastHeader && isBeforeEnd && scrollProgress < 0.95) {
