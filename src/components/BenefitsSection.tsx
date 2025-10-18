@@ -281,7 +281,7 @@ const BenefitsSection = () => {
       {/* Scroll Indicator - Only visible when in steps zone */}
       {isInStepsZone && (
         <div
-          className="fixed left-12 top-1/2 -translate-y-1/2 z-50 hidden lg:block"
+          className="fixed left-12 top-[45%] -translate-y-1/2 z-50 hidden lg:block"
           style={{
             opacity: isInStepsZone ? 1 : 0,
             transition: "opacity 0.3s ease-out",
