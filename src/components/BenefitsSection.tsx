@@ -100,9 +100,9 @@ const BenefitsSection = () => {
 
     // Check if we're in the steps zone AND still within section bounds
     const isPastHeader = sectionTop <= 0 && Math.abs(sectionTop) >= headerHeight;
-    const isBeforeEnd = sectionBottom > viewportBottom * 0.2;
+    const isBeforeEnd = sectionBottom > viewportBottom * 0.5;
 
-    if (isPastHeader && isBeforeEnd) {
+    if (isPastHeader && isBeforeEnd && scrollProgress < 0.95) {
       setIsInStepsZone(true);
 
       const stepsScroll = Math.abs(sectionTop) - headerHeight;
@@ -192,9 +192,9 @@ const BenefitsSection = () => {
     const currentScrollY = window.scrollY;
 
     const sectionTop = currentScrollY + rect.top;
-    const headerHeight = window.innerHeight * 0.4;
-    const targetProgress = stepIndex / 6;
-    const stepsHeight = window.innerHeight * 2.6;
+    const headerHeight = window.innerHeight * 0.2;
+    const targetProgress = (stepIndex + 0.5) / 6;
+    const stepsHeight = window.innerHeight * 3.5;
 
     const targetScroll = sectionTop + headerHeight + targetProgress * stepsHeight;
 
@@ -275,7 +275,7 @@ const BenefitsSection = () => {
     <section
       ref={sectionRef}
       className="relative bg-white"
-      style={{ height: "370vh" }}
+      style={{ height: "420vh" }}
       aria-label="Interactive product showcase"
     >
       {/* Scroll Indicator - Only visible when in steps zone */}
