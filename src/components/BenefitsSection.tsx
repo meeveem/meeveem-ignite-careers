@@ -278,21 +278,6 @@ const BenefitsSection = () => {
       style={{ height: "300vh" }}
       aria-label="Interactive product showcase"
     >
-      {/* Header statique */}
-      <div className="py-8 md:py-10 flex items-center justify-center">
-        <div className="container mx-auto px-6 md:px-8 max-w-[1100px]">
-          <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-3" style={{ color: "#0F172A" }}>
-              Searching Smarter Starts Here
-            </h2>
-            <p className="text-lg lg:text-xl" style={{ color: "#334155" }}>
-              Endless scrolling, vague job descriptions and slow responses. Meeveem AI removes the guesswork and makes
-              finding the right role fast, fair and personal.
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Scroll Indicator - Only visible when in steps zone */}
       {isInStepsZone && (
         <div
@@ -328,7 +313,7 @@ const BenefitsSection = () => {
         </div>
       )}
 
-      {/* Container sticky - verrouillé pendant 600vh */}
+      {/* Container sticky with header and cards */}
       <div
         className="sticky top-0 h-screen overflow-hidden"
         style={{
@@ -337,8 +322,19 @@ const BenefitsSection = () => {
           height: "100vh",
         }}
       >
-        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full">
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 h-full items-center pt-4 lg:pt-8">
+        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col">
+          {/* Header inside sticky container */}
+          <div className="py-8 md:py-10 text-center">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-3" style={{ color: "#0F172A" }}>
+              Searching Smarter Starts Here
+            </h2>
+            <p className="text-lg lg:text-xl max-w-3xl mx-auto" style={{ color: "#334155" }}>
+              Endless scrolling, vague job descriptions and slow responses. Meeveem AI removes the guesswork and makes
+              finding the right role fast, fair and personal.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 flex-1 items-center">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
             <div className="lg:col-span-5 relative h-full flex items-center">
               {benefits.map((benefit, idx) => {
