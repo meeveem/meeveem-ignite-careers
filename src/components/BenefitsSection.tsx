@@ -95,11 +95,11 @@ const BenefitsSection = () => {
     const sectionBottom = sectionTop + rect.height;
     const viewportBottom = window.innerHeight;
 
-    const headerHeight = window.innerHeight * 0.2;
+    const headerHeight = 0;
     const stepsHeight = window.innerHeight * 3.5;
 
     // Check if we're in the steps zone AND still within section bounds
-    const isPastHeader = sectionTop <= 0 && Math.abs(sectionTop) >= headerHeight;
+    const isPastHeader = sectionTop <= 0;
     const isBeforeEnd = sectionBottom > viewportBottom * 0.5;
 
     if (isPastHeader && isBeforeEnd && scrollProgress < 0.95) {
