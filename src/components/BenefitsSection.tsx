@@ -95,8 +95,8 @@ const BenefitsSection = () => {
     const sectionBottom = sectionTop + rect.height;
     const viewportBottom = window.innerHeight;
 
-    const headerHeight = window.innerHeight * 0.4;
-    const stepsHeight = window.innerHeight * 2.6;
+    const headerHeight = window.innerHeight * 0.2;
+    const stepsHeight = window.innerHeight * 3.5;
 
     // Check if we're in the steps zone AND still within section bounds
     const isPastHeader = sectionTop <= 0 && Math.abs(sectionTop) >= headerHeight;
@@ -275,7 +275,7 @@ const BenefitsSection = () => {
     <section
       ref={sectionRef}
       className="relative bg-white"
-      style={{ height: "150vh" }}
+      style={{ height: "370vh" }}
       aria-label="Interactive product showcase"
     >
       {/* Scroll Indicator - Only visible when in steps zone */}
