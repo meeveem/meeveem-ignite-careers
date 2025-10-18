@@ -276,7 +276,7 @@ const BenefitsSection = () => {
     <section
       ref={sectionRef}
       className="relative bg-white"
-      style={{ height: "350vh" }}
+      style={{ height: "420vh" }}
       aria-label="Interactive product showcase"
     >
       {/* Scroll Indicator - Only visible when in steps zone */}
