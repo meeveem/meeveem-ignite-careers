@@ -111,7 +111,7 @@ const BenefitsSection = () => {
     } else {
       setIsInStepsZone(false);
       if (sectionTop > 0) {
-        setScrollProgress(0);
+        setScrollProgress(0.1);
       } else if (!isBeforeEnd) {
         setScrollProgress(1);
       }
