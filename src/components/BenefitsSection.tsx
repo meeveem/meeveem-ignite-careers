@@ -97,14 +97,14 @@ const BenefitsSection = () => {
     const viewportBottom = window.innerHeight;
 
     const headerHeight = 0;
-    const stepsHeight = window.innerHeight * 3.8;
+    const stepsHeight = window.innerHeight * 4.2;
 
     // Check if we're in the steps zone AND still within section bounds
     // Pin when section top reaches 15% of viewport to keep title visible
     const isPastHeader = sectionTop <= window.innerHeight * 0.15;
     const isBeforeEnd = sectionBottom > viewportBottom * 0.5;
 
-    if (isPastHeader && isBeforeEnd && scrollProgress < 1.0) {
+    if (isPastHeader && isBeforeEnd && scrollProgress < 0.95) {
       setIsInStepsZone(true);
       setShowDots(true);
 
@@ -199,7 +199,7 @@ const BenefitsSection = () => {
     const sectionTop = currentScrollY + rect.top;
     const headerHeight = window.innerHeight * 0.2;
     const targetProgress = (stepIndex + 0.5) / 6;
-    const stepsHeight = window.innerHeight * 3.8;
+    const stepsHeight = window.innerHeight * 4.2;
 
     const targetScroll = sectionTop + headerHeight + targetProgress * stepsHeight;
 
@@ -280,7 +280,7 @@ const BenefitsSection = () => {
     <section
       ref={sectionRef}
       className="relative bg-white"
-      style={{ height: "380vh" }}
+      style={{ height: "420vh" }}
       aria-label="Interactive product showcase"
     >
 
