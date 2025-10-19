@@ -294,7 +294,7 @@ const BenefitsSection = () => {
       >
         {/* Scroll Indicator - Absolute positioned within sticky container */}
         <div
-          className="absolute left-12 bottom-[20%] z-50 hidden lg:block transition-opacity duration-600"
+          className="absolute left-12 top-[calc(8rem+2rem+4rem)] z-50 hidden lg:block transition-opacity duration-600"
           style={{
             opacity: isInStepsZone && showDots ? 1 : 0,
             pointerEvents: isInStepsZone && showDots ? "auto" : "none",
@@ -338,7 +338,7 @@ const BenefitsSection = () => {
 
           <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
-            <div className="lg:col-span-5 relative h-full flex items-center">
+            <div className="lg:col-span-5 relative h-full flex items-start">
               {benefits.map((benefit, idx) => {
                 const Icon = benefit.icon;
                 const opacity = calculateTextOpacity(scrollProgress, idx);
@@ -383,7 +383,7 @@ const BenefitsSection = () => {
             </div>
 
             {/* Images stacked avec cross-fade - 7 colonnes */}
-            <div className="lg:col-span-7 relative h-full flex items-center">
+            <div className="lg:col-span-7 relative h-full flex items-start">
               <div className="relative w-full" style={{ aspectRatio: "16 / 10" }}>
                 {benefits.map((benefit, idx) => {
                   const opacity = calculateImageOpacity(scrollProgress, idx);
