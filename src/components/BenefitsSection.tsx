@@ -294,7 +294,7 @@ const BenefitsSection = () => {
       >
         {/* Scroll Indicator - Absolute positioned within sticky container */}
         <div
-          className="absolute left-12 top-[calc(8rem+2rem+4rem)] z-50 hidden lg:block transition-opacity duration-600"
+          className="absolute left-12 top-[calc(8rem+2rem)] z-50 hidden lg:block transition-opacity duration-600"
           style={{
             opacity: isInStepsZone && showDots ? 1 : 0,
             pointerEvents: isInStepsZone && showDots ? "auto" : "none",
