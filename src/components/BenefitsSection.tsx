@@ -97,7 +97,7 @@ const BenefitsSection = () => {
     const viewportBottom = window.innerHeight;
 
     const headerHeight = 0;
-    const stepsHeight = window.innerHeight * 5.5;
+    const stepsHeight = window.innerHeight * 4.5;
 
     // Check if we're in the steps zone AND still within section bounds
     // Pin when section top reaches 15% of viewport to keep title visible
@@ -199,7 +199,7 @@ const BenefitsSection = () => {
     const sectionTop = currentScrollY + rect.top;
     const headerHeight = window.innerHeight * 0.2;
     const targetProgress = (stepIndex + 0.5) / 6;
-    const stepsHeight = window.innerHeight * 5.5;
+    const stepsHeight = window.innerHeight * 4.5;
 
     const targetScroll = sectionTop + headerHeight + targetProgress * stepsHeight;
 
@@ -279,8 +279,8 @@ const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-white pb-16"
-      style={{ height: "550vh" }}
+      className="relative bg-white pb-8"
+      style={{ height: "450vh" }}
       aria-label="Interactive product showcase"
     >
 
