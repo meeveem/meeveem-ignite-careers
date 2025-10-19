@@ -104,7 +104,7 @@ const BenefitsSection = () => {
     const isPastHeader = sectionTop <= window.innerHeight * 0.15;
     const isBeforeEnd = sectionBottom > viewportBottom * 0.5;
 
-    if (isPastHeader && isBeforeEnd && scrollProgress < 0.80) {
+    if (isPastHeader && isBeforeEnd && scrollProgress < 0.40) {
       setIsInStepsZone(true);
       setShowDots(true);
 
