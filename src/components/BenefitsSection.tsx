@@ -74,6 +74,7 @@ const BenefitsSection = () => {
   const [showDots, setShowDots] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [lockedStepIndex, setLockedStepIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
 
@@ -150,6 +151,7 @@ const BenefitsSection = () => {
   }, [handleScroll, isMobile, reducedMotion]);
 
   const calculateTextOpacity = (progress: number, stepIndex: number): number => {
+    if (lockedStepIndex === stepIndex) return 1;
     const segStart = stepIndex * SEGMENT_DURATION;
     const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
     const fadeInPortion = 0.15 * SEGMENT_DURATION;
@@ -177,6 +179,7 @@ const BenefitsSection = () => {
   };
 
   const calculateTextTranslate = (progress: number, stepIndex: number): number => {
+    if (lockedStepIndex === stepIndex) return 0;
     const segStart = stepIndex * SEGMENT_DURATION;
     const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
     const fadeInPortion = 0.15 * SEGMENT_DURATION;
@@ -205,6 +208,7 @@ const BenefitsSection = () => {
   };
 
   const calculateImageOpacity = (progress: number, stepIndex: number): number => {
+    if (lockedStepIndex === stepIndex) return 1;
     const segStart = stepIndex * SEGMENT_DURATION;
     const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
     const fadeInPortion = 0.15 * SEGMENT_DURATION;
@@ -232,6 +236,7 @@ const BenefitsSection = () => {
   };
 
   const calculateImageScale = (progress: number, stepIndex: number): number => {
+    if (lockedStepIndex === stepIndex) return 1;
     const opacity = calculateImageOpacity(progress, stepIndex);
     return 0.98 + 0.02 * opacity;
   };
@@ -252,15 +257,18 @@ const BenefitsSection = () => {
     const targetProgress = (stepIndex + 0.6) / benefits.length;
     const targetScroll = sectionTop + stickyOffset + targetProgress * stepsHeight;
 
+    setLockedStepIndex(stepIndex);
+
     window.scrollTo({
       top: targetScroll,
       behavior: "smooth",
     });
     
-    // Force a final position update after smooth scroll completes
+    // Force a final position update after smooth scroll completes and release the lock
     setTimeout(() => {
       handleScroll();
-    }, 600);
+      setLockedStepIndex(null);
+    }, 700);
   };
 
   // Mobile/Reduced Motion Fallback
@@ -409,9 +417,9 @@ const BenefitsSection = () => {
                     style={{
                       opacity: opacity,
                       transform: `translateY(${translateY}px)`,
-                      transition: reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
+                      transition: lockedStepIndex === idx || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
                       pointerEvents: opacity > 0 ? "auto" : "none",
-                      contentVisibility: Math.abs(idx - currentStepIndex) > 1 ? "hidden" : "auto",
+                      contentVisibility: lockedStepIndex === idx || Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden",
                     }}
                   >
                     <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center mb-6">
@@ -456,9 +464,9 @@ const BenefitsSection = () => {
                       style={{
                         opacity: opacity,
                         transform: `scale(${scale})`,
-                        transition: reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
+                        transition: lockedStepIndex === idx || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
                         boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
-                        contentVisibility: Math.abs(idx - currentStepIndex) > 1 ? "hidden" : "auto",
+                        contentVisibility: lockedStepIndex === idx || Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden",
                       }}
                       loading={idx === 0 ? "eager" : "lazy"}
                     />
