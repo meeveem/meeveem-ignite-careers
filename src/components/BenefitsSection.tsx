@@ -77,6 +77,8 @@ const BenefitsSection = () => {
   const [lockedStepIndex, setLockedStepIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
+  const [noTransitionStep, setNoTransitionStep] = useState<number | null>(null);
+  const noTransitionTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -101,6 +103,12 @@ const BenefitsSection = () => {
       const img = new Image();
       img.src = benefit.image;
     });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (noTransitionTimerRef.current) window.clearTimeout(noTransitionTimerRef.current);
+    };
   }, []);
 
   const handleScroll = useCallback(() => {
@@ -279,6 +287,8 @@ const BenefitsSection = () => {
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
     const targetScroll = sectionTop + stickyOffset + targetProgress * stepsHeight;
 
+    if (noTransitionTimerRef.current) window.clearTimeout(noTransitionTimerRef.current);
+    setNoTransitionStep(stepIndex);
     setLockedStepIndex(stepIndex);
 
     window.scrollTo({
@@ -289,6 +299,9 @@ const BenefitsSection = () => {
     await waitForScrollSettled(targetScroll);
     handleScroll();
     setLockedStepIndex(null);
+    noTransitionTimerRef.current = window.setTimeout(() => {
+      setNoTransitionStep(null);
+    }, 300);
   };
 
   // Mobile/Reduced Motion Fallback
@@ -437,7 +450,7 @@ const BenefitsSection = () => {
                     style={{
                       opacity: opacity,
                       transform: `translateY(${translateY}px)`,
-                      transition: lockedStepIndex === idx || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
+                      transition: lockedStepIndex !== null || noTransitionStep !== null || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
                       pointerEvents: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "none") : (opacity > 0 ? "auto" : "none"),
                       contentVisibility: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "hidden") : (Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden"),
                       zIndex: lockedStepIndex === idx ? 10 : 0,
@@ -485,7 +498,7 @@ const BenefitsSection = () => {
                       style={{
                         opacity: opacity,
                         transform: `scale(${scale})`,
-                        transition: lockedStepIndex === idx || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
+                        transition: lockedStepIndex !== null || noTransitionStep !== null || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
                         boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
                         contentVisibility: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "hidden") : (Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden"),
                         pointerEvents: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "none") : (opacity > 0 ? "auto" : "none"),
