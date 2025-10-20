@@ -79,6 +79,8 @@ const BenefitsSection = () => {
   const stickyRef = useRef<HTMLDivElement>(null);
   const [noTransitionStep, setNoTransitionStep] = useState<number | null>(null);
   const noTransitionTimerRef = useRef<number | null>(null);
+  const lockTargetScrollRef = useRef<number | null>(null);
+  const noTransitionStepRef = useRef<number | null>(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -113,6 +115,16 @@ const BenefitsSection = () => {
 
   const handleScroll = useCallback(() => {
     if (!sectionRef.current) return;
+
+    // If we are in no-transition mode after a click, keep it until user moves away from the target
+    const y = window.scrollY;
+    if (noTransitionStepRef.current !== null && lockTargetScrollRef.current !== null) {
+      if (Math.abs(y - lockTargetScrollRef.current) > 2) {
+        setNoTransitionStep(null);
+        noTransitionStepRef.current = null;
+        lockTargetScrollRef.current = null;
+      }
+    }
 
     const section = sectionRef.current;
     const rect = section.getBoundingClientRect();
@@ -159,7 +171,10 @@ const BenefitsSection = () => {
   }, [handleScroll, isMobile, reducedMotion]);
 
   const calculateTextOpacity = (progress: number, stepIndex: number): number => {
-    if (lockedStepIndex !== null) return stepIndex === lockedStepIndex ? 1 : 0;
+    if (lockedStepIndex !== null || noTransitionStep !== null) {
+      const active = (lockedStepIndex ?? noTransitionStep)!;
+      return stepIndex === active ? 1 : 0;
+    }
     const segStart = stepIndex * SEGMENT_DURATION;
     const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
     const fadeInPortion = 0.15 * SEGMENT_DURATION;
@@ -187,7 +202,7 @@ const BenefitsSection = () => {
   };
 
   const calculateTextTranslate = (progress: number, stepIndex: number): number => {
-    if (lockedStepIndex !== null) return 0;
+    if (lockedStepIndex !== null || noTransitionStep !== null) return 0;
     const segStart = stepIndex * SEGMENT_DURATION;
     const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
     const fadeInPortion = 0.15 * SEGMENT_DURATION;
@@ -216,7 +231,10 @@ const BenefitsSection = () => {
   };
 
   const calculateImageOpacity = (progress: number, stepIndex: number): number => {
-    if (lockedStepIndex !== null) return stepIndex === lockedStepIndex ? 1 : 0;
+    if (lockedStepIndex !== null || noTransitionStep !== null) {
+      const active = (lockedStepIndex ?? noTransitionStep)!;
+      return stepIndex === active ? 1 : 0;
+    }
     const segStart = stepIndex * SEGMENT_DURATION;
     const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
     const fadeInPortion = 0.15 * SEGMENT_DURATION;
@@ -244,7 +262,7 @@ const BenefitsSection = () => {
   };
 
   const calculateImageScale = (progress: number, stepIndex: number): number => {
-    if (lockedStepIndex !== null) return 1;
+    if (lockedStepIndex !== null || noTransitionStep !== null) return 1;
     const opacity = calculateImageOpacity(progress, stepIndex);
     return 0.98 + 0.02 * opacity;
   };
@@ -289,7 +307,9 @@ const BenefitsSection = () => {
 
     if (noTransitionTimerRef.current) window.clearTimeout(noTransitionTimerRef.current);
     setNoTransitionStep(stepIndex);
+    noTransitionStepRef.current = stepIndex;
     setLockedStepIndex(stepIndex);
+    lockTargetScrollRef.current = targetScroll;
 
     window.scrollTo({
       top: targetScroll,
@@ -299,9 +319,7 @@ const BenefitsSection = () => {
     await waitForScrollSettled(targetScroll);
     handleScroll();
     setLockedStepIndex(null);
-    noTransitionTimerRef.current = window.setTimeout(() => {
-      setNoTransitionStep(null);
-    }, 300);
+    // Keep noTransitionStep active until the user scrolls away from the target
   };
 
   // Mobile/Reduced Motion Fallback
