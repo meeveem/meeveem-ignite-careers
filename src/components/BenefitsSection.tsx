@@ -119,11 +119,22 @@ const BenefitsSection = () => {
     // If we are in no-transition mode after a click, keep it until user moves away from the target
     const y = window.scrollY;
     if (noTransitionStepRef.current !== null && lockTargetScrollRef.current !== null) {
-      if (Math.abs(y - lockTargetScrollRef.current) > 2) {
+      // Use a generous threshold to avoid accidental unlock due to sub-pixel differences
+      if (Math.abs(y - lockTargetScrollRef.current) > 24) {
         setNoTransitionStep(null);
         noTransitionStepRef.current = null;
         lockTargetScrollRef.current = null;
       }
+    }
+
+    // While locked (noTransitionStep), freeze progress at the step center to avoid any fades
+    if (noTransitionStepRef.current !== null) {
+      const active = (lockedStepIndex ?? noTransitionStepRef.current)!;
+      const targetCenterProgress = active * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
+      setIsInStepsZone(true);
+      setShowDots(true);
+      setScrollProgress(targetCenterProgress);
+      return;
     }
 
     const section = sectionRef.current;
