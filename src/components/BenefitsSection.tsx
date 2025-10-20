@@ -322,6 +322,10 @@ const BenefitsSection = () => {
     setLockedStepIndex(stepIndex);
     lockTargetScrollRef.current = targetScroll;
 
+    // Ensure "noTransitionStep" styles are applied BEFORE starting the scroll
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
     window.scrollTo({
       top: targetScroll,
       behavior: "smooth",
@@ -430,7 +434,7 @@ const BenefitsSection = () => {
         >
           <div className="flex flex-col gap-6">
             {benefits.map((benefit, idx) => {
-              const isActive = (lockedStepIndex ?? currentStepIndex) === idx;
+              const isActive = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex) === idx;
               return (
                 <button
                   key={idx}
