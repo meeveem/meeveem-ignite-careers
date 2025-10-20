@@ -151,7 +151,7 @@ const BenefitsSection = () => {
   }, [handleScroll, isMobile, reducedMotion]);
 
   const calculateTextOpacity = (progress: number, stepIndex: number): number => {
-    if (lockedStepIndex === stepIndex) return 1;
+    if (lockedStepIndex !== null) return stepIndex === lockedStepIndex ? 1 : 0;
     const segStart = stepIndex * SEGMENT_DURATION;
     const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
     const fadeInPortion = 0.15 * SEGMENT_DURATION;
@@ -179,7 +179,7 @@ const BenefitsSection = () => {
   };
 
   const calculateTextTranslate = (progress: number, stepIndex: number): number => {
-    if (lockedStepIndex === stepIndex) return 0;
+    if (lockedStepIndex !== null) return 0;
     const segStart = stepIndex * SEGMENT_DURATION;
     const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
     const fadeInPortion = 0.15 * SEGMENT_DURATION;
@@ -208,7 +208,7 @@ const BenefitsSection = () => {
   };
 
   const calculateImageOpacity = (progress: number, stepIndex: number): number => {
-    if (lockedStepIndex === stepIndex) return 1;
+    if (lockedStepIndex !== null) return stepIndex === lockedStepIndex ? 1 : 0;
     const segStart = stepIndex * SEGMENT_DURATION;
     const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
     const fadeInPortion = 0.15 * SEGMENT_DURATION;
@@ -236,12 +236,34 @@ const BenefitsSection = () => {
   };
 
   const calculateImageScale = (progress: number, stepIndex: number): number => {
-    if (lockedStepIndex === stepIndex) return 1;
+    if (lockedStepIndex !== null) return 1;
     const opacity = calculateImageOpacity(progress, stepIndex);
     return 0.98 + 0.02 * opacity;
   };
 
-  const scrollToStep = (stepIndex: number) => {
+  const waitForScrollSettled = (targetY: number, timeoutMs = 1500) =>
+    new Promise<void>((resolve) => {
+      let lastY = window.scrollY;
+      let stableFrames = 0;
+      const start = performance.now();
+      const check = () => {
+        const y = window.scrollY;
+        const nearTarget = Math.abs(y - targetY) < 1;
+        const delta = Math.abs(y - lastY);
+        lastY = y;
+        if (nearTarget || delta < 0.5) {
+          stableFrames++;
+          if (stableFrames >= 2) return resolve();
+        } else {
+          stableFrames = 0;
+        }
+        if (performance.now() - start > timeoutMs) return resolve();
+        requestAnimationFrame(check);
+      };
+      requestAnimationFrame(check);
+    });
+
+  const scrollToStep = async (stepIndex: number) => {
     if (!sectionRef.current) return;
 
     const section = sectionRef.current;
@@ -254,7 +276,7 @@ const BenefitsSection = () => {
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
     const stepsHeight = (rect.height - vh) + stickyOffset;
     
-    const targetProgress = (stepIndex + 0.6) / benefits.length;
+    const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
     const targetScroll = sectionTop + stickyOffset + targetProgress * stepsHeight;
 
     setLockedStepIndex(stepIndex);
@@ -263,12 +285,10 @@ const BenefitsSection = () => {
       top: targetScroll,
       behavior: "smooth",
     });
-    
-    // Force a final position update after smooth scroll completes and release the lock
-    setTimeout(() => {
-      handleScroll();
-      setLockedStepIndex(null);
-    }, 700);
+
+    await waitForScrollSettled(targetScroll);
+    handleScroll();
+    setLockedStepIndex(null);
   };
 
   // Mobile/Reduced Motion Fallback
@@ -352,7 +372,7 @@ const BenefitsSection = () => {
       {/* Container sticky with header and cards */}
       <div
         ref={stickyRef}
-        className="sticky top-16 md:top-20 lg:top-24 h-screen overflow-hidden"
+        className="sticky top-16 md:top-20 lg:top-24 h-screen overflow-hidden overscroll-contain"
         style={{
           position: "sticky",
           height: "100vh",
@@ -368,7 +388,7 @@ const BenefitsSection = () => {
         >
           <div className="flex flex-col gap-6">
             {benefits.map((benefit, idx) => {
-              const isActive = currentStepIndex === idx;
+              const isActive = (lockedStepIndex ?? currentStepIndex) === idx;
               return (
                 <button
                   key={idx}
@@ -418,8 +438,9 @@ const BenefitsSection = () => {
                       opacity: opacity,
                       transform: `translateY(${translateY}px)`,
                       transition: lockedStepIndex === idx || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
-                      pointerEvents: opacity > 0 ? "auto" : "none",
-                      contentVisibility: lockedStepIndex === idx || Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden",
+                      pointerEvents: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "none") : (opacity > 0 ? "auto" : "none"),
+                      contentVisibility: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "hidden") : (Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden"),
+                      zIndex: lockedStepIndex === idx ? 10 : 0,
                     }}
                   >
                     <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center mb-6">
@@ -466,7 +487,9 @@ const BenefitsSection = () => {
                         transform: `scale(${scale})`,
                         transition: lockedStepIndex === idx || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
                         boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
-                        contentVisibility: lockedStepIndex === idx || Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden",
+                        contentVisibility: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "hidden") : (Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden"),
+                        pointerEvents: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "none") : (opacity > 0 ? "auto" : "none"),
+                        zIndex: lockedStepIndex === idx ? 10 : 0,
                       }}
                       loading={idx === 0 ? "eager" : "lazy"}
                     />
