@@ -102,9 +102,9 @@ const BenefitsSection = () => {
     // Check if we're in the steps zone AND still within section bounds
     // Pin when section top reaches 15% of viewport to keep title visible
     const isPastHeader = sectionTop <= window.innerHeight * 0.15;
-    const isBeforeEnd = sectionBottom > viewportBottom * 0.5;
+    const isBeforeEnd = sectionBottom > viewportBottom;
 
-    if (isPastHeader && isBeforeEnd && scrollProgress < 0.88) {
+    if (isPastHeader && isBeforeEnd) {
       setIsInStepsZone(true);
       setShowDots(true);
 
