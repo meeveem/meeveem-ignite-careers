@@ -473,6 +473,9 @@ const BenefitsSection = () => {
             <div className="lg:col-span-5 relative h-full flex items-center">
               {benefits.map((benefit, idx) => {
                 const Icon = benefit.icon;
+                const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
+                if (noTransitionStep !== null && idx !== activeIndex) return null;
+
                 const opacity = calculateTextOpacity(scrollProgress, idx);
                 const translateY = calculateTextTranslate(scrollProgress, idx);
 
@@ -484,9 +487,13 @@ const BenefitsSection = () => {
                       opacity: opacity,
                       transform: `translateY(${translateY}px)`,
                       transition: lockedStepIndex !== null || noTransitionStep !== null || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
-                      pointerEvents: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "none") : (opacity > 0 ? "auto" : "none"),
-                      contentVisibility: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "hidden") : (Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden"),
-                      zIndex: lockedStepIndex === idx ? 10 : 0,
+                      pointerEvents: (lockedStepIndex !== null || noTransitionStep !== null)
+                        ? (idx === activeIndex ? "auto" : "none")
+                        : (opacity > 0 ? "auto" : "none"),
+                      contentVisibility: (lockedStepIndex !== null || noTransitionStep !== null)
+                        ? (idx === activeIndex ? "auto" : "hidden")
+                        : (Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden"),
+                      zIndex: idx === activeIndex ? 10 : 0,
                     }}
                   >
                     <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center mb-6">
@@ -519,6 +526,9 @@ const BenefitsSection = () => {
             <div className="lg:col-span-7 relative h-full flex items-center">
               <div className="relative w-full" style={{ aspectRatio: "16 / 10" }}>
                 {benefits.map((benefit, idx) => {
+                  const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
+                  if (noTransitionStep !== null && idx !== activeIndex) return null;
+
                   const opacity = calculateImageOpacity(scrollProgress, idx);
                   const scale = calculateImageScale(scrollProgress, idx);
 
@@ -533,9 +543,13 @@ const BenefitsSection = () => {
                         transform: `scale(${scale})`,
                         transition: lockedStepIndex !== null || noTransitionStep !== null || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
                         boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
-                        contentVisibility: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "hidden") : (Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden"),
-                        pointerEvents: lockedStepIndex !== null ? (idx === lockedStepIndex ? "auto" : "none") : (opacity > 0 ? "auto" : "none"),
-                        zIndex: lockedStepIndex === idx ? 10 : 0,
+                        contentVisibility: (lockedStepIndex !== null || noTransitionStep !== null)
+                          ? (idx === activeIndex ? "auto" : "hidden")
+                          : (Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden"),
+                        pointerEvents: (lockedStepIndex !== null || noTransitionStep !== null)
+                          ? (idx === activeIndex ? "auto" : "none")
+                          : (opacity > 0 ? "auto" : "none"),
+                        zIndex: idx === activeIndex ? 10 : 0,
                       }}
                       loading={idx === 0 ? "eager" : "lazy"}
                     />
