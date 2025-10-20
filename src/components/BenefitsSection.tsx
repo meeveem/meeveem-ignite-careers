@@ -385,7 +385,7 @@ const BenefitsSection = () => {
 
           <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
-            <div className="lg:col-span-5 relative h-full flex items-start">
+            <div className="lg:col-span-5 relative h-full flex items-center">
               {benefits.map((benefit, idx) => {
                 const Icon = benefit.icon;
                 const opacity = calculateTextOpacity(scrollProgress, idx);
@@ -430,7 +430,7 @@ const BenefitsSection = () => {
             </div>
 
             {/* Images stacked avec cross-fade - 7 colonnes */}
-            <div className="lg:col-span-7 relative h-full flex items-start">
+            <div className="lg:col-span-7 relative h-full flex items-center">
               <div className="relative w-full" style={{ aspectRatio: "16 / 10" }}>
                 {benefits.map((benefit, idx) => {
                   const opacity = calculateImageOpacity(scrollProgress, idx);
