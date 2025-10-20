@@ -54,6 +54,14 @@ const benefits = [
 
 const SEGMENT_DURATION = 1 / 6;
 
+// Utility to get sticky top offset based on viewport width
+const getStickyTopRatio = (): number => {
+  const w = window.innerWidth;
+  if (w >= 1024) return 0.15; // lg
+  if (w >= 768) return 0.12;  // md
+  return 0.10;                // base
+};
+
 const BenefitsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isInStepsZone, setIsInStepsZone] = useState(false);
@@ -96,19 +104,22 @@ const BenefitsSection = () => {
     const sectionBottom = sectionTop + rect.height;
     const viewportBottom = window.innerHeight;
 
-    const headerHeight = 0;
-    const stepsHeight = window.innerHeight * 4.2;
+    const vh = window.innerHeight;
+    const stickyTopRatio = getStickyTopRatio();
+    const stickyOffset = vh * stickyTopRatio;
+    
+    // Calculate actual scroll distance while pinned
+    const stepsHeight = (rect.height - vh) + stickyOffset;
 
     // Check if we're in the steps zone AND still within section bounds
-    // Pin when section top reaches 15% of viewport to keep title visible
-    const isPastHeader = sectionTop <= window.innerHeight * 0.15;
+    const isPastHeader = sectionTop <= stickyOffset;
     const isBeforeEnd = sectionBottom > viewportBottom;
 
     if (isPastHeader && isBeforeEnd) {
       setIsInStepsZone(true);
       setShowDots(true);
 
-      const stepsScroll = Math.abs(sectionTop - window.innerHeight * 0.15);
+      const stepsScroll = Math.abs(sectionTop - stickyOffset);
       const progress = Math.min(1, Math.max(0, stepsScroll / stepsHeight));
       setScrollProgress(progress);
     } else {
@@ -133,55 +144,85 @@ const BenefitsSection = () => {
   }, [handleScroll, isMobile, reducedMotion]);
 
   const calculateTextOpacity = (progress: number, stepIndex: number): number => {
-    const segmentStart = stepIndex * SEGMENT_DURATION;
-    const segmentEnd = (stepIndex + 1) * SEGMENT_DURATION;
-    const segmentMid = (segmentStart + segmentEnd) / 2;
+    const segStart = stepIndex * SEGMENT_DURATION;
+    const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
+    const fadeInPortion = 0.15 * SEGMENT_DURATION;
+    const fadeOutPortion = 0.15 * SEGMENT_DURATION;
+    const holdStart = segStart + fadeInPortion;
+    const holdEnd = segEnd - fadeOutPortion;
 
-    if (progress < segmentStart || progress > segmentEnd) return 0;
+    if (progress < segStart || progress > segEnd) return 0;
 
     // Fade in
-    if (progress < segmentMid) {
-      return (progress - segmentStart) / (SEGMENT_DURATION * 0.5);
+    if (progress < holdStart) {
+      return (progress - segStart) / fadeInPortion;
     }
-    // Fade out
-    else {
-      return 1 - (progress - segmentMid) / (SEGMENT_DURATION * 0.5);
+    
+    // Hold at full opacity
+    if (progress <= holdEnd) {
+      return 1;
     }
+    
+    // Fade out (except for last card)
+    if (stepIndex === benefits.length - 1) {
+      return 1;
+    }
+    return 1 - (progress - holdEnd) / fadeOutPortion;
   };
 
   const calculateTextTranslate = (progress: number, stepIndex: number): number => {
-    const segmentStart = stepIndex * SEGMENT_DURATION;
-    const segmentEnd = (stepIndex + 1) * SEGMENT_DURATION;
-    const segmentMid = (segmentStart + segmentEnd) / 2;
+    const segStart = stepIndex * SEGMENT_DURATION;
+    const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
+    const fadeInPortion = 0.15 * SEGMENT_DURATION;
+    const fadeOutPortion = 0.15 * SEGMENT_DURATION;
+    const holdStart = segStart + fadeInPortion;
+    const holdEnd = segEnd - fadeOutPortion;
 
-    if (progress < segmentStart) return 20;
-    if (progress > segmentEnd) return -20;
+    if (progress < segStart) return 20;
+    if (progress > segEnd && stepIndex !== benefits.length - 1) return -20;
 
-    // Slide in
-    if (progress < segmentMid) {
-      return 20 * (1 - (progress - segmentStart) / (SEGMENT_DURATION * 0.5));
+    // Slide in during fade-in
+    if (progress < holdStart) {
+      return 20 * (1 - (progress - segStart) / fadeInPortion);
     }
-    // Slide out
-    else {
-      return -20 * ((progress - segmentMid) / (SEGMENT_DURATION * 0.5));
+    
+    // Hold at 0 during full opacity
+    if (progress <= holdEnd) {
+      return 0;
     }
+    
+    // Slide out during fade-out (except for last card)
+    if (stepIndex === benefits.length - 1) {
+      return 0;
+    }
+    return -20 * ((progress - holdEnd) / fadeOutPortion);
   };
 
   const calculateImageOpacity = (progress: number, stepIndex: number): number => {
-    const segmentStart = stepIndex * SEGMENT_DURATION;
-    const segmentEnd = (stepIndex + 1) * SEGMENT_DURATION;
-    const segmentMid = (segmentStart + segmentEnd) / 2;
+    const segStart = stepIndex * SEGMENT_DURATION;
+    const segEnd = (stepIndex + 1) * SEGMENT_DURATION;
+    const fadeInPortion = 0.15 * SEGMENT_DURATION;
+    const fadeOutPortion = 0.15 * SEGMENT_DURATION;
+    const holdStart = segStart + fadeInPortion;
+    const holdEnd = segEnd - fadeOutPortion;
 
-    if (progress < segmentStart || progress > segmentEnd) return 0;
+    if (progress < segStart || progress > segEnd) return 0;
 
     // Fade in
-    if (progress < segmentMid) {
-      return (progress - segmentStart) / (SEGMENT_DURATION * 0.5);
+    if (progress < holdStart) {
+      return (progress - segStart) / fadeInPortion;
     }
-    // Fade out
-    else {
-      return 1 - (progress - segmentMid) / (SEGMENT_DURATION * 0.5);
+    
+    // Hold at full opacity
+    if (progress <= holdEnd) {
+      return 1;
     }
+    
+    // Fade out (except for last card)
+    if (stepIndex === benefits.length - 1) {
+      return 1;
+    }
+    return 1 - (progress - holdEnd) / fadeOutPortion;
   };
 
   const calculateImageScale = (progress: number, stepIndex: number): number => {
@@ -197,11 +238,14 @@ const BenefitsSection = () => {
     const currentScrollY = window.scrollY;
 
     const sectionTop = currentScrollY + rect.top;
-    const headerHeight = window.innerHeight * 0.2;
-    const targetProgress = (stepIndex + 0.5) / 6;
-    const stepsHeight = window.innerHeight * 4.2;
-
-    const targetScroll = sectionTop + headerHeight + targetProgress * stepsHeight;
+    
+    const vh = window.innerHeight;
+    const stickyTopRatio = getStickyTopRatio();
+    const stickyOffset = vh * stickyTopRatio;
+    const stepsHeight = (rect.height - vh) + stickyOffset;
+    
+    const targetProgress = (stepIndex + 0.5) / benefits.length;
+    const targetScroll = sectionTop + stickyOffset + targetProgress * stepsHeight;
 
     window.scrollTo({
       top: targetScroll,
@@ -274,7 +318,10 @@ const BenefitsSection = () => {
     );
   }
 
-  const currentStepIndex = Math.round(scrollProgress * 6 - 0.5);
+  const currentStepIndex = Math.min(
+    benefits.length - 1,
+    Math.max(0, Math.floor(scrollProgress / SEGMENT_DURATION + 1e-6))
+  );
 
   return (
     <section
