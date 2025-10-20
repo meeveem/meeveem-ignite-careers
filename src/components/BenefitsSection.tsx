@@ -113,19 +113,14 @@ const BenefitsSection = () => {
     };
   }, []);
 
+  const clearNoTransition = useCallback(() => {
+    setNoTransitionStep(null);
+    noTransitionStepRef.current = null;
+    lockTargetScrollRef.current = null;
+  }, []);
+
   const handleScroll = useCallback(() => {
     if (!sectionRef.current) return;
-
-    // If we are in no-transition mode after a click, keep it until user moves away from the target
-    const y = window.scrollY;
-    if (noTransitionStepRef.current !== null && lockTargetScrollRef.current !== null) {
-      // Use a generous threshold to avoid accidental unlock due to sub-pixel differences
-      if (Math.abs(y - lockTargetScrollRef.current) > 24) {
-        setNoTransitionStep(null);
-        noTransitionStepRef.current = null;
-        lockTargetScrollRef.current = null;
-      }
-    }
 
     // While locked (noTransitionStep), freeze progress at the step center to avoid any fades
     if (noTransitionStepRef.current !== null) {
@@ -180,6 +175,29 @@ const BenefitsSection = () => {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll, isMobile, reducedMotion]);
+
+  // Add event listeners to clear no-transition on user intent
+  useEffect(() => {
+    if (isMobile || reducedMotion || noTransitionStep === null) return;
+
+    const handleWheel = () => clearNoTransition();
+    const handleTouchMove = () => clearNoTransition();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) {
+        clearNoTransition();
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMobile, reducedMotion, noTransitionStep, clearNoTransition]);
 
   const calculateTextOpacity = (progress: number, stepIndex: number): number => {
     if (lockedStepIndex !== null || noTransitionStep !== null) {
