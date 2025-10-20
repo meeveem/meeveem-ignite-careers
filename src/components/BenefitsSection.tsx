@@ -249,13 +249,18 @@ const BenefitsSection = () => {
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
     const stepsHeight = (rect.height - vh) + stickyOffset;
     
-    const targetProgress = (stepIndex + 0.5) / benefits.length;
+    const targetProgress = (stepIndex + 0.6) / benefits.length;
     const targetScroll = sectionTop + stickyOffset + targetProgress * stepsHeight;
 
     window.scrollTo({
       top: targetScroll,
       behavior: "smooth",
     });
+    
+    // Force a final position update after smooth scroll completes
+    setTimeout(() => {
+      handleScroll();
+    }, 600);
   };
 
   // Mobile/Reduced Motion Fallback
