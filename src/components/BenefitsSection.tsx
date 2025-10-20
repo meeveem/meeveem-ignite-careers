@@ -54,12 +54,18 @@ const benefits = [
 
 const SEGMENT_DURATION = 1 / 6;
 
-// Utility to get sticky top offset based on viewport width
-const getStickyTopRatio = (): number => {
-  const w = window.innerWidth;
-  if (w >= 1024) return 0.15; // lg
-  if (w >= 768) return 0.12;  // md
-  return 0.10;                // base
+// Utility to get sticky top offset in pixels by reading CSS
+const getStickyTopOffsetPx = (stickyEl: HTMLElement | null): number => {
+  if (!stickyEl) {
+    // Fallback based on viewport width
+    const w = window.innerWidth;
+    if (w >= 1024) return 96;  // lg: top-24 = 96px
+    if (w >= 768) return 80;   // md: top-20 = 80px
+    return 64;                 // base: top-16 = 64px
+  }
+  const top = getComputedStyle(stickyEl).top;
+  const px = parseFloat(top);
+  return Number.isFinite(px) ? px : 96;
 };
 
 const BenefitsSection = () => {
@@ -69,6 +75,7 @@ const BenefitsSection = () => {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -105,8 +112,7 @@ const BenefitsSection = () => {
     const viewportBottom = window.innerHeight;
 
     const vh = window.innerHeight;
-    const stickyTopRatio = getStickyTopRatio();
-    const stickyOffset = vh * stickyTopRatio;
+    const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
     
     // Calculate actual scroll distance while pinned
     const stepsHeight = (rect.height - vh) + stickyOffset;
@@ -240,8 +246,7 @@ const BenefitsSection = () => {
     const sectionTop = currentScrollY + rect.top;
     
     const vh = window.innerHeight;
-    const stickyTopRatio = getStickyTopRatio();
-    const stickyOffset = vh * stickyTopRatio;
+    const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
     const stepsHeight = (rect.height - vh) + stickyOffset;
     
     const targetProgress = (stepIndex + 0.5) / benefits.length;
@@ -327,13 +332,14 @@ const BenefitsSection = () => {
     <section
       ref={sectionRef}
       className="relative bg-white"
-      style={{ height: "420vh" }}
+      style={{ height: "400vh" }}
       aria-label="Interactive product showcase"
     >
 
       {/* Container sticky with header and cards */}
       <div
-        className="sticky top-[10vh] md:top-[12vh] lg:top-[15vh] h-screen overflow-hidden"
+        ref={stickyRef}
+        className="sticky top-16 md:top-20 lg:top-24 h-screen overflow-hidden"
         style={{
           position: "sticky",
           height: "100vh",
