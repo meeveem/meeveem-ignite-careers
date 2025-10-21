@@ -90,7 +90,7 @@ const BenefitsSection = () => {
     // Responsive per-step distance clamped for consistency across screens/zoom
     const perStep = Math.max(320, Math.min(560, Math.round(vh * 0.78)));
     const stepsHeight = perStep * benefits.length;
-    const endGapPx = 24; // Controlled final gap
+    const endGapPx = 0; // Controlled final gap handled via section padding
 
     // Total height = space before pin + viewport + scroll distance - end gap
     return stickyOffset + vh + stepsHeight - endGapPx;
@@ -158,7 +158,7 @@ const BenefitsSection = () => {
 
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const endGapPx = 24;
+    const endGapPx = 0;
     
     // Distance while sticky: sectionHeight - (vh + stickyOffset) + endGapPx
     const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
@@ -349,7 +349,7 @@ const BenefitsSection = () => {
     
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const endGapPx = 24;
+    const endGapPx = 0;
     const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
     
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
@@ -449,7 +449,7 @@ const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-white"
+      className="relative bg-white pb-6"
       style={{ height: sectionHeight > 0 ? `${sectionHeight}px` : "400vh" }}
       aria-label="Interactive product showcase"
     >
