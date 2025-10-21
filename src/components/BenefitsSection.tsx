@@ -1,5 +1,5 @@
 import { SearchX, Radar, Eye, Scale, DoorOpen, Target } from "lucide-react";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useLayoutEffect } from "react";
 import dashboardStep1 from "@/assets/dashboard-step1.png";
 import dashboardStep2 from "@/assets/dashboard-step2.png";
 import dashboardStep3 from "@/assets/dashboard-step3.png";
@@ -82,6 +82,7 @@ const BenefitsSection = () => {
   const lockTargetScrollRef = useRef<number | null>(null);
   const noTransitionStepRef = useRef<number | null>(null);
   const [sectionHeight, setSectionHeight] = useState(0);
+  const [stickyHeight, setStickyHeight] = useState<number | null>(null);
 
   const calculateSectionHeight = useCallback(() => {
     const vh = window.innerHeight;
@@ -116,6 +117,30 @@ const BenefitsSection = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [calculateSectionHeight]);
+
+  // Compute available sticky height for content (viewport minus sticky top offset and section paddings)
+  const computeStickyHeight = useCallback(() => {
+    const vh = window.innerHeight;
+    const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
+    const sectionEl = sectionRef.current;
+    let paddingTop = 0;
+    let paddingBottom = 0;
+    if (sectionEl) {
+      const styles = getComputedStyle(sectionEl);
+      paddingTop = parseFloat(styles.paddingTop) || 0;
+      paddingBottom = parseFloat(styles.paddingBottom) || 0;
+    }
+    const available = vh - stickyOffset - paddingTop - paddingBottom;
+    const minComfort = 560; // ensure comfortable min height
+    return Math.max(minComfort, Math.round(available));
+  }, []);
+
+  useLayoutEffect(() => {
+    const update = () => setStickyHeight(computeStickyHeight());
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [computeStickyHeight]);
 
   // Preload images
   useEffect(() => {
@@ -495,7 +520,7 @@ const BenefitsSection = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col">
+        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col" style={{ height: stickyHeight ? `${stickyHeight}px` : undefined }}>
           {/* Header inside sticky container */}
           <div className="pt-6 md:pt-8 pb-0 text-center mb-10 lg:mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
@@ -507,7 +532,7 @@ const BenefitsSection = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
+          <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 flex-1 min-h-0">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
             <div className="lg:col-span-5 relative h-full flex items-center">
               {benefits.map((benefit, idx) => {
@@ -563,7 +588,7 @@ const BenefitsSection = () => {
 
             {/* Images stacked avec cross-fade - 7 colonnes */}
             <div className="lg:col-span-7 relative h-full flex items-center">
-              <div className="relative w-full" style={{ aspectRatio: "16 / 10" }}>
+              <div className="relative w-full h-full" style={{ height: "100%" }}>
                 {benefits.map((benefit, idx) => {
                   const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
                   if (noTransitionStep !== null && idx !== activeIndex) return null;
@@ -576,7 +601,7 @@ const BenefitsSection = () => {
                       key={idx}
                       src={benefit.image}
                       alt={`Dashboard for ${benefit.title}`}
-                      className="absolute inset-0 w-full h-full object-contain rounded-[24px]"
+                      className="absolute inset-0 w-full h-full object-cover rounded-[24px]"
                       style={{
                         opacity: opacity,
                         transform: `scale(${scale})`,
