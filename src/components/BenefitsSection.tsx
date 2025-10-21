@@ -102,6 +102,9 @@ const BenefitsSection = () => {
     const perStep = Math.max(320, Math.min(560, Math.round(stickyH * 0.78)));
     const D_target = perStep * benefits.length; // total pinned animation distance (target)
 
+    // Debug
+    console.debug('[Benefits] calc', { vh, navH, stickyH, perStep, D_target });
+
     // Expose targets for scroll logic
     setDTarget(D_target);
     setGTarget(0);
@@ -195,6 +198,9 @@ const BenefitsSection = () => {
     // Physical max pin distance allowed by section height (safety)
     const physicalPinnedMax = Math.max(0, sectionHeight - stickyH);
     const pinnedUpper = Math.min(D, physicalPinnedMax);
+
+    // Debug
+    console.debug('[Benefits] scroll', { sectionTop, vh, navH, stickyH, D, sectionHeight, physicalPinnedMax, rawPinned, pinnedUpper });
 
     // Inside sticky zone (including the final gap compensation)
     const isPinnedOrGap = sectionTop <= stickyOffset && rawPinned < pinnedUpper;
@@ -532,7 +538,7 @@ const BenefitsSection = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col justify-start">
+        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col justify-between">
           {/* Header inside sticky container */}
           <div ref={headerRef} className="pt-2 md:pt-4 pb-0 text-center mb-6 lg:mb-8">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
@@ -544,9 +550,9 @@ const BenefitsSection = () => {
             </p>
           </div>
 
-          <div ref={gridRef} className="grid lg:grid-cols-12 gap-6 lg:gap-8">
+          <div ref={gridRef} className="grid lg:grid-cols-12 gap-6 lg:gap-8 flex-1">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
-            <div className="lg:col-span-5 relative h-full flex items-end">
+            <div className="lg:col-span-5 relative h-full flex items-center">
               {benefits.map((benefit, idx) => {
                 const Icon = benefit.icon;
                 const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
@@ -558,7 +564,7 @@ const BenefitsSection = () => {
                 return (
                   <div
                     key={idx}
-                    className="absolute inset-0 flex flex-col justify-end"
+                    className="absolute inset-0 flex flex-col justify-center"
                     style={{
                       opacity: opacity,
                       transform: `translateY(${translateY}px)`,
@@ -599,8 +605,8 @@ const BenefitsSection = () => {
             </div>
 
             {/* Images stacked avec cross-fade - 7 colonnes */}
-            <div className="lg:col-span-7 relative h-full flex items-end">
-              <div className="relative w-full" style={{ aspectRatio: "16 / 10" }}>
+            <div className="lg:col-span-7 relative h-full flex items-center">
+              <div className="relative w-full h-full">
                 {benefits.map((benefit, idx) => {
                   const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
                   if (noTransitionStep !== null && idx !== activeIndex) return null;
