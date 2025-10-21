@@ -1,5 +1,5 @@
 import { SearchX, Radar, Eye, Scale, DoorOpen, Target } from "lucide-react";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useLayoutEffect } from "react";
 import dashboardStep1 from "@/assets/dashboard-step1.png";
 import dashboardStep2 from "@/assets/dashboard-step2.png";
 import dashboardStep3 from "@/assets/dashboard-step3.png";
@@ -81,6 +81,7 @@ const BenefitsSection = () => {
   const noTransitionTimerRef = useRef<number | null>(null);
   const lockTargetScrollRef = useRef<number | null>(null);
   const noTransitionStepRef = useRef<number | null>(null);
+  const [stickyHeight, setStickyHeight] = useState<number | null>(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -100,6 +101,35 @@ const BenefitsSection = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  // Compute sticky height dynamically based on viewport, sticky offset, and section paddings
+  useLayoutEffect(() => {
+    if (isMobile || reducedMotion) {
+      setStickyHeight(null);
+      return;
+    }
+
+    const recalc = () => {
+      const viewportH = window.innerHeight;
+      const topOffset = getStickyTopOffsetPx(stickyRef.current);
+      let padTop = 0, padBottom = 0;
+      if (sectionRef.current) {
+        const styles = getComputedStyle(sectionRef.current);
+        padTop = parseFloat(styles.paddingTop) || 0;
+        padBottom = parseFloat(styles.paddingBottom) || 0;
+      }
+      const MIN_STICKY_HEIGHT = 560;
+      const available = Math.max(MIN_STICKY_HEIGHT, viewportH - topOffset - padTop - padBottom);
+      setStickyHeight(available);
+    };
+
+    recalc();
+    const onResize = () => recalc();
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('resize', onResize);
+    };
+  }, [isMobile, reducedMotion]);
 
   // Preload images
   useEffect(() => {
@@ -475,7 +505,7 @@ const BenefitsSection = () => {
         ref={stickyRef}
         className="sticky top-16 md:top-20 lg:top-24 overflow-hidden"
         style={{
-          height: "min(calc(100vh - 4rem), 900px)",
+          height: stickyHeight ? `${stickyHeight}px` : undefined,
         }}
       >
         <div className="mx-auto px-6 md:px-8 max-w-screen-xl h-full flex flex-col">
