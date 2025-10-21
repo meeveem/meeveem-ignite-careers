@@ -532,9 +532,9 @@ const BenefitsSection = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col justify-between">
+        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col justify-start">
           {/* Header inside sticky container */}
-          <div ref={headerRef} className="pt-6 md:pt-8 pb-0 text-center mb-10 lg:mb-12">
+          <div ref={headerRef} className="pt-2 md:pt-4 pb-0 text-center mb-6 lg:mb-8">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
@@ -544,9 +544,9 @@ const BenefitsSection = () => {
             </p>
           </div>
 
-          <div ref={gridRef} className="grid lg:grid-cols-12 gap-6 lg:gap-8 flex-1">
+          <div ref={gridRef} className="grid lg:grid-cols-12 gap-6 lg:gap-8">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
-            <div className="lg:col-span-5 relative h-full flex items-center">
+            <div className="lg:col-span-5 relative h-full flex items-end">
               {benefits.map((benefit, idx) => {
                 const Icon = benefit.icon;
                 const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
@@ -558,7 +558,7 @@ const BenefitsSection = () => {
                 return (
                   <div
                     key={idx}
-                    className="absolute inset-0 flex flex-col justify-center"
+                    className="absolute inset-0 flex flex-col justify-end"
                     style={{
                       opacity: opacity,
                       transform: `translateY(${translateY}px)`,
@@ -599,7 +599,7 @@ const BenefitsSection = () => {
             </div>
 
             {/* Images stacked avec cross-fade - 7 colonnes */}
-            <div className="lg:col-span-7 relative h-full flex items-center">
+            <div className="lg:col-span-7 relative h-full flex items-end">
               <div className="relative w-full" style={{ aspectRatio: "16 / 10" }}>
                 {benefits.map((benefit, idx) => {
                   const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
