@@ -86,31 +86,30 @@ const BenefitsSection = () => {
   const [sectionHeight, setSectionHeight] = useState(0);
   const [dTarget, setDTarget] = useState(0);
   const [gTarget, setGTarget] = useState(16);
+  const [navHeight, setNavHeight] = useState(0);
+
+  const getNavHeight = useCallback((): number => {
+    const nav = document.querySelector("nav");
+    return nav ? nav.getBoundingClientRect().height : 0;
+  }, []);
 
   const calculateSectionHeight = useCallback(() => {
     const vh = window.innerHeight;
+    const navH = getNavHeight();
+    const stickyH = Math.max(0, vh - navH); // effective visible height below navbar
 
     // Responsive per-step distance clamped for consistency across screens/zoom
-    const perStep = Math.max(320, Math.min(560, Math.round(vh * 0.78)));
+    const perStep = Math.max(320, Math.min(560, Math.round(stickyH * 0.78)));
     const D_target = perStep * benefits.length; // total pinned animation distance (target)
-    const G_target = 0; // no end gap to glue sections
-
-    // Measure actual sticky content height to compensate free space inside sticky viewport
-    const headerH = headerRef.current ? headerRef.current.getBoundingClientRect().height : 0;
-    const gridH = gridRef.current ? gridRef.current.getBoundingClientRect().height : 0;
-    const contentH = Math.min(vh, headerH + gridH);
-    const freeSpace = Math.max(0, vh - contentH); // empty area already present at bottom of sticky
-
-    // If sticky already has free space F, reduce extra end gap so perceived gap ≈ G_target
-    const extraEnd = 0;
 
     // Expose targets for scroll logic
     setDTarget(D_target);
-    setGTarget(G_target);
+    setGTarget(0);
+    setNavHeight(navH);
 
-    // Total height = viewport + D_target + compensated end gap (extraEnd)
-    return vh + D_target;
-  }, []);
+    // Total height = sticky viewport + animation distance
+    return stickyH + D_target;
+  }, [getNavHeight]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -183,16 +182,18 @@ const BenefitsSection = () => {
     const sectionTop = rect.top;
 
     const vh = window.innerHeight;
-    const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
+    const navH = getNavHeight();
+    const stickyH = Math.max(0, vh - navH);
+    const stickyOffset = navH;
 
-    // Use target distances and desired gap
+    // Use target distances
     const D = Math.max(1, dTarget || 1);
 
     // Distance scrolled while sticky (relative to the pin start)
     const rawPinned = Math.max(0, stickyOffset - sectionTop);
 
     // Physical max pin distance allowed by section height (safety)
-    const physicalPinnedMax = Math.max(0, sectionHeight - vh);
+    const physicalPinnedMax = Math.max(0, sectionHeight - stickyH);
     const pinnedUpper = Math.min(D, physicalPinnedMax);
 
     // Inside sticky zone (including the final gap compensation)
@@ -381,14 +382,15 @@ const BenefitsSection = () => {
     // Absolute top of the section relative to the document
     const sectionTop = currentScrollY + rect.top;
 
-    const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
+    const navH = getNavHeight();
     const vh = window.innerHeight;
+    const stickyH = Math.max(0, vh - navH);
 
     // Use measured target distance; fallback to computed from sectionHeight if not ready
-    const D_used = Math.max(1, dTarget || (sectionHeight - vh));
+    const D_used = Math.max(1, dTarget || (sectionHeight - stickyH));
 
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
-    const targetScroll = sectionTop + stickyOffset + targetProgress * D_used;
+    const targetScroll = sectionTop + navH + targetProgress * D_used;
 
     if (noTransitionTimerRef.current) window.clearTimeout(noTransitionTimerRef.current);
     setNoTransitionStep(stepIndex);
@@ -492,10 +494,10 @@ const BenefitsSection = () => {
       {/* Container sticky with header and cards */}
       <div
         ref={stickyRef}
-        className="sticky top-16 md:top-20 lg:top-24 h-screen overflow-hidden overscroll-contain"
+        className="sticky overflow-hidden overscroll-contain"
         style={{
-          position: "sticky",
-          height: "100vh",
+          top: `${navHeight}px`,
+          height: `calc(100vh - ${navHeight}px)`
         }}
       >
         {/* Scroll Indicator - Absolute positioned within sticky container */}
