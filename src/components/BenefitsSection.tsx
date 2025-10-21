@@ -77,22 +77,39 @@ const BenefitsSection = () => {
   const [lockedStepIndex, setLockedStepIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
   const [noTransitionStep, setNoTransitionStep] = useState<number | null>(null);
   const noTransitionTimerRef = useRef<number | null>(null);
   const lockTargetScrollRef = useRef<number | null>(null);
   const noTransitionStepRef = useRef<number | null>(null);
   const [sectionHeight, setSectionHeight] = useState(0);
+  const [dTarget, setDTarget] = useState(0);
+  const [gTarget, setGTarget] = useState(16);
 
   const calculateSectionHeight = useCallback(() => {
     const vh = window.innerHeight;
 
     // Responsive per-step distance clamped for consistency across screens/zoom
     const perStep = Math.max(320, Math.min(560, Math.round(vh * 0.78)));
-    const D = perStep * benefits.length; // total pinned animation distance
-    const G = 24; // controlled final gap
+    const D_target = perStep * benefits.length; // total pinned animation distance (target)
+    const G_target = 16; // desired final gap perceived by the user
 
-    // Total height = viewport (sticky container height) + pinned distance + final gap
-    return vh + D + G;
+    // Measure actual sticky content height to compensate free space inside sticky viewport
+    const headerH = headerRef.current ? headerRef.current.getBoundingClientRect().height : 0;
+    const gridH = gridRef.current ? gridRef.current.getBoundingClientRect().height : 0;
+    const contentH = Math.min(vh, headerH + gridH);
+    const freeSpace = Math.max(0, vh - contentH); // empty area already present at bottom of sticky
+
+    // If sticky already has free space F, reduce extra end gap so perceived gap ≈ G_target
+    const extraEnd = Math.max(0, G_target - freeSpace);
+
+    // Expose targets for scroll logic
+    setDTarget(D_target);
+    setGTarget(G_target);
+
+    // Total height = viewport + D_target + compensated end gap (extraEnd)
+    return vh + D_target + extraEnd;
   }, []);
 
   useEffect(() => {
@@ -115,6 +132,18 @@ const BenefitsSection = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [calculateSectionHeight]);
+
+  // Observe sticky content size to recompute section height
+  useEffect(() => {
+    if (isMobile || reducedMotion) return;
+    const ro = new ResizeObserver(() => {
+      setSectionHeight(calculateSectionHeight());
+    });
+    if (headerRef.current) ro.observe(headerRef.current);
+    if (gridRef.current) ro.observe(gridRef.current);
+    if (stickyRef.current) ro.observe(stickyRef.current);
+    return () => ro.disconnect();
+  }, [calculateSectionHeight, isMobile, reducedMotion]);
 
   // Preload images
   useEffect(() => {
@@ -156,18 +185,23 @@ const BenefitsSection = () => {
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
 
-    const G = 24;
-    const D = Math.max(1, sectionHeight - vh - G);
+    // Use target distances and desired gap
+    const D = Math.max(1, dTarget || 1);
+    const G = gTarget;
 
     // Distance scrolled while sticky (relative to the pin start)
     const rawPinned = Math.max(0, stickyOffset - sectionTop);
 
-    // Inside sticky zone (including the final gap of G)
-    const isPinnedOrGap = sectionTop <= stickyOffset && rawPinned < D + G;
+    // Physical max pin distance allowed by section height (safety)
+    const physicalPinnedMax = Math.max(0, sectionHeight - vh);
+    const pinnedUpper = Math.min(D + G, physicalPinnedMax);
+
+    // Inside sticky zone (including the final gap compensation)
+    const isPinnedOrGap = sectionTop <= stickyOffset && rawPinned < pinnedUpper;
 
     if (isPinnedOrGap) {
       setIsInStepsZone(true);
-      // Hide dots during the final gap
+      // Hide dots during the final gap only
       setShowDots(rawPinned < D);
 
       const stepsScroll = Math.min(D, rawPinned);
@@ -185,7 +219,7 @@ const BenefitsSection = () => {
         setShowDots(false);
       }
     }
-  }, [sectionHeight]);
+  }, [sectionHeight, dTarget, gTarget, lockedStepIndex]);
 
   useEffect(() => {
     if (isMobile || reducedMotion) return;
@@ -348,13 +382,14 @@ const BenefitsSection = () => {
     // Absolute top of the section relative to the document
     const sectionTop = currentScrollY + rect.top;
 
-    const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const G = 24;
-    const D = Math.max(1, sectionHeight - vh - G);
+    const vh = window.innerHeight;
+
+    // Use measured target distance; fallback to computed from sectionHeight if not ready
+    const D_used = Math.max(1, dTarget || (sectionHeight - vh - gTarget));
 
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
-    const targetScroll = sectionTop + stickyOffset + targetProgress * D;
+    const targetScroll = sectionTop + stickyOffset + targetProgress * D_used;
 
     if (noTransitionTimerRef.current) window.clearTimeout(noTransitionTimerRef.current);
     setNoTransitionStep(stepIndex);
@@ -498,7 +533,7 @@ const BenefitsSection = () => {
 
         <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col">
           {/* Header inside sticky container */}
-          <div className="pt-6 md:pt-8 pb-0 text-center mb-10 lg:mb-12">
+          <div ref={headerRef} className="pt-6 md:pt-8 pb-0 text-center mb-10 lg:mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
@@ -508,7 +543,7 @@ const BenefitsSection = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
+          <div ref={gridRef} className="grid lg:grid-cols-12 gap-6 lg:gap-8">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
             <div className="lg:col-span-5 relative h-full flex items-center">
               {benefits.map((benefit, idx) => {
