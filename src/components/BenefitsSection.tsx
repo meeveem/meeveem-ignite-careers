@@ -86,9 +86,13 @@ const BenefitsSection = () => {
   const calculateSectionHeight = useCallback(() => {
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const scrollPerStep = vh * 0.8;
-    const totalScrollDistance = scrollPerStep * benefits.length;
-    return vh + totalScrollDistance;
+
+    // Fixed per-step distance for consistent experience across screens/zoom
+    const perStep = 420; // px per step
+    const stepsHeight = perStep * benefits.length;
+
+    // Total height = space before pin (stickyOffset) + sticky viewport height + pinned scroll distance
+    return stickyOffset + vh + stepsHeight;
   }, []);
 
   useEffect(() => {
@@ -154,19 +158,20 @@ const BenefitsSection = () => {
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
     
-    // Calculate actual scroll distance while pinned using dynamic height
-    const stepsHeight = (sectionHeight - vh) + stickyOffset;
+    // Distance while sticky: sectionHeight - (vh + stickyOffset)
+    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset));
 
     // Check if we're in the steps zone AND still within section bounds
     const isPastHeader = sectionTop <= stickyOffset;
-    const isBeforeEnd = sectionBottom > viewportBottom;
+    const isBeforeEnd = sectionBottom > stickyOffset + vh;
 
     if (isPastHeader && isBeforeEnd) {
       setIsInStepsZone(true);
       setShowDots(true);
 
-      const stepsScroll = Math.abs(sectionTop - stickyOffset);
-      const progress = Math.min(1, Math.max(0, stepsScroll / stepsHeight));
+      const rawScroll = stickyOffset - sectionTop;
+      const stepsScroll = Math.min(stepsHeight, Math.max(0, rawScroll));
+      const progress = stepsHeight > 0 ? Math.min(1, Math.max(0, stepsScroll / stepsHeight)) : 0;
       setScrollProgress(progress);
     } else {
       setIsInStepsZone(false);
@@ -342,7 +347,7 @@ const BenefitsSection = () => {
     
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const stepsHeight = (sectionHeight - vh) + stickyOffset;
+    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset));
     
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
     const targetScroll = sectionTop + stickyOffset + targetProgress * stepsHeight;
