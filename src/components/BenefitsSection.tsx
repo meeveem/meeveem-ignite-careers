@@ -85,15 +85,14 @@ const BenefitsSection = () => {
 
   const calculateSectionHeight = useCallback(() => {
     const vh = window.innerHeight;
-    const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
 
     // Responsive per-step distance clamped for consistency across screens/zoom
     const perStep = Math.max(320, Math.min(560, Math.round(vh * 0.78)));
-    const stepsHeight = perStep * benefits.length;
-    const endGapPx = 24; // Controlled final gap
+    const D = perStep * benefits.length; // total pinned animation distance
+    const G = 24; // controlled final gap
 
-    // Total height = space before pin + viewport + scroll distance - end gap
-    return stickyOffset + vh + stepsHeight - endGapPx;
+    // Total height = viewport (sticky container height) + pinned distance + final gap
+    return vh + D + G;
   }, []);
 
   useEffect(() => {
@@ -153,36 +152,37 @@ const BenefitsSection = () => {
     const section = sectionRef.current;
     const rect = section.getBoundingClientRect();
     const sectionTop = rect.top;
-    const sectionBottom = sectionTop + sectionHeight;
-    const viewportBottom = window.innerHeight;
 
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const endGapPx = 24;
-    
-    // Distance while sticky: sectionHeight - (vh + stickyOffset) + endGapPx
-    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
 
-    // Check if we're in the steps zone AND still within section bounds
-    const isPastHeader = sectionTop <= stickyOffset;
-    const isBeforeEnd = sectionBottom > stickyOffset + vh;
+    const G = 24;
+    const D = Math.max(1, sectionHeight - vh - G);
 
-    if (isPastHeader && isBeforeEnd) {
+    // Distance scrolled while sticky (relative to the pin start)
+    const rawPinned = Math.max(0, stickyOffset - sectionTop);
+
+    // Inside sticky zone (including the final gap of G)
+    const isPinnedOrGap = sectionTop <= stickyOffset && rawPinned < D + G;
+
+    if (isPinnedOrGap) {
       setIsInStepsZone(true);
-      setShowDots(true);
+      // Hide dots during the final gap
+      setShowDots(rawPinned < D);
 
-      const rawScroll = stickyOffset - sectionTop;
-      const stepsScroll = Math.min(stepsHeight, Math.max(0, rawScroll));
-      const progress = stepsHeight > 0 ? Math.min(1, Math.max(0, stepsScroll / stepsHeight)) : 0;
+      const stepsScroll = Math.min(D, rawPinned);
+      const progress = stepsScroll / D;
       setScrollProgress(progress);
     } else {
       setIsInStepsZone(false);
       if (sectionTop > 0) {
-        setScrollProgress(0.1);
-        setShowDots(true); // Fade back in when scrolling up
-      } else if (!isBeforeEnd) {
+        // Before pin
+        setScrollProgress(0);
+        setShowDots(true);
+      } else {
+        // After unpin
         setScrollProgress(1);
-        setShowDots(false); // Fade out when unpinning
+        setShowDots(false);
       }
     }
   }, [sectionHeight]);
@@ -345,15 +345,16 @@ const BenefitsSection = () => {
     const rect = section.getBoundingClientRect();
     const currentScrollY = window.scrollY;
 
+    // Absolute top of the section relative to the document
     const sectionTop = currentScrollY + rect.top;
-    
+
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const endGapPx = 24;
-    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
-    
+    const G = 24;
+    const D = Math.max(1, sectionHeight - vh - G);
+
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
-    const targetScroll = sectionTop + stickyOffset + targetProgress * stepsHeight;
+    const targetScroll = sectionTop + stickyOffset + targetProgress * D;
 
     if (noTransitionTimerRef.current) window.clearTimeout(noTransitionTimerRef.current);
     setNoTransitionStep(stepIndex);
