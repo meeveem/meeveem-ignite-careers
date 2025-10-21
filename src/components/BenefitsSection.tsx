@@ -93,7 +93,7 @@ const BenefitsSection = () => {
     // Responsive per-step distance clamped for consistency across screens/zoom
     const perStep = Math.max(320, Math.min(560, Math.round(vh * 0.78)));
     const D_target = perStep * benefits.length; // total pinned animation distance (target)
-    const G_target = 16; // desired final gap perceived by the user
+    const G_target = 0; // no end gap to glue sections
 
     // Measure actual sticky content height to compensate free space inside sticky viewport
     const headerH = headerRef.current ? headerRef.current.getBoundingClientRect().height : 0;
@@ -102,14 +102,14 @@ const BenefitsSection = () => {
     const freeSpace = Math.max(0, vh - contentH); // empty area already present at bottom of sticky
 
     // If sticky already has free space F, reduce extra end gap so perceived gap ≈ G_target
-    const extraEnd = Math.max(0, G_target - freeSpace);
+    const extraEnd = 0;
 
     // Expose targets for scroll logic
     setDTarget(D_target);
     setGTarget(G_target);
 
     // Total height = viewport + D_target + compensated end gap (extraEnd)
-    return vh + D_target + extraEnd;
+    return vh + D_target;
   }, []);
 
   useEffect(() => {
@@ -187,14 +187,13 @@ const BenefitsSection = () => {
 
     // Use target distances and desired gap
     const D = Math.max(1, dTarget || 1);
-    const G = gTarget;
 
     // Distance scrolled while sticky (relative to the pin start)
     const rawPinned = Math.max(0, stickyOffset - sectionTop);
 
     // Physical max pin distance allowed by section height (safety)
     const physicalPinnedMax = Math.max(0, sectionHeight - vh);
-    const pinnedUpper = Math.min(D + G, physicalPinnedMax);
+    const pinnedUpper = Math.min(D, physicalPinnedMax);
 
     // Inside sticky zone (including the final gap compensation)
     const isPinnedOrGap = sectionTop <= stickyOffset && rawPinned < pinnedUpper;
@@ -386,7 +385,7 @@ const BenefitsSection = () => {
     const vh = window.innerHeight;
 
     // Use measured target distance; fallback to computed from sectionHeight if not ready
-    const D_used = Math.max(1, dTarget || (sectionHeight - vh - gTarget));
+    const D_used = Math.max(1, dTarget || (sectionHeight - vh));
 
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
     const targetScroll = sectionTop + stickyOffset + targetProgress * D_used;
@@ -531,7 +530,7 @@ const BenefitsSection = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col">
+        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col justify-between">
           {/* Header inside sticky container */}
           <div ref={headerRef} className="pt-6 md:pt-8 pb-0 text-center mb-10 lg:mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
@@ -543,7 +542,7 @@ const BenefitsSection = () => {
             </p>
           </div>
 
-          <div ref={gridRef} className="grid lg:grid-cols-12 gap-6 lg:gap-8">
+          <div ref={gridRef} className="grid lg:grid-cols-12 gap-6 lg:gap-8 flex-1">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
             <div className="lg:col-span-5 relative h-full flex items-center">
               {benefits.map((benefit, idx) => {
