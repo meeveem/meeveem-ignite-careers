@@ -208,7 +208,7 @@ const BenefitsSection = () => {
     if (isPinnedOrGap) {
       setIsInStepsZone(true);
       // Hide dots during the final gap only
-      setShowDots(rawPinned < D);
+      setShowDots(true);
 
       const stepsScroll = Math.min(D, rawPinned);
       const progress = stepsScroll / D;
@@ -550,7 +550,7 @@ const BenefitsSection = () => {
             </p>
           </div>
 
-          <div ref={gridRef} className="grid lg:grid-cols-12 gap-6 lg:gap-8 flex-1">
+          <div ref={gridRef} className="grid lg:grid-cols-12 gap-6 lg:gap-8">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
             <div className="lg:col-span-5 relative h-full flex items-center">
               {benefits.map((benefit, idx) => {
@@ -605,8 +605,8 @@ const BenefitsSection = () => {
             </div>
 
             {/* Images stacked avec cross-fade - 7 colonnes */}
-            <div className="lg:col-span-7 relative h-full flex items-center">
-              <div className="relative w-full h-full overflow-hidden rounded-[24px]" style={{ boxShadow: "0 20px 40px rgba(0,0,0,0.15)" }}>
+            <div className="lg:col-span-7 relative flex items-center">
+              <div className="relative w-full aspect-[16/10] overflow-hidden rounded-[24px] mx-auto" style={{ boxShadow: "0 20px 40px rgba(0,0,0,0.15)" }}>
                 {benefits.map((benefit, idx) => {
                   const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
                   if (noTransitionStep !== null && idx !== activeIndex) return null;
@@ -619,7 +619,7 @@ const BenefitsSection = () => {
                       key={idx}
                       src={benefit.image}
                       alt={`Dashboard for ${benefit.title}`}
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-contain"
                       style={{
                         opacity: opacity,
                         transform: `scale(${scale})`,
