@@ -449,7 +449,7 @@ const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-white pb-6"
+      className="relative bg-white pb-0"
       style={{ height: sectionHeight > 0 ? `${sectionHeight}px` : "400vh" }}
       aria-label="Interactive product showcase"
     >
@@ -563,7 +563,7 @@ const BenefitsSection = () => {
 
             {/* Images stacked avec cross-fade - 7 colonnes */}
             <div className="lg:col-span-7 relative h-full flex items-center">
-              <div className="relative w-full h-full">
+              <div className="relative w-full" style={{ aspectRatio: "16 / 10" }}>
                 {benefits.map((benefit, idx) => {
                   const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
                   if (noTransitionStep !== null && idx !== activeIndex) return null;
