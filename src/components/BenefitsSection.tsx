@@ -90,7 +90,7 @@ const BenefitsSection = () => {
     // Responsive per-step distance clamped for consistency across screens/zoom
     const perStep = Math.max(320, Math.min(560, Math.round(vh * 0.78)));
     const stepsHeight = perStep * benefits.length;
-    const endGapPx = 0; // Controlled final gap handled via section padding
+    const endGapPx = 96; // Controlled final gap to prevent white gap at the end
 
     // Total height = space before pin + viewport + scroll distance - end gap
     return stickyOffset + vh + stepsHeight - endGapPx;
@@ -158,7 +158,7 @@ const BenefitsSection = () => {
 
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const endGapPx = 0;
+    const endGapPx = 96;
     
     // Distance while sticky: sectionHeight - (vh + stickyOffset) + endGapPx
     const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
@@ -349,7 +349,7 @@ const BenefitsSection = () => {
     
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const endGapPx = 0;
+    const endGapPx = 96;
     const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
     
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
@@ -495,7 +495,7 @@ const BenefitsSection = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col">
+        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full min-h-0 flex flex-col">
           {/* Header inside sticky container */}
           <div className="pt-6 md:pt-8 pb-0 text-center mb-10 lg:mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
