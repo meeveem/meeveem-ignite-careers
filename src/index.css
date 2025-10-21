@@ -181,4 +181,27 @@ All colors MUST be HSL.
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+
+  /* Benefits layout variables */
+  .benefits-section {
+    --benefits-bottom-gap: 48px;
+  }
+  @media (min-height: 1100px) {
+    .benefits-section {
+      --benefits-bottom-gap: clamp(24px, 3vh, 56px);
+    }
+  }
+  .benefits-sticky {
+    --benefits-top-offset: 4rem;
+  }
+  @media (min-width: 768px) {
+    .benefits-sticky {
+      --benefits-top-offset: 5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .benefits-sticky {
+      --benefits-top-offset: 6rem;
+    }
+  }
 }

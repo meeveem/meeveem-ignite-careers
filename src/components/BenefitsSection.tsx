@@ -1,5 +1,5 @@
 import { SearchX, Radar, Eye, Scale, DoorOpen, Target } from "lucide-react";
-import { useEffect, useRef, useState, useCallback, useLayoutEffect } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import dashboardStep1 from "@/assets/dashboard-step1.png";
 import dashboardStep2 from "@/assets/dashboard-step2.png";
 import dashboardStep3 from "@/assets/dashboard-step3.png";
@@ -82,7 +82,7 @@ const BenefitsSection = () => {
   const lockTargetScrollRef = useRef<number | null>(null);
   const noTransitionStepRef = useRef<number | null>(null);
   const [sectionHeight, setSectionHeight] = useState(0);
-  const [stickyHeight, setStickyHeight] = useState<number | null>(null);
+  
 
   const calculateSectionHeight = useCallback(() => {
     const vh = window.innerHeight;
@@ -118,29 +118,6 @@ const BenefitsSection = () => {
     };
   }, [calculateSectionHeight]);
 
-  // Compute available sticky height for content (viewport minus sticky top offset and section paddings)
-  const computeStickyHeight = useCallback(() => {
-    const vh = window.innerHeight;
-    const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const sectionEl = sectionRef.current;
-    let paddingTop = 0;
-    let paddingBottom = 0;
-    if (sectionEl) {
-      const styles = getComputedStyle(sectionEl);
-      paddingTop = parseFloat(styles.paddingTop) || 0;
-      paddingBottom = parseFloat(styles.paddingBottom) || 0;
-    }
-    const available = vh - stickyOffset - paddingTop - paddingBottom;
-    const minComfort = 560; // ensure comfortable min height
-    return Math.max(minComfort, Math.round(available));
-  }, []);
-
-  useLayoutEffect(() => {
-    const update = () => setStickyHeight(computeStickyHeight());
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, [computeStickyHeight]);
 
   // Preload images
   useEffect(() => {
@@ -474,15 +451,19 @@ const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-white"
-      style={{ height: sectionHeight > 0 ? `${sectionHeight}px` : "400vh" }}
+      className="benefits-section relative bg-white"
+      style={{
+        height: sectionHeight > 0 ? `${sectionHeight}px` : "400vh",
+        paddingBottom: "var(--benefits-bottom-gap)",
+        ["--benefits-bottom-gap" as any]: "48px",
+      }}
       aria-label="Interactive product showcase"
     >
 
       {/* Container sticky with header and cards */}
       <div
         ref={stickyRef}
-        className="sticky top-16 md:top-20 lg:top-24 h-screen overflow-hidden overscroll-contain"
+        className="benefits-sticky sticky top-16 md:top-20 lg:top-24 h-screen overflow-hidden overscroll-contain"
         style={{
           position: "sticky",
           height: "100vh",
@@ -520,7 +501,7 @@ const BenefitsSection = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col" style={{ height: stickyHeight ? `${stickyHeight}px` : undefined }}>
+        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col" style={{ height: "min(calc(100vh - var(--benefits-top-offset)), 1180px)", minHeight: "720px" }}>
           {/* Header inside sticky container */}
           <div className="pt-6 md:pt-8 pb-0 text-center mb-10 lg:mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
@@ -601,7 +582,7 @@ const BenefitsSection = () => {
                       key={idx}
                       src={benefit.image}
                       alt={`Dashboard for ${benefit.title}`}
-                      className="absolute inset-0 w-full h-full object-cover rounded-[24px]"
+                      className="absolute inset-0 w-full h-full object-contain rounded-[24px]"
                       style={{
                         opacity: opacity,
                         transform: `scale(${scale})`,
