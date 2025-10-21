@@ -87,12 +87,13 @@ const BenefitsSection = () => {
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
 
-    // Fixed per-step distance for consistent experience across screens/zoom
-    const perStep = 420; // px per step
+    // Responsive per-step distance clamped for consistency across screens/zoom
+    const perStep = Math.max(320, Math.min(560, Math.round(vh * 0.78)));
     const stepsHeight = perStep * benefits.length;
+    const endGapPx = 24; // Controlled final gap
 
-    // Total height = space before pin (stickyOffset) + sticky viewport height + pinned scroll distance
-    return stickyOffset + vh + stepsHeight;
+    // Total height = space before pin + viewport + scroll distance - end gap
+    return stickyOffset + vh + stepsHeight - endGapPx;
   }, []);
 
   useEffect(() => {
@@ -157,9 +158,10 @@ const BenefitsSection = () => {
 
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
+    const endGapPx = 24;
     
-    // Distance while sticky: sectionHeight - (vh + stickyOffset)
-    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset));
+    // Distance while sticky: sectionHeight - (vh + stickyOffset) + endGapPx
+    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
 
     // Check if we're in the steps zone AND still within section bounds
     const isPastHeader = sectionTop <= stickyOffset;
@@ -347,7 +349,8 @@ const BenefitsSection = () => {
     
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset));
+    const endGapPx = 24;
+    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
     
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
     const targetScroll = sectionTop + stickyOffset + targetProgress * stepsHeight;
@@ -378,7 +381,7 @@ const BenefitsSection = () => {
     return (
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6 max-w-[1200px]">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-10 lg:mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
@@ -494,7 +497,7 @@ const BenefitsSection = () => {
 
         <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col">
           {/* Header inside sticky container */}
-          <div className="pt-8 md:pt-10 pb-2 text-center mb-16">
+          <div className="pt-6 md:pt-8 pb-0 text-center mb-10 lg:mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
