@@ -82,7 +82,6 @@ const BenefitsSection = () => {
   const lockTargetScrollRef = useRef<number | null>(null);
   const noTransitionStepRef = useRef<number | null>(null);
   const [sectionHeight, setSectionHeight] = useState(0);
-  
 
   const calculateSectionHeight = useCallback(() => {
     const vh = window.innerHeight;
@@ -117,7 +116,6 @@ const BenefitsSection = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, [calculateSectionHeight]);
-
 
   // Preload images
   useEffect(() => {
@@ -451,19 +449,15 @@ const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="benefits-section relative bg-white"
-      style={{
-        height: sectionHeight > 0 ? `${sectionHeight}px` : "400vh",
-        paddingBottom: "var(--benefits-bottom-gap)",
-        ["--benefits-bottom-gap" as any]: "48px",
-      }}
+      className="relative bg-white"
+      style={{ height: sectionHeight > 0 ? `${sectionHeight}px` : "400vh" }}
       aria-label="Interactive product showcase"
     >
 
       {/* Container sticky with header and cards */}
       <div
         ref={stickyRef}
-        className="benefits-sticky sticky top-16 md:top-20 lg:top-24 h-screen overflow-hidden overscroll-contain"
+        className="sticky top-16 md:top-20 lg:top-24 h-screen overflow-hidden overscroll-contain"
         style={{
           position: "sticky",
           height: "100vh",
@@ -501,7 +495,7 @@ const BenefitsSection = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col" style={{ height: "min(calc(100vh - var(--benefits-top-offset)), 1180px)", minHeight: "720px" }}>
+        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col">
           {/* Header inside sticky container */}
           <div className="pt-6 md:pt-8 pb-0 text-center mb-10 lg:mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
@@ -513,7 +507,7 @@ const BenefitsSection = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 flex-1 min-h-0">
+          <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
             {/* Textes stacked avec cross-fade - 5 colonnes */}
             <div className="lg:col-span-5 relative h-full flex items-center">
               {benefits.map((benefit, idx) => {
@@ -569,7 +563,7 @@ const BenefitsSection = () => {
 
             {/* Images stacked avec cross-fade - 7 colonnes */}
             <div className="lg:col-span-7 relative h-full flex items-center">
-              <div className="relative w-full h-full" style={{ height: "100%" }}>
+              <div className="relative w-full" style={{ aspectRatio: "16 / 10" }}>
                 {benefits.map((benefit, idx) => {
                   const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
                   if (noTransitionStep !== null && idx !== activeIndex) return null;
