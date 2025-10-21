@@ -1,5 +1,5 @@
 import { SearchX, Radar, Eye, Scale, DoorOpen, Target } from "lucide-react";
-import { useEffect, useRef, useState, useCallback, useLayoutEffect } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import dashboardStep1 from "@/assets/dashboard-step1.png";
 import dashboardStep2 from "@/assets/dashboard-step2.png";
 import dashboardStep3 from "@/assets/dashboard-step3.png";
@@ -81,16 +81,31 @@ const BenefitsSection = () => {
   const noTransitionTimerRef = useRef<number | null>(null);
   const lockTargetScrollRef = useRef<number | null>(null);
   const noTransitionStepRef = useRef<number | null>(null);
-  const [stickyHeight, setStickyHeight] = useState<number | null>(null);
+  const [sectionHeight, setSectionHeight] = useState(0);
+
+  const calculateSectionHeight = useCallback(() => {
+    const vh = window.innerHeight;
+    const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
+
+    // Responsive per-step distance clamped for consistency across screens/zoom
+    const perStep = Math.max(320, Math.min(560, Math.round(vh * 0.78)));
+    const stepsHeight = perStep * benefits.length;
+    const endGapPx = 24; // Controlled final gap
+
+    // Total height = space before pin + viewport + scroll distance - end gap
+    return stickyOffset + vh + stepsHeight - endGapPx;
+  }, []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mediaQuery.matches);
     setIsMobile(window.innerWidth < 1024);
+    setSectionHeight(calculateSectionHeight());
 
     const handleChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
+      setSectionHeight(calculateSectionHeight());
     };
     
     mediaQuery.addEventListener("change", handleChange);
@@ -100,36 +115,7 @@ const BenefitsSection = () => {
       mediaQuery.removeEventListener("change", handleChange);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
-
-  // Compute sticky height dynamically based on viewport, sticky offset, and section paddings
-  useLayoutEffect(() => {
-    if (isMobile || reducedMotion) {
-      setStickyHeight(null);
-      return;
-    }
-
-    const recalc = () => {
-      const viewportH = window.innerHeight;
-      const topOffset = getStickyTopOffsetPx(stickyRef.current);
-      let padTop = 0, padBottom = 0;
-      if (sectionRef.current) {
-        const styles = getComputedStyle(sectionRef.current);
-        padTop = parseFloat(styles.paddingTop) || 0;
-        padBottom = parseFloat(styles.paddingBottom) || 0;
-      }
-      const MIN_STICKY_HEIGHT = 560;
-      const available = Math.max(MIN_STICKY_HEIGHT, viewportH - topOffset - padTop - padBottom);
-      setStickyHeight(available);
-    };
-
-    recalc();
-    const onResize = () => recalc();
-    window.addEventListener('resize', onResize);
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
-  }, [isMobile, reducedMotion]);
+  }, [calculateSectionHeight]);
 
   // Preload images
   useEffect(() => {
@@ -152,7 +138,7 @@ const BenefitsSection = () => {
   }, []);
 
   const handleScroll = useCallback(() => {
-    if (!sectionRef.current) return;
+    if (!sectionRef.current || sectionHeight === 0) return;
 
     // While locked (noTransitionStep), freeze progress at the step center to avoid any fades
     if (noTransitionStepRef.current !== null) {
@@ -167,14 +153,15 @@ const BenefitsSection = () => {
     const section = sectionRef.current;
     const rect = section.getBoundingClientRect();
     const sectionTop = rect.top;
-    const sectionHeight = rect.height;
     const sectionBottom = sectionTop + sectionHeight;
+    const viewportBottom = window.innerHeight;
 
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
+    const endGapPx = 24;
     
-    // Distance for steps progression (total scrollable area)
-    const stepsHeight = Math.max(1, sectionHeight - vh);
+    // Distance while sticky: sectionHeight - (vh + stickyOffset) + endGapPx
+    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
 
     // Check if we're in the steps zone AND still within section bounds
     const isPastHeader = sectionTop <= stickyOffset;
@@ -192,13 +179,13 @@ const BenefitsSection = () => {
       setIsInStepsZone(false);
       if (sectionTop > 0) {
         setScrollProgress(0.1);
-        setShowDots(true);
+        setShowDots(true); // Fade back in when scrolling up
       } else if (!isBeforeEnd) {
         setScrollProgress(1);
-        setShowDots(false);
+        setShowDots(false); // Fade out when unpinning
       }
     }
-  }, [lockedStepIndex]);
+  }, [sectionHeight]);
 
   useEffect(() => {
     if (isMobile || reducedMotion) return;
@@ -352,17 +339,18 @@ const BenefitsSection = () => {
     });
 
   const scrollToStep = async (stepIndex: number) => {
-    if (!sectionRef.current) return;
+    if (!sectionRef.current || sectionHeight === 0) return;
 
     const section = sectionRef.current;
     const rect = section.getBoundingClientRect();
     const currentScrollY = window.scrollY;
+
     const sectionTop = currentScrollY + rect.top;
-    const sectionHeight = rect.height;
     
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const stepsHeight = Math.max(1, sectionHeight - vh);
+    const endGapPx = 24;
+    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
     
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
     const targetScroll = sectionTop + stickyOffset + targetProgress * stepsHeight;
@@ -461,56 +449,55 @@ const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-white overflow-hidden"
-      style={{
-        paddingTop: "clamp(56px, 8vh, 120px)",
-        paddingBottom: "clamp(56px, 8vh, 120px)",
-      }}
+      className="relative bg-white"
+      style={{ height: sectionHeight > 0 ? `${sectionHeight}px` : "400vh" }}
       aria-label="Interactive product showcase"
     >
-      {/* Bullets positioned outside flow */}
-      <div
-        className="pointer-events-none fixed left-12 top-1/2 -translate-y-1/2 z-50 hidden lg:block transition-opacity duration-600"
-        style={{
-          opacity: isInStepsZone && showDots ? 1 : 0,
-          pointerEvents: isInStepsZone && showDots ? "auto" : "none",
-        }}
-      >
-        <div className="flex flex-col gap-6 pointer-events-auto">
-          {benefits.map((benefit, idx) => {
-            const isActive = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex) === idx;
-            return (
-              <button
-                key={idx}
-                onClick={() => scrollToStep(idx)}
-                className="group transition-all duration-300 hover:scale-110"
-                aria-label={`Navigate to step ${idx + 1}: ${benefit.keyPhrase}`}
-              >
-                <div
-                  className="w-3 h-3 rounded-full transition-all duration-300"
-                  style={{
-                    backgroundColor: isActive ? "#2563EB" : "#CBD5E1",
-                    transform: isActive ? "scale(1.25)" : "scale(1)",
-                    boxShadow: isActive ? "0 0 12px rgba(37, 99, 235, 0.5)" : "none",
-                  }}
-                />
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
       {/* Container sticky with header and cards */}
       <div
         ref={stickyRef}
-        className="sticky top-16 md:top-20 lg:top-24 overflow-hidden"
+        className="sticky top-16 md:top-20 lg:top-24 h-screen overflow-hidden overscroll-contain"
         style={{
-          height: stickyHeight ? `${stickyHeight}px` : undefined,
+          position: "sticky",
+          height: "100vh",
         }}
       >
-        <div className="mx-auto px-6 md:px-8 max-w-screen-xl h-full flex flex-col">
+        {/* Scroll Indicator - Absolute positioned within sticky container */}
+        <div
+          className="absolute left-12 top-[calc(8rem+2rem+4rem)] z-50 hidden lg:block transition-opacity duration-600"
+          style={{
+            opacity: isInStepsZone && showDots ? 1 : 0,
+            pointerEvents: isInStepsZone && showDots ? "auto" : "none",
+          }}
+        >
+          <div className="flex flex-col gap-6">
+            {benefits.map((benefit, idx) => {
+              const isActive = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex) === idx;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => scrollToStep(idx)}
+                  className="group transition-all duration-300 hover:scale-110"
+                  aria-label={`Navigate to step ${idx + 1}: ${benefit.keyPhrase}`}
+                >
+                  <div
+                    className="w-3 h-3 rounded-full transition-all duration-300"
+                    style={{
+                      backgroundColor: isActive ? "#2563EB" : "#CBD5E1",
+                      transform: isActive ? "scale(1.25)" : "scale(1)",
+                      boxShadow: isActive ? "0 0 12px rgba(37, 99, 235, 0.5)" : "none",
+                    }}
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="container mx-auto px-6 md:px-8 max-w-[1100px] h-full flex flex-col">
           {/* Header inside sticky container */}
-          <div className="pt-6 md:pt-8 pb-0 text-center mb-10 lg:mb-12 flex-shrink-0">
+          <div className="pt-6 md:pt-8 pb-0 text-center mb-10 lg:mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
@@ -520,65 +507,63 @@ const BenefitsSection = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 items-center gap-10 flex-1 min-h-0">
-            {/* Textes stacked avec cross-fade */}
-            <div className="relative h-full flex items-center">
-              <div className="relative w-full">
-                {benefits.map((benefit, idx) => {
-                  const Icon = benefit.icon;
-                  const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
-                  if (noTransitionStep !== null && idx !== activeIndex) return null;
+          <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
+            {/* Textes stacked avec cross-fade - 5 colonnes */}
+            <div className="lg:col-span-5 relative h-full flex items-center">
+              {benefits.map((benefit, idx) => {
+                const Icon = benefit.icon;
+                const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
+                if (noTransitionStep !== null && idx !== activeIndex) return null;
 
-                  const opacity = calculateTextOpacity(scrollProgress, idx);
-                  const translateY = calculateTextTranslate(scrollProgress, idx);
+                const opacity = calculateTextOpacity(scrollProgress, idx);
+                const translateY = calculateTextTranslate(scrollProgress, idx);
 
-                  return (
-                    <div
-                      key={idx}
-                      className="absolute inset-0 flex flex-col justify-center"
-                      style={{
-                        opacity: opacity,
-                        transform: `translateY(${translateY}px)`,
-                        transition: lockedStepIndex !== null || noTransitionStep !== null || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
-                        pointerEvents: (lockedStepIndex !== null || noTransitionStep !== null)
-                          ? (idx === activeIndex ? "auto" : "none")
-                          : (opacity > 0 ? "auto" : "none"),
-                        contentVisibility: (lockedStepIndex !== null || noTransitionStep !== null)
-                          ? (idx === activeIndex ? "auto" : "hidden")
-                          : (Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden"),
-                        zIndex: idx === activeIndex ? 10 : 0,
-                      }}
-                    >
-                      <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center mb-6">
-                        <Icon className="w-6 h-6 text-white" />
-                      </div>
-                      <h3
-                        className="text-[28px] sm:text-[32px] lg:text-[40px] font-bold mb-4"
-                        style={{ lineHeight: "1.1", color: "#0F172A" }}
-                      >
-                        {benefit.title}
-                      </h3>
-                      <p
-                        className="font-semibold text-[17px] sm:text-[18px] mb-3 px-3 py-1 rounded-md inline-block"
-                        style={{ color: "#2563EB", backgroundColor: "rgba(37, 99, 235, 0.08)" }}
-                      >
-                        {benefit.keyPhrase}
-                      </p>
-                      <p
-                        className="text-[16px] sm:text-[18px]"
-                        style={{ lineHeight: "1.75", color: "#334155" }}
-                      >
-                        {benefit.description}
-                      </p>
+                return (
+                  <div
+                    key={idx}
+                    className="absolute inset-0 flex flex-col justify-center"
+                    style={{
+                      opacity: opacity,
+                      transform: `translateY(${translateY}px)`,
+                      transition: lockedStepIndex !== null || noTransitionStep !== null || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
+                      pointerEvents: (lockedStepIndex !== null || noTransitionStep !== null)
+                        ? (idx === activeIndex ? "auto" : "none")
+                        : (opacity > 0 ? "auto" : "none"),
+                      contentVisibility: (lockedStepIndex !== null || noTransitionStep !== null)
+                        ? (idx === activeIndex ? "auto" : "hidden")
+                        : (Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden"),
+                      zIndex: idx === activeIndex ? 10 : 0,
+                    }}
+                  >
+                    <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center mb-6">
+                      <Icon className="w-6 h-6 text-white" />
                     </div>
-                  );
-                })}
-              </div>
+                    <h3
+                      className="text-[28px] sm:text-[32px] lg:text-[40px] font-bold mb-4"
+                      style={{ lineHeight: "1.1", color: "#0F172A" }}
+                    >
+                      {benefit.title}
+                    </h3>
+                    <p
+                      className="font-semibold text-[17px] sm:text-[18px] mb-3 px-3 py-1 rounded-md inline-block"
+                      style={{ color: "#2563EB", backgroundColor: "rgba(37, 99, 235, 0.08)" }}
+                    >
+                      {benefit.keyPhrase}
+                    </p>
+                    <p
+                      className="text-[16px] sm:text-[18px]"
+                      style={{ lineHeight: "1.75", color: "#334155" }}
+                    >
+                      {benefit.description}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Images stacked avec cross-fade */}
-            <div className="relative">
-              <div className="relative w-full max-h-[min(72vh,820px)]" style={{ aspectRatio: "16 / 10" }}>
+            {/* Images stacked avec cross-fade - 7 colonnes */}
+            <div className="lg:col-span-7 relative h-full flex items-center">
+              <div className="relative w-full" style={{ aspectRatio: "16 / 10" }}>
                 {benefits.map((benefit, idx) => {
                   const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
                   if (noTransitionStep !== null && idx !== activeIndex) return null;
@@ -591,7 +576,7 @@ const BenefitsSection = () => {
                       key={idx}
                       src={benefit.image}
                       alt={`Dashboard for ${benefit.title}`}
-                      className="absolute inset-0 w-full h-auto object-contain rounded-[24px]"
+                      className="absolute inset-0 w-full h-full object-contain rounded-[24px]"
                       style={{
                         opacity: opacity,
                         transform: `scale(${scale})`,
