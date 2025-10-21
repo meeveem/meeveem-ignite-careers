@@ -81,14 +81,27 @@ const BenefitsSection = () => {
   const noTransitionTimerRef = useRef<number | null>(null);
   const lockTargetScrollRef = useRef<number | null>(null);
   const noTransitionStepRef = useRef<number | null>(null);
+  const [sectionHeight, setSectionHeight] = useState(0);
+
+  const calculateSectionHeight = useCallback(() => {
+    const vh = window.innerHeight;
+    const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
+    const scrollPerStep = vh * 0.8;
+    const totalScrollDistance = scrollPerStep * benefits.length;
+    return vh + totalScrollDistance;
+  }, []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mediaQuery.matches);
     setIsMobile(window.innerWidth < 1024);
+    setSectionHeight(calculateSectionHeight());
 
     const handleChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+      setSectionHeight(calculateSectionHeight());
+    };
     
     mediaQuery.addEventListener("change", handleChange);
     window.addEventListener("resize", handleResize);
@@ -97,7 +110,7 @@ const BenefitsSection = () => {
       mediaQuery.removeEventListener("change", handleChange);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [calculateSectionHeight]);
 
   // Preload images
   useEffect(() => {
@@ -120,7 +133,7 @@ const BenefitsSection = () => {
   }, []);
 
   const handleScroll = useCallback(() => {
-    if (!sectionRef.current) return;
+    if (!sectionRef.current || sectionHeight === 0) return;
 
     // While locked (noTransitionStep), freeze progress at the step center to avoid any fades
     if (noTransitionStepRef.current !== null) {
@@ -135,14 +148,14 @@ const BenefitsSection = () => {
     const section = sectionRef.current;
     const rect = section.getBoundingClientRect();
     const sectionTop = rect.top;
-    const sectionBottom = sectionTop + rect.height;
+    const sectionBottom = sectionTop + sectionHeight;
     const viewportBottom = window.innerHeight;
 
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
     
-    // Calculate actual scroll distance while pinned
-    const stepsHeight = (rect.height - vh) + stickyOffset;
+    // Calculate actual scroll distance while pinned using dynamic height
+    const stepsHeight = (sectionHeight - vh) + stickyOffset;
 
     // Check if we're in the steps zone AND still within section bounds
     const isPastHeader = sectionTop <= stickyOffset;
@@ -165,7 +178,7 @@ const BenefitsSection = () => {
         setShowDots(false); // Fade out when unpinning
       }
     }
-  }, []);
+  }, [sectionHeight]);
 
   useEffect(() => {
     if (isMobile || reducedMotion) return;
@@ -319,7 +332,7 @@ const BenefitsSection = () => {
     });
 
   const scrollToStep = async (stepIndex: number) => {
-    if (!sectionRef.current) return;
+    if (!sectionRef.current || sectionHeight === 0) return;
 
     const section = sectionRef.current;
     const rect = section.getBoundingClientRect();
@@ -329,7 +342,7 @@ const BenefitsSection = () => {
     
     const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const stepsHeight = (rect.height - vh) + stickyOffset;
+    const stepsHeight = (sectionHeight - vh) + stickyOffset;
     
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
     const targetScroll = sectionTop + stickyOffset + targetProgress * stepsHeight;
@@ -429,7 +442,7 @@ const BenefitsSection = () => {
     <section
       ref={sectionRef}
       className="relative bg-white"
-      style={{ height: "400vh" }}
+      style={{ height: sectionHeight > 0 ? `${sectionHeight}px` : "400vh" }}
       aria-label="Interactive product showcase"
     >
 
