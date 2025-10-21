@@ -606,7 +606,7 @@ const BenefitsSection = () => {
 
             {/* Images stacked avec cross-fade - 7 colonnes */}
             <div className="lg:col-span-7 relative h-full flex items-center">
-              <div className="relative w-full h-full">
+              <div className="relative w-full h-full overflow-hidden rounded-[24px]" style={{ boxShadow: "0 20px 40px rgba(0,0,0,0.15)" }}>
                 {benefits.map((benefit, idx) => {
                   const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
                   if (noTransitionStep !== null && idx !== activeIndex) return null;
@@ -619,12 +619,12 @@ const BenefitsSection = () => {
                       key={idx}
                       src={benefit.image}
                       alt={`Dashboard for ${benefit.title}`}
-                      className="absolute inset-0 w-full h-full object-contain rounded-[24px]"
+                      className="absolute inset-0 w-full h-full object-cover"
                       style={{
                         opacity: opacity,
                         transform: `scale(${scale})`,
                         transition: lockedStepIndex !== null || noTransitionStep !== null || reducedMotion ? "none" : "opacity 0.6s ease-out, transform 0.6s ease-out",
-                        boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+                        
                         contentVisibility: (lockedStepIndex !== null || noTransitionStep !== null)
                           ? (idx === activeIndex ? "auto" : "hidden")
                           : (Math.abs(idx - currentStepIndex) <= 1 ? "auto" : "hidden"),
