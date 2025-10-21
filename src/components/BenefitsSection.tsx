@@ -563,7 +563,7 @@ const BenefitsSection = () => {
 
             {/* Images stacked avec cross-fade - 7 colonnes */}
             <div className="lg:col-span-7 relative h-full flex items-center">
-              <div className="relative w-full" style={{ aspectRatio: "16 / 10" }}>
+              <div className="relative w-full h-full">
                 {benefits.map((benefit, idx) => {
                   const activeIndex = (lockedStepIndex ?? noTransitionStep ?? currentStepIndex);
                   if (noTransitionStep !== null && idx !== activeIndex) return null;
