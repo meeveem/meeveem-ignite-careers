@@ -81,31 +81,29 @@ const BenefitsSection = () => {
   const noTransitionTimerRef = useRef<number | null>(null);
   const lockTargetScrollRef = useRef<number | null>(null);
   const noTransitionStepRef = useRef<number | null>(null);
-  const [sectionHeight, setSectionHeight] = useState(0);
+  const [scrollDistance, setScrollDistance] = useState(0);
 
-  const calculateSectionHeight = useCallback(() => {
+  const calculateScrollDistance = useCallback(() => {
     const vh = window.innerHeight;
-    const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-
+    
     // Responsive per-step distance clamped for consistency across screens/zoom
     const perStep = Math.max(320, Math.min(560, Math.round(vh * 0.78)));
-    const stepsHeight = perStep * benefits.length;
     const endGapPx = 96; // Controlled final gap to prevent white gap at the end
-
-    // Total height = space before pin + viewport + scroll distance - end gap
-    return stickyOffset + vh + stepsHeight - endGapPx;
+    
+    // Scroll distance = perStep * number of steps - end gap
+    return perStep * benefits.length - endGapPx;
   }, []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mediaQuery.matches);
     setIsMobile(window.innerWidth < 1024);
-    setSectionHeight(calculateSectionHeight());
+    setScrollDistance(calculateScrollDistance());
 
     const handleChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
-      setSectionHeight(calculateSectionHeight());
+      setScrollDistance(calculateScrollDistance());
     };
     
     mediaQuery.addEventListener("change", handleChange);
@@ -115,7 +113,7 @@ const BenefitsSection = () => {
       mediaQuery.removeEventListener("change", handleChange);
       window.removeEventListener("resize", handleResize);
     };
-  }, [calculateSectionHeight]);
+  }, [calculateScrollDistance]);
 
   // Preload images
   useEffect(() => {
@@ -138,7 +136,7 @@ const BenefitsSection = () => {
   }, []);
 
   const handleScroll = useCallback(() => {
-    if (!sectionRef.current || sectionHeight === 0) return;
+    if (!sectionRef.current || scrollDistance === 0) return;
 
     // While locked (noTransitionStep), freeze progress at the step center to avoid any fades
     if (noTransitionStepRef.current !== null) {
@@ -153,15 +151,11 @@ const BenefitsSection = () => {
     const section = sectionRef.current;
     const rect = section.getBoundingClientRect();
     const sectionTop = rect.top;
-    const sectionBottom = sectionTop + sectionHeight;
-    const viewportBottom = window.innerHeight;
+    const sectionBottom = rect.bottom;
 
-    const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const endGapPx = 96;
-    
-    // Distance while sticky: sectionHeight - (vh + stickyOffset) + endGapPx
-    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
+    const vh = window.innerHeight;
+    const stepsHeight = Math.max(1, scrollDistance);
 
     // Check if we're in the steps zone AND still within section bounds
     const isPastHeader = sectionTop <= stickyOffset;
@@ -185,7 +179,7 @@ const BenefitsSection = () => {
         setShowDots(false); // Fade out when unpinning
       }
     }
-  }, [sectionHeight]);
+  }, [scrollDistance, lockedStepIndex]);
 
   useEffect(() => {
     if (isMobile || reducedMotion) return;
@@ -339,7 +333,7 @@ const BenefitsSection = () => {
     });
 
   const scrollToStep = async (stepIndex: number) => {
-    if (!sectionRef.current || sectionHeight === 0) return;
+    if (!sectionRef.current || scrollDistance === 0) return;
 
     const section = sectionRef.current;
     const rect = section.getBoundingClientRect();
@@ -347,10 +341,8 @@ const BenefitsSection = () => {
 
     const sectionTop = currentScrollY + rect.top;
     
-    const vh = window.innerHeight;
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const endGapPx = 96;
-    const stepsHeight = Math.max(1, sectionHeight - (vh + stickyOffset) + endGapPx);
+    const stepsHeight = Math.max(1, scrollDistance);
     
     const targetProgress = stepIndex * SEGMENT_DURATION + 0.5 * SEGMENT_DURATION;
     const targetScroll = sectionTop + stickyOffset + targetProgress * stepsHeight;
@@ -450,7 +442,6 @@ const BenefitsSection = () => {
     <section
       ref={sectionRef}
       className="relative bg-white pb-0"
-      style={{ height: sectionHeight > 0 ? `${sectionHeight}px` : "400vh" }}
       aria-label="Interactive product showcase"
     >
 
@@ -599,6 +590,9 @@ const BenefitsSection = () => {
           </div>
         </div>
       </div>
+      
+      {/* Spacer to control scroll distance */}
+      <div aria-hidden="true" style={{ height: `${scrollDistance}px` }} />
     </section>
   );
 };
