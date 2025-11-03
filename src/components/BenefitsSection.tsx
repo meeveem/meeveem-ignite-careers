@@ -93,14 +93,14 @@ const BenefitsSection = () => {
     const stickyHeight = getStickyHeight(stickyRef.current);
     
     // Responsive per-step distance clamped for consistency across screens/zoom
-    // Tightened to avoid excessive spacer on large screens/zoom levels
-    const perStep = Math.max(280, Math.min(420, Math.round(stickyHeight * 0.6)));
-    const holdEnd = 0.25 * perStep; // Small pause on last card
-    const endComp = 96; // Compensation to avoid any trailing gap before next section
+    // Further tightened and with compensation that scales with sticky height to ensure 0-gap across zoom
+    const perStep = Math.max(260, Math.min(380, Math.round(stickyHeight * 0.55)));
+    const holdEnd = 0.2 * perStep; // Shorter pause on last card
+    const endComp = Math.round(stickyHeight * 0.4); // Scale with sticky to eliminate residual gap
     
     // Scroll distance = perStep * (steps - 1) + holdEnd - endComp
     // We use (steps - 1) because the last step doesn't fade out
-    return Math.round(perStep * (benefits.length - 1) + holdEnd - endComp);
+    return Math.max(0, Math.round(perStep * (benefits.length - 1) + holdEnd - endComp));
   }, []);
 
   useEffect(() => {
@@ -126,11 +126,14 @@ const BenefitsSection = () => {
     
     mediaQuery.addEventListener("change", handleChange);
     window.addEventListener("resize", handleResize);
+    // Expose spacer to CSS for downstream sections (0-gap visual join)
+    document.documentElement.style.setProperty("--benefits-spacer-px", `${calculateScrollDistance()}px`);
     
     return () => {
       mediaQuery.removeEventListener("change", handleChange);
       window.removeEventListener("resize", handleResize);
       if (resizeObserver) resizeObserver.disconnect();
+      document.documentElement.style.removeProperty("--benefits-spacer-px");
     };
   }, [calculateScrollDistance]);
 
@@ -461,6 +464,7 @@ const BenefitsSection = () => {
     <section
       ref={sectionRef}
       className="relative bg-white pb-0"
+      style={{ paddingBottom: `${scrollDistance}px` }}
       aria-label="Interactive product showcase"
     >
 
@@ -610,8 +614,7 @@ const BenefitsSection = () => {
         </div>
       </div>
       
-      {/* Spacer to control scroll distance (trimmed slightly to remove rounding gaps) */}
-      <div aria-hidden="true" style={{ height: `${Math.max(0, scrollDistance) }px` }} />
+      {/* Spacer now applied via section paddingBottom; CSS var feeds next section to visually remove gap */}
     </section>
   );
 };
