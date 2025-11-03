@@ -96,8 +96,8 @@ const BenefitsSection = () => {
     // Tuned to keep sections visually close while keeping a small, consistent breathing space
     const perStep = Math.max(280, Math.min(420, Math.round(stickyHeight * 0.6)));
     const holdEnd = 0.25 * perStep; // Small pause on last card
-    // Trim the trailing spacer proportionally to sticky height, clamped to a sensible range
-    const endComp = Math.round(Math.max(160, Math.min(280, stickyHeight * 0.55)));
+    // Stronger compensation to avoid any trailing blank space at all zoom levels
+    const endComp = Math.round(Math.max(180, Math.min(360, stickyHeight * 0.7)));
     
     // Scroll distance = perStep * (steps - 1) + holdEnd - endComp
     // We use (steps - 1) because the last step doesn't fade out
@@ -622,12 +622,11 @@ const BenefitsSection = () => {
         </div>
       </div>
       
-      {/* Spacer contributes to scroll height; negative bottom margin removes visible gap by pulling next section up */}
+      {/* Spacer contributes to scroll height only; no visual overlap to ensure sections stack in order */}
       <div
         aria-hidden="true"
         style={{
           height: `${Math.max(0, scrollDistance)}px`,
-          marginBottom: `-${Math.max(0, scrollDistance)}px`,
           pointerEvents: "none",
         }}
       />
