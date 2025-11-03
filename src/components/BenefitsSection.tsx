@@ -622,8 +622,8 @@ const BenefitsSection = () => {
         </div>
       </div>
       
-      {/* Spacer to control scroll distance */}
-      <div aria-hidden="true" style={{ height: `${scrollDistance}px` }} />
+      {/* Spacer to control scroll distance (trimmed slightly to remove rounding gaps) */}
+      <div aria-hidden="true" style={{ height: `${Math.max(0, scrollDistance) }px` }} />
     </section>
   );
 };
