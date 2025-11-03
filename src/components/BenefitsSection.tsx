@@ -138,11 +138,14 @@ const BenefitsSection = () => {
     
     mediaQuery.addEventListener("change", handleChange);
     window.addEventListener("resize", handleResize);
+    // Expose spacer to CSS for downstream sections (0-gap visual join)
+    document.documentElement.style.setProperty("--benefits-spacer-px", `${calculateScrollDistance()}px`);
     
     return () => {
       mediaQuery.removeEventListener("change", handleChange);
       window.removeEventListener("resize", handleResize);
       if (resizeObserver) resizeObserver.disconnect();
+      document.documentElement.style.removeProperty("--benefits-spacer-px");
     };
   }, [calculateScrollDistance]);
 
@@ -473,6 +476,7 @@ const BenefitsSection = () => {
     <section
       ref={sectionRef}
       className="relative bg-white pb-0"
+      style={{ paddingBottom: `${scrollDistance}px` }}
       aria-label="Interactive product showcase"
     >
 
@@ -622,8 +626,7 @@ const BenefitsSection = () => {
         </div>
       </div>
       
-      {/* Spacer to control scroll distance (trimmed slightly to remove rounding gaps) */}
-      <div aria-hidden="true" style={{ height: `${Math.max(0, scrollDistance) }px` }} />
+      {/* Spacer now applied via section paddingBottom; CSS var feeds next section to visually remove gap */}
     </section>
   );
 };

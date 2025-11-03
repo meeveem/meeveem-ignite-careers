@@ -56,7 +56,11 @@ const HowItWorksSection = () => {
   }, []);
 
   return (
-    <section id="how-it-works" className="pt-0 pb-24 bg-white relative overflow-hidden">
+    <section
+      id="how-it-works"
+      className="pt-0 pb-24 bg-white relative overflow-hidden"
+      style={{ marginTop: "calc(var(--benefits-spacer-px, 0px) * -1)" }}
+    >
       {/* Decorative blob */}
       <div className="absolute top-20 right-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
       <div className="absolute bottom-20 left-20 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
