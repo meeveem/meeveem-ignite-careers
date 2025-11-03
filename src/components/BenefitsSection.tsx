@@ -633,12 +633,11 @@ const BenefitsSection = () => {
         </div>
       </div>
       
-      {/* Spacer contributes to scroll height; negative bottom margin removes visible gap by pulling next section up */}
+      {/* Spacer contributes to scroll height only; no visual overlap to ensure sections stack in order */}
       <div
         aria-hidden="true"
         style={{
           height: `${Math.max(0, scrollDistance)}px`,
-          marginBottom: `-${Math.max(0, scrollDistance)}px`,
           pointerEvents: "none",
         }}
       />
