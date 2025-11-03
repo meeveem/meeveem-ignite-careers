@@ -472,7 +472,7 @@ const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative isolate bg-white pb-0"
+      className="relative bg-white pb-0"
       aria-label="Interactive product showcase"
     >
 
