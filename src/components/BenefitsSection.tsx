@@ -472,7 +472,6 @@ const BenefitsSection = () => {
     <section
       ref={sectionRef}
       className="relative bg-white pb-0"
-      style={{ paddingBottom: `${scrollDistance}px` }}
       aria-label="Interactive product showcase"
     >
 
@@ -622,7 +621,8 @@ const BenefitsSection = () => {
         </div>
       </div>
       
-      {/* Spacer now applied via section paddingBottom; CSS var feeds next section to visually remove gap */}
+      {/* Dedicated spacer to preserve sticky scroll math; visual gap is cancelled by next section's negative margin */}
+      <div aria-hidden="true" style={{ height: `${Math.max(0, scrollDistance)}px`, pointerEvents: "none" }} />
     </section>
   );
 };
