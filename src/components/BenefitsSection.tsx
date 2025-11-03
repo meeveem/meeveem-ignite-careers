@@ -70,8 +70,9 @@ const getStickyTopOffsetPx = (stickyEl: HTMLElement | null): number => {
 
 // Get actual sticky height (capped by min(100vh, 860px))
 const getStickyHeight = (stickyEl: HTMLElement | null): number => {
-  if (!stickyEl) return Math.min(window.innerHeight, 860);
-  return stickyEl.offsetHeight || Math.min(window.innerHeight, 860);
+  const viewportHeight = typeof window !== "undefined" ? window.innerHeight : 0;
+  if (!stickyEl) return Math.min(viewportHeight || 0, 860);
+  return stickyEl.offsetHeight || Math.min(viewportHeight || 0, 860);
 };
 
 const BenefitsSection = () => {
@@ -91,16 +92,27 @@ const BenefitsSection = () => {
 
   const calculateScrollDistance = useCallback(() => {
     const stickyHeight = getStickyHeight(stickyRef.current);
-    
+    const viewportHeight = typeof window !== "undefined" ? window.innerHeight : stickyHeight;
+    const stickyOffset = typeof window !== "undefined" ? getStickyTopOffsetPx(stickyRef.current) : 0;
+
     // Responsive per-step distance clamped for consistency across screens/zoom
-    // Further tightened and with compensation that scales with sticky height to ensure 0-gap across zoom
-    const perStep = Math.max(260, Math.min(380, Math.round(stickyHeight * 0.55)));
-    const holdEnd = 0.2 * perStep; // Shorter pause on last card
-    const endComp = Math.round(stickyHeight * 0.4); // Scale with sticky to eliminate residual gap
-    
-    // Scroll distance = perStep * (steps - 1) + holdEnd - endComp
-    // We use (steps - 1) because the last step doesn't fade out
-    return Math.max(0, Math.round(perStep * (benefits.length - 1) + holdEnd - endComp));
+    const perStep = Math.max(300, Math.min(520, Math.round(stickyHeight * 0.75)));
+    const holdEnd = 0.35 * perStep; // Small pause on last card
+    const endComp = 24; // Compensation to avoid over-scrolling
+
+    const baseDistance = Math.round(perStep * (benefits.length - 1) + holdEnd - endComp);
+
+    // When the viewport is taller than the sticky content (happens when "zooming out"),
+    // part of that height shows the spacer that sits under the sticky container. This
+    // creates a large white gap between sections. We compensate by subtracting the
+    // extra viewport height so the next section appears attached to the benefits block.
+    const extraViewportSpace = Math.max(0, viewportHeight - (stickyHeight + stickyOffset));
+
+    // Ensure we always keep enough room for smooth transitions between the cards.
+    const minPerStep = 240;
+    const minDistance = Math.round(minPerStep * (benefits.length - 1) + holdEnd - endComp);
+
+    return Math.max(minDistance, baseDistance - extraViewportSpace);
   }, []);
 
   useEffect(() => {
