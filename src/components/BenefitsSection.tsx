@@ -179,7 +179,10 @@ const BenefitsSection = () => {
     const section = sectionRef.current;
     const rect = section.getBoundingClientRect();
     const sectionTop = rect.top;
-    const sectionBottom = rect.bottom;
+    // Because we visually collapse the spacer using a negative bottom margin,
+    // the DOM bounding bottom no longer reflects the intended scrollable range.
+    // Compensate by virtually extending the bottom by scrollDistance.
+    const sectionBottom = rect.bottom + scrollDistance;
 
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
     const stickyHeight = getStickyHeight(stickyRef.current);
