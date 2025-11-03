@@ -87,11 +87,13 @@ const BenefitsSection = () => {
     const vh = window.innerHeight;
     
     // Responsive per-step distance clamped for consistency across screens/zoom
-    const perStep = Math.max(320, Math.min(560, Math.round(vh * 0.78)));
-    const endGapPx = 96; // Controlled final gap to prevent white gap at the end
+    const perStep = Math.max(300, Math.min(520, Math.round(vh * 0.75)));
+    const holdEnd = 0.35 * perStep; // Small pause on last card
+    const endComp = 24; // Compensation to avoid over-scrolling
     
-    // Scroll distance = perStep * number of steps - end gap
-    return perStep * benefits.length - endGapPx;
+    // Scroll distance = perStep * (steps - 1) + holdEnd - endComp
+    // We use (steps - 1) because the last step doesn't fade out
+    return Math.round(perStep * (benefits.length - 1) + holdEnd - endComp);
   }, []);
 
   useEffect(() => {
