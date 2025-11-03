@@ -93,9 +93,10 @@ const BenefitsSection = () => {
     const stickyHeight = getStickyHeight(stickyRef.current);
     
     // Responsive per-step distance clamped for consistency across screens/zoom
-    const perStep = Math.max(300, Math.min(520, Math.round(stickyHeight * 0.75)));
-    const holdEnd = 0.35 * perStep; // Small pause on last card
-    const endComp = 24; // Compensation to avoid over-scrolling
+    // Tightened to avoid excessive spacer on large screens/zoom levels
+    const perStep = Math.max(280, Math.min(420, Math.round(stickyHeight * 0.6)));
+    const holdEnd = 0.25 * perStep; // Small pause on last card
+    const endComp = 96; // Compensation to avoid any trailing gap before next section
     
     // Scroll distance = perStep * (steps - 1) + holdEnd - endComp
     // We use (steps - 1) because the last step doesn't fade out
@@ -609,8 +610,8 @@ const BenefitsSection = () => {
         </div>
       </div>
       
-      {/* Spacer to control scroll distance */}
-      <div aria-hidden="true" style={{ height: `${scrollDistance}px` }} />
+      {/* Spacer to control scroll distance (trimmed slightly to remove rounding gaps) */}
+      <div aria-hidden="true" style={{ height: `${Math.max(0, scrollDistance) }px` }} />
     </section>
   );
 };

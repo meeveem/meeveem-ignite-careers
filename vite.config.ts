@@ -6,8 +6,10 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::",
-    port: 8080,
+    host: "127.0.0.1", // Force IPv4 for local dev reliability
+    port: 5173,         // Common Vite default port
+    strictPort: false,  // Allow fallback to the next free port
+    open: true,         // Auto-open browser on start
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
