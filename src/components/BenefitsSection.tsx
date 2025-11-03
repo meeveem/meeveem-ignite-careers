@@ -619,8 +619,15 @@ const BenefitsSection = () => {
         </div>
       </div>
       
-      {/* Dedicated spacer to preserve sticky scroll math; visual gap is cancelled by next section's negative margin */}
-      <div aria-hidden="true" style={{ height: `${Math.max(0, scrollDistance)}px`, pointerEvents: "none" }} />
+      {/* Spacer contributes to scroll height but visually overlaps the next section to eliminate the gap */}
+      <div
+        aria-hidden="true"
+        style={{
+          height: `${Math.max(0, scrollDistance)}px`,
+          marginTop: `-${Math.max(0, scrollDistance)}px`,
+          pointerEvents: "none",
+        }}
+      />
     </section>
   );
 };
