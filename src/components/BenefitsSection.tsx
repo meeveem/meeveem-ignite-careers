@@ -68,6 +68,12 @@ const getStickyTopOffsetPx = (stickyEl: HTMLElement | null): number => {
   return Number.isFinite(px) ? px : 96;
 };
 
+// Get actual sticky height (capped by min(100vh, 860px))
+const getStickyHeight = (stickyEl: HTMLElement | null): number => {
+  if (!stickyEl) return Math.min(window.innerHeight, 860);
+  return stickyEl.offsetHeight || Math.min(window.innerHeight, 860);
+};
+
 const BenefitsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isInStepsZone, setIsInStepsZone] = useState(false);
@@ -84,10 +90,10 @@ const BenefitsSection = () => {
   const [scrollDistance, setScrollDistance] = useState(0);
 
   const calculateScrollDistance = useCallback(() => {
-    const vh = window.innerHeight;
+    const stickyHeight = getStickyHeight(stickyRef.current);
     
     // Responsive per-step distance clamped for consistency across screens/zoom
-    const perStep = Math.max(300, Math.min(520, Math.round(vh * 0.75)));
+    const perStep = Math.max(300, Math.min(520, Math.round(stickyHeight * 0.75)));
     const holdEnd = 0.35 * perStep; // Small pause on last card
     const endComp = 24; // Compensation to avoid over-scrolling
     
@@ -108,12 +114,22 @@ const BenefitsSection = () => {
       setScrollDistance(calculateScrollDistance());
     };
     
+    // ResizeObserver to recalculate when sticky height changes
+    let resizeObserver: ResizeObserver | null = null;
+    if (stickyRef.current) {
+      resizeObserver = new ResizeObserver(() => {
+        setScrollDistance(calculateScrollDistance());
+      });
+      resizeObserver.observe(stickyRef.current);
+    }
+    
     mediaQuery.addEventListener("change", handleChange);
     window.addEventListener("resize", handleResize);
     
     return () => {
       mediaQuery.removeEventListener("change", handleChange);
       window.removeEventListener("resize", handleResize);
+      if (resizeObserver) resizeObserver.disconnect();
     };
   }, [calculateScrollDistance]);
 
@@ -156,12 +172,12 @@ const BenefitsSection = () => {
     const sectionBottom = rect.bottom;
 
     const stickyOffset = getStickyTopOffsetPx(stickyRef.current);
-    const vh = window.innerHeight;
+    const stickyHeight = getStickyHeight(stickyRef.current);
     const stepsHeight = Math.max(1, scrollDistance);
 
     // Check if we're in the steps zone AND still within section bounds
     const isPastHeader = sectionTop <= stickyOffset;
-    const isBeforeEnd = sectionBottom > stickyOffset + vh;
+    const isBeforeEnd = sectionBottom > stickyOffset + stickyHeight;
 
     if (isPastHeader && isBeforeEnd) {
       setIsInStepsZone(true);
@@ -450,10 +466,10 @@ const BenefitsSection = () => {
       {/* Container sticky with header and cards */}
       <div
         ref={stickyRef}
-        className="sticky top-16 md:top-20 lg:top-24 h-screen overflow-hidden overscroll-contain"
+        className="sticky top-16 md:top-20 lg:top-24 h-[min(100vh,860px)] overflow-hidden overscroll-contain"
         style={{
           position: "sticky",
-          height: "100vh",
+          height: "min(100vh, 860px)",
         }}
       >
         {/* Scroll Indicator - Absolute positioned within sticky container */}
