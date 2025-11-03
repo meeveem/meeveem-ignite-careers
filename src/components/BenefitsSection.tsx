@@ -490,7 +490,7 @@ const BenefitsSection = () => {
       {/* Container sticky with header and cards */}
       <div
         ref={stickyRef}
-        className="sticky top-16 md:top-20 lg:top-24 h-[min(100vh,860px)] overflow-hidden overscroll-contain z-20 bg-white"
+        className="sticky top-16 md:top-20 lg:top-24 h-[min(100vh,860px)] overflow-hidden overscroll-contain z-50 bg-white"
         style={{
           position: "sticky",
           height: "min(100vh, 860px)",
