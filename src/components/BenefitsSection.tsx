@@ -137,6 +137,14 @@ const BenefitsSection = () => {
     };
   }, [calculateScrollDistance]);
 
+  // Keep CSS var in sync whenever scrollDistance recalculates (e.g., zoom, ResizeObserver)
+  useEffect(() => {
+    document.documentElement.style.setProperty("--benefits-spacer-px", `${Math.max(0, scrollDistance)}px`);
+    return () => {
+      document.documentElement.style.removeProperty("--benefits-spacer-px");
+    };
+  }, [scrollDistance]);
+
   // Preload images
   useEffect(() => {
     benefits.forEach((benefit) => {
