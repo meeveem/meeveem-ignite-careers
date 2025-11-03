@@ -93,10 +93,10 @@ const BenefitsSection = () => {
     const stickyHeight = getStickyHeight(stickyRef.current);
     
     // Responsive per-step distance clamped for consistency across screens/zoom
-    // Further tightened and with compensation that scales with sticky height to ensure 0-gap across zoom
-    const perStep = Math.max(260, Math.min(380, Math.round(stickyHeight * 0.55)));
-    const holdEnd = 0.2 * perStep; // Shorter pause on last card
-    const endComp = Math.round(stickyHeight * 0.4); // Scale with sticky to eliminate residual gap
+    // Tuned to keep sections flush without hacks that affect layout of following sections
+    const perStep = Math.max(280, Math.min(420, Math.round(stickyHeight * 0.6)));
+    const holdEnd = 0.25 * perStep; // Small pause on last card
+    const endComp = 128; // Compensation to avoid trailing gap without negative margins
     
     // Scroll distance = perStep * (steps - 1) + holdEnd - endComp
     // We use (steps - 1) because the last step doesn't fade out
@@ -137,12 +137,9 @@ const BenefitsSection = () => {
     };
   }, [calculateScrollDistance]);
 
-  // Keep CSS var in sync whenever scrollDistance recalculates (e.g., zoom, ResizeObserver)
+  // Remove any previously set CSS var to avoid side effects
   useEffect(() => {
-    document.documentElement.style.setProperty("--benefits-spacer-px", `${Math.max(0, scrollDistance)}px`);
-    return () => {
-      document.documentElement.style.removeProperty("--benefits-spacer-px");
-    };
+    document.documentElement.style.removeProperty("--benefits-spacer-px");
   }, [scrollDistance]);
 
   // Preload images
