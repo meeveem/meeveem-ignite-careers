@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { DoorOpen, Eye, Radar, Scale, SearchX, Target } from "lucide-react";
-
+import { useState, useRef, useEffect, useCallback } from "react";
+import { SearchX, Radar, Eye, Scale, DoorOpen, Target } from "lucide-react";
 import dashboardStep1 from "@/assets/dashboard-step1.png";
 import dashboardStep2 from "@/assets/dashboard-step2.png";
 import dashboardStep3 from "@/assets/dashboard-step3.png";
@@ -8,7 +7,15 @@ import dashboardStep4 from "@/assets/dashboard-step4.png";
 import dashboardStep5 from "@/assets/dashboard-step5.png";
 import dashboardStep6 from "@/assets/dashboard-step6.png";
 
-const benefits = [
+interface Benefit {
+  icon: any;
+  title: string;
+  keyPhrase: string;
+  description: string;
+  image: string;
+}
+
+const benefits: Benefit[] = [
   {
     icon: SearchX,
     title: "Wasted hours on irrelevant jobs?",
@@ -54,206 +61,119 @@ const benefits = [
 ];
 
 const BenefitsSection = () => {
-  // Start hidden: image appears only when first text enters view
-  const [activeIndex, setActiveIndex] = useState(-1);
   const [isMobile, setIsMobile] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
-  const sectionRef = useRef<HTMLElement>(null);
-  const articleRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [stickyTopPx, setStickyTopPx] = useState<number>(0);
-  const [computedTopPx, setComputedTopPx] = useState<number>(0);
-  const rightImageRef = useRef<HTMLDivElement>(null);
-  const rightWrapperRef = useRef<HTMLDivElement>(null);
-  const lastArticleRef = useRef<HTMLDivElement>(null); // legacy sentinel (unused after refactor but kept harmless)
-  const leftColumnRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
 
+  // Detect mobile and reduced motion preference
   useEffect(() => {
-    const updateViewportFlags = () => {
-      setIsMobile(window.innerWidth < 1024);
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    const checkMotion = () => {
+      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      setPrefersReducedMotion(mediaQuery.matches);
     };
 
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const handleMotionChange = (event: MediaQueryListEvent) => {
-      setReducedMotion(event.matches);
-    };
+    checkMobile();
+    checkMotion();
 
-    updateViewportFlags();
-    setReducedMotion(motionQuery.matches);
-
-    window.addEventListener("resize", updateViewportFlags);
-    motionQuery.addEventListener("change", handleMotionChange);
+    window.addEventListener("resize", checkMobile);
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    mediaQuery.addEventListener("change", checkMotion);
 
     return () => {
-      window.removeEventListener("resize", updateViewportFlags);
-      motionQuery.removeEventListener("change", handleMotionChange);
+      window.removeEventListener("resize", checkMobile);
+      mediaQuery.removeEventListener("change", checkMotion);
     };
   }, []);
-
-  // Compute sticky top so image card never overlaps headline and stays professionally aligned
-  useEffect(() => {
-    const computeStickyTop = () => {
-      const header = document.querySelector('[data-benefits-heading="true"]') as HTMLElement | null;
-      const navOffset = 96; // approx nav height (lg:top-24)
-      const minTop = Math.round(window.innerHeight * 0.28); // keep image higher than mid but not at the very top
-      let headerBottom = 0;
-      if (header) {
-        const r = header.getBoundingClientRect();
-        headerBottom = Math.max(0, r.bottom);
-      }
-      const desired = Math.max(minTop, headerBottom + 16, navOffset);
-      setStickyTopPx(desired);
-    };
 
     computeStickyTop();
     window.addEventListener("resize", computeStickyTop);
     return () => window.removeEventListener("resize", computeStickyTop);
   }, []);
 
-  // Ensure the sticky image stops at the same level as the last text column bottom
+  // Handle scroll-based animation with Intersection Observer
   useEffect(() => {
-    if (isMobile || reducedMotion) return;
-    let ticking = false;
+    if (isMobile || prefersReducedMotion) return;
 
-    const updateTop = () => {
-      ticking = false;
-      const baseTop = stickyTopPx || 0;
-      const imageEl = rightImageRef.current;
-      const leftCol = leftColumnRef.current;
-      if (!imageEl || !leftCol) {
-        setComputedTopPx(baseTop);
-        return;
-      }
-      const imgRect = imageEl.getBoundingClientRect();
-      const leftRect = leftCol.getBoundingClientRect();
-      const imgHeight = imgRect.height || 0;
-      // Desired top so that image bottom aligns with left column bottom.
-      // Allow negative top so the card can move higher if needed and never overflow below the text.
-      const desiredTop = leftRect.bottom - imgHeight;
-      const clampedTop = Math.min(baseTop, desiredTop);
-      setComputedTopPx(clampedTop);
-    };
+    const handleScroll = () => {
+      const section = document.getElementById("benefits");
+      if (!section) return;
 
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateTop);
-        ticking = true;
-      }
-    };
-
-    // Watch image size too (when switching slides or on first load)
-    const imgRO = new ResizeObserver(() => updateTop());
-    if (rightImageRef.current) imgRO.observe(rightImageRef.current);
-
-    updateTop();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      imgRO.disconnect();
-    };
-  }, [stickyTopPx, isMobile, reducedMotion]);
-
-  // Make the right wrapper exactly as tall as the left column, so sticky boundary ends exactly with text
-  useEffect(() => {
-    if (!leftColumnRef.current || !rightWrapperRef.current) return;
-    const syncHeights = () => {
-      const h = leftColumnRef.current?.getBoundingClientRect().height || 0;
-      // Use explicit height (not min-height) to match the text column precisely
-      rightWrapperRef.current!.style.height = `${Math.max(1, Math.round(h))}px`;
-    };
-    const ro = new ResizeObserver(syncHeights);
-    ro.observe(leftColumnRef.current);
-    syncHeights();
-    window.addEventListener("resize", syncHeights);
-    // Re-sync after images/fonts settle
-    const t = setTimeout(syncHeights, 300);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", syncHeights);
-      clearTimeout(t);
-    };
-  }, []);
-
-  // Drive active card by the element whose center is closest to viewport center.
-  // Reveal earlier, but avoid overlapping the heading area.
-  useEffect(() => {
-    if (isMobile || reducedMotion) return;
-
-    let ticking = false;
-
-    const updateActive = () => {
-      ticking = false;
-      const centerY = window.innerHeight / 2;
-      const earlyThreshold = window.innerHeight * 0.6;
-      const refs = articleRefs.current;
-      if (!refs.length) return;
-
-      const first = refs[0];
-      if (!first) return;
-      const firstRect = first.getBoundingClientRect();
-      // Reveal a bit earlier, but not before first block reaches ~80vh
-      if (firstRect.top > earlyThreshold) {
-        if (activeIndex !== -1) setActiveIndex(-1);
-        return;
-      }
-
-      // Also ensure we don't display while the header still occupies mid-screen
-      const header = document.querySelector('[data-benefits-heading="true"]') as HTMLElement | null;
-      const headerBottom = header?.getBoundingClientRect().bottom ?? 0;
-      if (headerBottom > window.innerHeight * 0.45) {
-        if (activeIndex !== -1) setActiveIndex(-1);
-        return;
-      }
-
-      let bestIdx = 0;
-      let bestDist = Number.POSITIVE_INFINITY;
-      refs.forEach((el, idx) => {
-        if (!el) return;
-        const r = el.getBoundingClientRect();
-        if (r.bottom < 0 || r.top > window.innerHeight) return; // not on screen
-        const mid = r.top + r.height / 2;
-        const d = Math.abs(mid - centerY);
-        if (d < bestDist) {
-          bestDist = d;
-          bestIdx = idx;
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      // Section is in viewport
+      if (rect.top <= 0 && rect.bottom >= viewportHeight) {
+        // Calculate how far we've scrolled into the section
+        const scrolled = Math.abs(rect.top);
+        const sectionScrollHeight = rect.height - viewportHeight;
+        
+        if (sectionScrollHeight > 0) {
+          const progress = (scrolled / sectionScrollHeight) * (benefits.length - 1);
+          const clampedProgress = Math.max(0, Math.min(benefits.length - 1, progress));
+          
+          setScrollProgress(clampedProgress);
+          setCurrentIndex(Math.round(clampedProgress));
         }
-      });
-      if (bestIdx !== activeIndex) setActiveIndex(bestIdx);
-    };
-
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateActive);
-        ticking = true;
       }
     };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    // Initial compute
-    updateActive();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial call
+
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [activeIndex, isMobile, reducedMotion]);
+  }, [isMobile, prefersReducedMotion, benefits.length]);
 
-  const scrollToStep = useCallback(
-    (index: number) => {
-      const target = articleRefs.current[index];
-      if (!target) return;
+  // Dot navigation
+  const scrollToSlide = useCallback((index: number) => {
+    const section = document.getElementById("benefits");
+    if (!section) return;
 
-      target.scrollIntoView({
-        block: "center",
-        behavior: reducedMotion ? "auto" : "smooth",
-      });
-    },
-    [reducedMotion]
-  );
+    const rect = section.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const sectionScrollHeight = rect.height - viewportHeight;
+    
+    const targetProgress = index / (benefits.length - 1);
+    const targetScroll = window.scrollY + rect.top + (targetProgress * sectionScrollHeight);
 
-  if (isMobile || reducedMotion) {
+    window.scrollTo({
+      top: targetScroll,
+      behavior: "smooth",
+    });
+  }, [benefits.length]);
+
+  // Calculate opacity and transform based on scroll progress
+  const calculateTextOpacity = (index: number): number => {
+    const distance = Math.abs(scrollProgress - index);
+    if (distance > 1) return 0;
+    return Math.pow(1 - distance, 0.9);
+  };
+
+  const calculateTextTranslate = (index: number): number => {
+    const distance = Math.abs(scrollProgress - index);
+    if (distance > 1) return 20;
+    return 20 * distance;
+  };
+
+  const calculateImageOpacity = (index: number): number => {
+    const distance = Math.abs(scrollProgress - index);
+    if (distance > 1) return 0;
+    return Math.pow(1 - distance, 1.2);
+  };
+
+  const calculateImageScale = (index: number): number => {
+    const distance = Math.abs(scrollProgress - index);
+    if (distance > 1) return 0.98;
+    return 0.98 + 0.02 * (1 - distance);
+  };
+
+  // Mobile/Reduced Motion Fallback
+  if (isMobile || prefersReducedMotion) {
     return (
       <section className="py-24 bg-white" ref={sectionRef}>
         <div className="container mx-auto px-6 max-w-[1200px]">
@@ -302,9 +222,8 @@ const BenefitsSection = () => {
                   <div className="lg:col-span-7">
                     <img
                       src={benefit.image}
-                      alt={`Dashboard showing ${benefit.title}`}
-                      className="w-full rounded-[24px]"
-                      style={{ boxShadow: "0 20px 40px rgba(0,0,0,0.15)" }}
+                      alt={benefit.title}
+                      className="w-full h-auto rounded-lg shadow-sm"
                       loading="lazy"
                     />
                   </div>
@@ -317,74 +236,97 @@ const BenefitsSection = () => {
     );
   }
 
+  // Desktop: Scroll hijacking with overlay
   return (
-    <section
-      ref={sectionRef}
-      className="pt-0 pb-24 bg-white relative isolate"
-      aria-label="Interactive product showcase"
-    >
-      <div className="container mx-auto px-6 md:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-16 relative z-20" data-benefits-heading="true">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
+    <section id="benefits" className="relative" style={{ height: `${benefits.length * 50}vh` }}>
+      <div
+        ref={stickyRef}
+        className="sticky top-16 md:top-20 lg:top-24 h-[min(100svh,860px)] bg-white overflow-hidden"
+        style={{ height: "min(100svh, 860px)" }}
+      >
+        {/* Overlay content (header, dots, text, images) */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Header */}
+          <div className="text-center pt-12 pb-8 px-6">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-6 pointer-events-auto" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
-            <p className="text-lg lg:text-xl" style={{ color: "#334155" }}>
-              Endless scrolling, vague job descriptions and slow responses. Meeveem AI removes the
-              guesswork and makes finding the right role fast, fair and personal.
+            <p className="text-lg lg:text-xl max-w-3xl mx-auto pointer-events-auto" style={{ color: "#334155" }}>
+              Endless scrolling, vague job descriptions and slow responses. Meeveem AI removes the guesswork and makes
+              finding the right role fast, fair and personal.
             </p>
           </div>
 
-        <div className="relative lg:grid lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)] gap-12 lg:gap-16 xl:gap-24">
-
-          <div ref={leftColumnRef} className="flex flex-col gap-24 lg:gap-32">
-            {benefits.map((benefit, index) => {
-              const Icon = benefit.icon;
-              const isActive = index === activeIndex;
-              return (
-                <article
-                  key={benefit.title}
-                  data-index={index}
-                  ref={(el) => {
-                    articleRefs.current[index] = el;
-                  }}
-                  className="scroll-mt-[calc(8rem+4rem)] min-h-[70vh] flex items-center"
-                >
-                  {index === benefits.length - 1 && (
-                    <div ref={lastArticleRef} className="absolute bottom-0 left-0 h-px w-px opacity-0 pointer-events-none" />
-                  )}
-                  <div
-                    className={`transition-all duration-500 ${
-                      isActive ? "opacity-100 translate-y-0" : "opacity-20 translate-y-6 pointer-events-none"
-                    }`}
-                    style={reducedMotion ? { transition: "none" } : undefined}
-                  >
-                    <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center mb-6">
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    <h3
-                      className="text-[26px] sm:text-[30px] lg:text-[36px] font-bold mb-4"
-                      style={{ lineHeight: "1.1", color: "#0F172A" }}
-                    >
-                      {benefit.title}
-                    </h3>
-                    <p
-                      className="font-semibold text-[16px] sm:text-[17px] mb-3 px-3 py-1 rounded-md inline-block"
-                      style={{ color: "#2563EB", backgroundColor: "rgba(37, 99, 235, 0.08)" }}
-                    >
-                      {benefit.keyPhrase}
-                    </p>
-                    <p
-                      className="text-[15px] sm:text-[16px]"
-                      style={{ lineHeight: "1.75", color: "#334155" }}
-                    >
-                      {benefit.description}
-                    </p>
-                  </div>
-                </article>
-              );
-            })}
+          {/* Dot Navigation */}
+          <div className="absolute left-8 top-1/2 -translate-y-1/2 flex flex-col gap-3 pointer-events-auto z-10">
+            {benefits.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => scrollToSlide(index)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  currentIndex === index
+                    ? "scale-125"
+                    : "hover:bg-gray-400"
+                }`}
+                style={{
+                  backgroundColor: currentIndex === index ? "#2563EB" : "#D1D5DB",
+                }}
+                aria-label={`Go to benefit ${index + 1}`}
+              />
+            ))}
           </div>
+
+          {/* Content Grid */}
+          <div className="container mx-auto px-6 h-full flex items-center max-w-[1200px]">
+            <div className="grid lg:grid-cols-12 gap-12 w-full items-center">
+              {/* Text Column */}
+              <div className="lg:col-span-5 relative h-[300px]">
+                {benefits.map((benefit, index) => {
+                  const Icon = benefit.icon;
+                  const opacity = calculateTextOpacity(index);
+                  const translateY = calculateTextTranslate(index);
+
+                  return (
+                    <div
+                      key={index}
+                      className="absolute inset-0 pointer-events-auto"
+                      style={{
+                        opacity,
+                        transform: `translateY(${translateY}px)`,
+                        transition: "opacity 0.3s ease-out, transform 0.3s ease-out",
+                      }}
+                    >
+                      <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center mb-6">
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      <h3
+                        className="text-[28px] sm:text-[32px] lg:text-[40px] font-bold mb-4"
+                        style={{ lineHeight: "1.1", color: "#0F172A" }}
+                      >
+                        {benefit.title}
+                      </h3>
+                      <p
+                        className="font-semibold text-[17px] sm:text-[18px] mb-3 px-3 py-1 rounded-md inline-block"
+                        style={{ color: "#2563EB", backgroundColor: "rgba(37, 99, 235, 0.08)" }}
+                      >
+                        {benefit.keyPhrase}
+                      </p>
+                      <p
+                        className="text-[16px] sm:text-[18px]"
+                        style={{ lineHeight: "1.75", color: "#334155" }}
+                      >
+                        {benefit.description}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Image Column */}
+              <div className="lg:col-span-7 relative h-[400px]">
+                {benefits.map((benefit, index) => {
+                  const opacity = calculateImageOpacity(index);
+                  const scale = calculateImageScale(index);
 
           <div ref={rightWrapperRef} className="relative">
             <div className="sticky flex justify-center items-center" style={{ top: computedTopPx || stickyTopPx || undefined }}>
@@ -401,17 +343,21 @@ const BenefitsSection = () => {
                 {benefits.map((benefit, index) => {
                   const isActive = index === activeIndex;
                   return (
-                    <img
-                      key={benefit.title}
-                      src={benefit.image}
-                      alt={`Dashboard for ${benefit.title}`}
-                      className={`absolute inset-0 w-full h-full object-contain object-center transition-all duration-700 ${
-                        isActive ? "opacity-100 scale-100" : "opacity-0 scale-95"
-                      }`}
-                      style={reducedMotion ? { transition: "none" } : undefined}
-                      loading={index === 0 ? "eager" : "lazy"}
-                      aria-hidden={!isActive}
-                    />
+                    <div
+                      key={index}
+                      className="absolute inset-0 flex items-center justify-center"
+                      style={{
+                        opacity,
+                        transform: `scale(${scale})`,
+                        transition: "opacity 0.3s ease-out, transform 0.3s ease-out",
+                      }}
+                    >
+                      <img
+                        src={benefit.image}
+                        alt={benefit.title}
+                        className="rounded-lg shadow-sm w-full h-full object-contain"
+                      />
+                    </div>
                   );
                 })}
               </div>
