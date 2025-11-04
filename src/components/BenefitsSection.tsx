@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { ChevronDown, SearchX, Radar, Eye, Scale, DoorOpen, Target } from "lucide-react";
+import { SearchX, Radar, Eye, Scale, DoorOpen, Target } from "lucide-react";
 import dashboardStep1 from "@/assets/dashboard-step1.png";
 import dashboardStep2 from "@/assets/dashboard-step2.png";
 import dashboardStep3 from "@/assets/dashboard-step3.png";
@@ -67,7 +67,6 @@ const BenefitsSection = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const stickyRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   // Detect mobile and reduced motion preference
   useEffect(() => {
@@ -98,75 +97,58 @@ const BenefitsSection = () => {
     });
   }, []);
 
-  // Handle internal scroll
-  const handleInternalScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const viewH = el.clientHeight;
-    const scrollTop = el.scrollTop;
-    const progress = scrollTop / viewH;
-
-    setScrollProgress(progress);
-    setCurrentIndex(Math.round(progress));
-  }, []);
-
+  // Handle scroll-based animation with Intersection Observer
   useEffect(() => {
-    const el = scrollRef.current;
-    if (!el || isMobile || prefersReducedMotion) return;
+    if (isMobile || prefersReducedMotion) return;
 
-    el.addEventListener("scroll", handleInternalScroll, { passive: true });
-    handleInternalScroll(); // Initial call
+    const handleScroll = () => {
+      const section = document.getElementById("benefits");
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      // Section is in viewport
+      if (rect.top <= 0 && rect.bottom >= viewportHeight) {
+        // Calculate how far we've scrolled into the section
+        const scrolled = Math.abs(rect.top);
+        const sectionScrollHeight = rect.height - viewportHeight;
+        
+        if (sectionScrollHeight > 0) {
+          const progress = (scrolled / sectionScrollHeight) * (benefits.length - 1);
+          const clampedProgress = Math.max(0, Math.min(benefits.length - 1, progress));
+          
+          setScrollProgress(clampedProgress);
+          setCurrentIndex(Math.round(clampedProgress));
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial call
 
     return () => {
-      el.removeEventListener("scroll", handleInternalScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [isMobile, prefersReducedMotion, handleInternalScroll]);
-
-  // Wheel handler: prioritize internal scroll
-  const handleWheel = useCallback((e: React.WheelEvent) => {
-    const el = scrollRef.current;
-    if (!el || isMobile || prefersReducedMotion) return;
-
-    const atTop = el.scrollTop <= 0;
-    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-
-    if ((e.deltaY > 0 && !atBottom) || (e.deltaY < 0 && !atTop)) {
-      e.preventDefault();
-      el.scrollTop += e.deltaY;
-    }
-  }, [isMobile, prefersReducedMotion]);
-
-  // Touch handler: prioritize internal scroll
-  const touchStartY = useRef(0);
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
-  }, []);
-
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    const el = scrollRef.current;
-    if (!el || isMobile || prefersReducedMotion) return;
-
-    const deltaY = touchStartY.current - e.touches[0].clientY;
-    const atTop = el.scrollTop <= 0;
-    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-
-    if ((deltaY > 0 && !atBottom) || (deltaY < 0 && !atTop)) {
-      e.preventDefault();
-    }
-  }, [isMobile, prefersReducedMotion]);
+  }, [isMobile, prefersReducedMotion, benefits.length]);
 
   // Dot navigation
   const scrollToSlide = useCallback((index: number) => {
-    const el = scrollRef.current;
-    if (!el) return;
+    const section = document.getElementById("benefits");
+    if (!section) return;
 
-    const viewH = el.clientHeight;
-    el.scrollTo({
-      top: index * viewH,
+    const rect = section.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const sectionScrollHeight = rect.height - viewportHeight;
+    
+    const targetProgress = index / (benefits.length - 1);
+    const targetScroll = window.scrollY + rect.top + (targetProgress * sectionScrollHeight);
+
+    window.scrollTo({
+      top: targetScroll,
       behavior: "smooth",
     });
-  }, []);
+  }, [benefits.length]);
 
   // Calculate opacity and transform based on scroll progress
   const calculateTextOpacity = (index: number): number => {
@@ -257,21 +239,18 @@ const BenefitsSection = () => {
     );
   }
 
-  // Desktop: Internal scroll with overlay
+  // Desktop: Scroll hijacking with overlay
   return (
-    <section id="benefits" className="relative">
+    <section id="benefits" className="relative" style={{ height: `${benefits.length * 50}vh` }}>
       <div
         ref={stickyRef}
         className="sticky top-16 md:top-20 lg:top-24 h-[min(100svh,860px)] bg-white overflow-hidden"
         style={{ height: "min(100svh, 860px)" }}
-        onWheel={handleWheel}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
       >
         {/* Overlay content (header, dots, text, images) */}
         <div className="absolute inset-0 pointer-events-none">
           {/* Header */}
-          <div className="text-center pt-12 pb-8">
+          <div className="text-center pt-12 pb-8 px-6">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6 pointer-events-auto" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
@@ -373,35 +352,6 @@ const BenefitsSection = () => {
               </div>
             </div>
           </div>
-
-          {/* Scroll indicator (only visible on first slide) */}
-          {currentIndex === 0 && (
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-auto animate-bounce">
-              <span className="text-sm" style={{ color: "#64748B" }}>
-                Scroll to explore
-              </span>
-              <ChevronDown className="w-5 h-5" style={{ color: "#64748B" }} />
-            </div>
-          )}
-        </div>
-
-        {/* Internal scroller (invisible, drives the timeline) */}
-        <div
-          ref={scrollRef}
-          className="absolute inset-0 overflow-y-auto"
-          style={{
-            scrollSnapType: "y mandatory",
-            scrollBehavior: "smooth",
-          }}
-          tabIndex={0}
-        >
-          {benefits.map((_, index) => (
-            <div
-              key={index}
-              className="h-full w-full"
-              style={{ scrollSnapAlign: "start" }}
-            />
-          ))}
         </div>
       </div>
     </section>
