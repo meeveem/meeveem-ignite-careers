@@ -277,8 +277,8 @@ const BenefitsSection = () => {
                   className="min-h-screen flex items-center"
                 >
                   <div
-                    className={`transition-all duration-500 ${
-                      isActive ? "opacity-100 translate-y-0" : "opacity-30 translate-y-8"
+                    className={`transition-all duration-300 ${
+                      isActive ? "opacity-100 scale-100" : "opacity-60 scale-95"
                     }`}
                   >
                     <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center mb-6">
