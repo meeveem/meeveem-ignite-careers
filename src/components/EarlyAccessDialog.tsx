@@ -72,7 +72,6 @@ const EarlyAccessDialog = ({ open, onOpenChange }: EarlyAccessDialogProps) => {
 
       // Check if successful (either from data.success or no error)
       if (data?.success || !error) {
-        console.log("Contact added successfully:", data);
         
         // Reset form
         setFormData({

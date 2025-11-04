@@ -89,12 +89,9 @@ const BenefitsSection = () => {
     };
   }, []);
 
-  // Preload images
-  useEffect(() => {
-    benefits.forEach((benefit) => {
-      const img = new Image();
-      img.src = benefit.image;
-    });
+    computeStickyTop();
+    window.addEventListener("resize", computeStickyTop);
+    return () => window.removeEventListener("resize", computeStickyTop);
   }, []);
 
   // Handle scroll-based animation with Intersection Observer
@@ -178,15 +175,15 @@ const BenefitsSection = () => {
   // Mobile/Reduced Motion Fallback
   if (isMobile || prefersReducedMotion) {
     return (
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-white" ref={sectionRef}>
         <div className="container mx-auto px-6 max-w-[1200px]">
-          <div className="text-center max-w-3xl mx-auto mb-10 lg:mb-12">
+          <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
             <p className="text-lg lg:text-xl" style={{ color: "#334155" }}>
-              Endless scrolling, vague job descriptions and slow responses. Meeveem AI removes the guesswork and makes
-              finding the right role fast, fair and personal.
+              Endless scrolling, vague job descriptions and slow responses. Meeveem AI removes
+              the guesswork and makes finding the right role fast, fair and personal.
             </p>
           </div>
           <div className="space-y-16">
@@ -194,10 +191,10 @@ const BenefitsSection = () => {
               const Icon = benefit.icon;
               return (
                 <div
-                  key={index}
+                  key={benefit.title}
                   className="grid lg:grid-cols-12 gap-12 items-center"
                   role="region"
-                  aria-label={`Step ${index + 1}: ${benefit.title}`}
+                  aria-label={`Benefit ${index + 1}: ${benefit.title}`}
                 >
                   <div className="lg:col-span-5">
                     <div className="w-11 h-11 rounded-xl gradient-primary flex items-center justify-center mb-6">
@@ -331,6 +328,20 @@ const BenefitsSection = () => {
                   const opacity = calculateImageOpacity(index);
                   const scale = calculateImageScale(index);
 
+          <div ref={rightWrapperRef} className="relative">
+            <div className="sticky flex justify-center items-center" style={{ top: computedTopPx || stickyTopPx || undefined }}>
+              <div
+                ref={rightImageRef}
+                className="relative z-0 w-full max-w-[1200px] xl:max-w-[1280px] 2xl:max-w-[1400px] aspect-[16/9] rounded-[36px] bg-white shadow-[0_32px_80px_rgba(15,23,42,0.15)] overflow-hidden"
+                style={{
+                  // Hide the whole card until a section is active
+                  opacity: activeIndex >= 0 ? 1 : 0,
+                  transition: "opacity 300ms ease",
+                }}
+                aria-hidden={activeIndex < 0}
+              >
+                {benefits.map((benefit, index) => {
+                  const isActive = index === activeIndex;
                   return (
                     <div
                       key={index}
@@ -352,6 +363,7 @@ const BenefitsSection = () => {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>
