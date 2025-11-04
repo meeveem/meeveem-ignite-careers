@@ -120,20 +120,23 @@ const BenefitsSection = () => {
       if (!refs.length) return;
 
       const first = refs[0];
-      if (!first) return;
+      const last = refs[refs.length - 1];
+      if (!first || !last) return;
 
       const firstRect = first.getBoundingClientRect();
+      const lastRect = last.getBoundingClientRect();
       const viewportCenter = window.innerHeight / 2;
 
-      // Reveal when first article is 50% in viewport
-      if (firstRect.top < window.innerHeight * 0.7 && firstRect.bottom > 0) {
+      // Check if we're in the section range
+      const inSection = firstRect.top < window.innerHeight && lastRect.bottom > 0;
+
+      if (inSection) {
         let bestIdx = 0;
         let bestDist = Number.POSITIVE_INFINITY;
 
         refs.forEach((el, idx) => {
           if (!el) return;
           const r = el.getBoundingClientRect();
-          if (r.bottom < 0 || r.top > window.innerHeight) return;
 
           const mid = r.top + r.height / 2;
           const d = Math.abs(mid - viewportCenter);
@@ -319,10 +322,6 @@ const BenefitsSection = () => {
             >
               <div
                 className="relative w-full aspect-[16/9] rounded-[32px] bg-white shadow-2xl overflow-hidden"
-                style={{
-                  opacity: activeIndex >= 0 ? 1 : 0,
-                  transition: "opacity 400ms ease-in-out",
-                }}
               >
                 {benefits.map((benefit, index) => {
                   const isActive = index === activeIndex;
