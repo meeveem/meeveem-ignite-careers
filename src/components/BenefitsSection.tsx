@@ -266,7 +266,7 @@ const BenefitsSection = () => {
 
         <div className="relative lg:grid lg:grid-cols-2 lg:gap-16 xl:gap-20">
           {/* Left column: Text content */}
-          <div className="space-y-[100vh]">
+          <div className="space-y-[50vh]">
             {benefits.map((benefit, index) => {
               const Icon = benefit.icon;
               const isActive = index === activeIndex;
