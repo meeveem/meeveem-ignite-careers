@@ -185,7 +185,7 @@ const BenefitsSection = () => {
 
   if (isMobile || reducedMotion) {
     return (
-      <section className="pt-12 pb-16 bg-white" ref={sectionRef}>
+      <section className="py-8 bg-white" ref={sectionRef}>
         <div className="container mx-auto px-6 max-w-[1200px]">
           <div className="text-center max-w-3xl mx-auto mb-8">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
@@ -250,7 +250,7 @@ const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="pt-12 pb-16 bg-white relative isolate"
+      className="py-8 bg-white relative isolate"
       aria-label="Interactive product showcase"
     >
       <div className="container mx-auto px-6 md:px-8 max-w-7xl">
@@ -277,7 +277,7 @@ const BenefitsSection = () => {
                   ref={(el) => {
                     articleRefs.current[index] = el as HTMLDivElement | null;
                   }}
-                  className="py-12 flex items-center"
+                  className="min-h-[60vh] flex items-center"
                 >
                   <div
                     className={`transition-all duration-300 ${
