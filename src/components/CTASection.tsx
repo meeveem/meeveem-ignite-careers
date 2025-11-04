@@ -6,7 +6,7 @@ import EarlyAccessDialog from "./EarlyAccessDialog";
 const CTASection = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   return (
-    <section id="cta" className="pt-0 pb-24 bg-white relative overflow-hidden">
+    <section id="cta" className="py-24 bg-white relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-10 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
 
@@ -16,7 +16,7 @@ const CTASection = () => {
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <div className="animate-fade-in">
-            <h2 className="text-4xl lg:text-6xl font-bold text-foreground mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
               Ready to launch your career in HealthTech?
             </h2>
             <p className="text-xl text-muted-foreground mb-12 leading-relaxed">

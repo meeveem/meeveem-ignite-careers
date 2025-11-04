@@ -11,6 +11,10 @@ node_modules
 dist
 dist-ssr
 *.local
+\n+# Local duplicate project folder (do not commit)
+meeveem-ignite-careers/
+\n+# Bun lockfile
+bun.lockb
 
 # Editor directories and files
 .vscode/*
