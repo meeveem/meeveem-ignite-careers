@@ -125,7 +125,7 @@ const BenefitsSection = () => {
 
       const firstRect = first.getBoundingClientRect();
       const lastRect = last.getBoundingClientRect();
-      const viewportCenter = window.innerHeight / 2;
+      const viewportCenter = window.innerHeight * 0.4;
 
       // Check if we're in the section range
       const inSection = firstRect.top < window.innerHeight && lastRect.bottom > 0;
@@ -185,7 +185,7 @@ const BenefitsSection = () => {
 
   if (isMobile || reducedMotion) {
     return (
-      <section className="py-16 bg-white" ref={sectionRef}>
+      <section className="py-8 bg-white" ref={sectionRef}>
         <div className="container mx-auto px-6 max-w-[1200px]">
           <div className="text-center max-w-3xl mx-auto mb-8">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
@@ -250,11 +250,11 @@ const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-16 bg-white relative isolate"
+      className="py-8 bg-white relative isolate"
       aria-label="Interactive product showcase"
     >
       <div className="container mx-auto px-6 md:px-8 max-w-7xl">
-        <div className="text-center max-w-3xl mx-auto mb-12 relative z-20" data-benefits-heading="true">
+        <div className="text-center max-w-3xl mx-auto mb-8 relative z-20" data-benefits-heading="true">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
             Searching Smarter Starts Here
           </h2>
@@ -264,9 +264,9 @@ const BenefitsSection = () => {
           </p>
         </div>
 
-        <div className="relative lg:grid lg:grid-cols-2 lg:gap-16 xl:gap-20">
+        <div className="relative lg:grid lg:grid-cols-2 lg:gap-12 xl:gap-14">
           {/* Left column: Text content */}
-          <div className="space-y-8">
+          <div className="space-y-4">
             {benefits.map((benefit, index) => {
               const Icon = benefit.icon;
               const isActive = index === activeIndex;
@@ -277,7 +277,7 @@ const BenefitsSection = () => {
                   ref={(el) => {
                     articleRefs.current[index] = el as HTMLDivElement | null;
                   }}
-                  className="min-h-screen flex items-center"
+                  className="min-h-[60vh] flex items-center"
                 >
                   <div
                     className={`transition-all duration-300 ${
@@ -317,11 +317,11 @@ const BenefitsSection = () => {
               className="sticky flex items-center justify-center"
               style={{
                 top: `${stickyTopPx}px`,
-                height: 'calc(100vh - 200px)',
+                height: 'calc(100vh - 160px)',
               }}
             >
               <div
-                className="relative w-full aspect-[16/9] rounded-[32px] bg-white shadow-2xl overflow-hidden"
+                className="relative w-full aspect-[4/3] rounded-[24px] bg-white shadow-2xl overflow-hidden"
               >
                 {benefits.map((benefit, index) => {
                   const isActive = index === activeIndex;
@@ -330,7 +330,7 @@ const BenefitsSection = () => {
                       key={benefit.title}
                       src={benefit.image}
                       alt={`Dashboard for ${benefit.title}`}
-                      className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${
+                      className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ${
                         isActive ? "opacity-100 scale-100" : "opacity-0 scale-95"
                       }`}
                       loading={index === 0 ? "eager" : "lazy"}
