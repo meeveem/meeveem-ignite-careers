@@ -185,9 +185,9 @@ const BenefitsSection = () => {
 
   if (isMobile || reducedMotion) {
     return (
-      <section className="py-8 bg-white" ref={sectionRef}>
+      <section className="pt-12 pb-6 bg-white" ref={sectionRef}>
         <div className="container mx-auto px-6 max-w-[1200px]">
-          <div className="text-center max-w-3xl mx-auto mb-8">
+          <div className="text-center max-w-3xl mx-auto mb-4">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
               Searching Smarter Starts Here
             </h2>
@@ -250,11 +250,11 @@ const BenefitsSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-8 bg-white relative isolate"
+      className="pt-12 pb-6 bg-white relative isolate"
       aria-label="Interactive product showcase"
     >
       <div className="container mx-auto px-6 md:px-8 max-w-7xl">
-        <div className="text-center max-w-3xl mx-auto mb-8 relative z-20" data-benefits-heading="true">
+        <div className="text-center max-w-3xl mx-auto mb-4 relative z-20" data-benefits-heading="true">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6" style={{ color: "#0F172A" }}>
             Searching Smarter Starts Here
           </h2>
