@@ -197,7 +197,7 @@ const SearchingSmarter = () => {
         </div>
 
         {/* Mobile & tablet: image followed by its benefit text */}
-        <div className="lg:hidden flex flex-col gap-10">
+        <div className="lg:hidden flex flex-col gap-14">
           {BENEFITS.map((benefit) => (
             <div key={benefit.title} className="flex flex-col gap-4">
               <div className="relative w-full aspect-square overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
@@ -224,7 +224,7 @@ const SearchingSmarter = () => {
         <div className="hidden lg:grid grid-cols-2 gap-12">
           <div
             ref={columnRef}
-            className="order-2 flex flex-col space-y-12 lg:order-1"
+            className="order-2 flex flex-col space-y-16 lg:order-1"
             style={{
               paddingTop: padTop > 0 ? `${padTop}px` : undefined,
               paddingBottom: padBottom > 0 ? `${padBottom}px` : undefined,
