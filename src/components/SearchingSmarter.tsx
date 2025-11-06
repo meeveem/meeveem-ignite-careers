@@ -143,7 +143,7 @@ const SearchingSmarter = () => {
       if (closestDist === Number.POSITIVE_INFINITY) return;
       // Update the image only when the text card's center comes close
       // to the image center ("dead zone" prevents early switches).
-      const threshold = Math.min(closestHeight * 0.35, imageRect.height * 0.3, 120);
+      const threshold = Math.min(closestHeight * 0.2, imageRect.height * 0.25, 100);
       setActiveIndex((prev) => (closestDist <= threshold ? closestIdx : prev));
     };
 
@@ -166,22 +166,33 @@ const SearchingSmarter = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // We keep zero top/bottom padding so extra space appears only between benefits
-    const applyNoColumnPadding = () => {
-      setPadTop(0);
-      setPadBottom(0);
+    const calculatePadding = () => {
+      const firstBenefit = itemRefs.current[0];
+      if (!firstBenefit || window.innerWidth < 1024) {
+        setPadTop(0);
+        return;
+      }
+
+      const viewportH = window.innerHeight;
+      const targetCenter = viewportH / 2 + navOffset / 2; // sticky center in viewport
+      const colTop = columnRef.current?.getBoundingClientRect().top ?? 0;
+      const firstHeight = firstBenefit.offsetHeight;
+      const newPadTop = Math.max(0, targetCenter - colTop - firstHeight / 2);
+      setPadTop(newPadTop);
     };
 
-    applyNoColumnPadding();
-
-    window.addEventListener("resize", applyNoColumnPadding);
-    window.addEventListener("orientationchange", applyNoColumnPadding);
+    calculatePadding();
+    const ro = new ResizeObserver(calculatePadding);
+    if (columnRef.current) ro.observe(columnRef.current);
+    window.addEventListener("resize", calculatePadding);
+    window.addEventListener("orientationchange", calculatePadding);
 
     return () => {
-      window.removeEventListener("resize", applyNoColumnPadding);
-      window.removeEventListener("orientationchange", applyNoColumnPadding);
+      ro.disconnect();
+      window.removeEventListener("resize", calculatePadding);
+      window.removeEventListener("orientationchange", calculatePadding);
     };
-  }, []);
+  }, [navOffset]);
 
 
   return (
@@ -223,7 +234,7 @@ const SearchingSmarter = () => {
         <div className="hidden lg:grid grid-cols-2 gap-12">
           <div
             ref={columnRef}
-            className="order-2 flex flex-col space-y-16 lg:order-1"
+            className="order-2 flex flex-col space-y-[60vh] lg:order-1"
             style={{
               paddingTop: padTop > 0 ? `${padTop}px` : undefined,
               paddingBottom: padBottom > 0 ? `${padBottom}px` : undefined,
