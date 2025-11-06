@@ -109,6 +109,7 @@ const SearchingSmarter = () => {
 
       let closestIdx = 0;
       let closestDist = Number.POSITIVE_INFINITY;
+      let closestHeight = 0;
 
       itemRefs.current.forEach((node, idx) => {
         if (!node) return;
@@ -118,11 +119,15 @@ const SearchingSmarter = () => {
         if (dist < closestDist) {
           closestDist = dist;
           closestIdx = idx;
+          closestHeight = rect.height;
         }
       });
 
       if (closestDist === Number.POSITIVE_INFINITY) return;
-      setActiveIndex((prev) => (prev === closestIdx ? prev : closestIdx));
+      // Update the image only when the text card's center comes close
+      // to the image center ("dead zone" prevents early switches).
+      const threshold = Math.min(closestHeight * 0.35, imageRect.height * 0.3, 120);
+      setActiveIndex((prev) => (closestDist <= threshold ? closestIdx : prev));
     };
 
     const handleScroll = () => {
