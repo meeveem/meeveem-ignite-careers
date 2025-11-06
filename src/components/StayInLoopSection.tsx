@@ -57,10 +57,10 @@ const StayInLoopSection = () => {
   ];
 
   return (
-    <section id="join-early" className="py-24 gradient-hero">
+    <section id="join-early" className="pt-16 md:pt-20 lg:pt-24 pb-12 md:pb-16 lg:pb-20 gradient-hero">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">Join Early. Get Matched First.</h2>
+          <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">Join Early. Get Matched First.</h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             Unlock smarter job matching, exclusive updates and first access to roles at launch.
           </p>
