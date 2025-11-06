@@ -52,6 +52,7 @@ const SearchingSmarter = () => {
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
   const columnRef = useRef<HTMLDivElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
+  const [navOffset, setNavOffset] = useState(0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -83,6 +84,29 @@ const SearchingSmarter = () => {
 
     return () => {
       anchors.forEach((anchor) => anchor.removeEventListener("click", handleClick));
+    };
+  }, []);
+
+  // Measure fixed navbar height to truly center the sticky image in the visible area
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const measureNav = () => {
+      const nav = document.querySelector('nav');
+      const h = nav ? (nav as HTMLElement).getBoundingClientRect().height : 0;
+      setNavOffset(Math.max(0, Math.round(h)));
+    };
+
+    measureNav();
+    window.addEventListener('resize', measureNav);
+    window.addEventListener('orientationchange', measureNav);
+    const ro = new ResizeObserver(measureNav);
+    const navEl = document.querySelector('nav');
+    if (navEl) ro.observe(navEl);
+    return () => {
+      window.removeEventListener('resize', measureNav);
+      window.removeEventListener('orientationchange', measureNav);
+      ro.disconnect();
     };
   }, []);
 
@@ -237,7 +261,10 @@ const SearchingSmarter = () => {
           </div>
 
           <div className="order-1 lg:order-2 lg:col-span-1 lg:self-stretch">
-            <div className="mx-auto w-full lg:sticky lg:top-0 lg:h-screen flex items-center justify-center">
+            <div
+              className="mx-auto w-full lg:sticky flex items-center justify-center"
+              style={{ top: navOffset, height: `calc(100vh - ${navOffset}px)` }}
+            >
               <div
                 ref={imageContainerRef}
                 className="relative mx-auto h-[60vh] w-[60vh] max-w-full aspect-square overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"
