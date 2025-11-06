@@ -143,7 +143,8 @@ const SearchingSmarter = () => {
       if (closestDist === Number.POSITIVE_INFINITY) return;
       // Update the image only when the text card's center comes close
       // to the image center ("dead zone" prevents early switches).
-      const threshold = Math.min(closestHeight * 0.2, imageRect.height * 0.25, 100);
+      // Switch a bit earlier so the image changes before the next benefit fully appears
+      const threshold = Math.min(closestHeight * 0.55, imageRect.height * 0.5, 220);
       setActiveIndex((prev) => (closestDist <= threshold ? closestIdx : prev));
     };
 
@@ -168,17 +169,25 @@ const SearchingSmarter = () => {
 
     const calculatePadding = () => {
       const firstBenefit = itemRefs.current[0];
-      if (!firstBenefit || window.innerWidth < 1024) {
+      const lastBenefit = itemRefs.current[BENEFITS.length - 1];
+      if (!firstBenefit || !lastBenefit || window.innerWidth < 1024) {
         setPadTop(0);
+        setPadBottom(0);
         return;
       }
 
       const viewportH = window.innerHeight;
       const targetCenter = viewportH / 2 + navOffset / 2; // sticky center in viewport
       const colTop = columnRef.current?.getBoundingClientRect().top ?? 0;
+
       const firstHeight = firstBenefit.offsetHeight;
       const newPadTop = Math.max(0, targetCenter - colTop - firstHeight / 2);
+
+      const lastHeight = lastBenefit.offsetHeight;
+      const newPadBottom = Math.max(0, targetCenter - colTop - lastHeight / 2);
+
       setPadTop(newPadTop);
+      setPadBottom(newPadBottom);
     };
 
     calculatePadding();
