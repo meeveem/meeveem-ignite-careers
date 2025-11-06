@@ -52,6 +52,8 @@ const SearchingSmarter = () => {
   const columnRef = useRef<HTMLDivElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const [navOffset, setNavOffset] = useState(0);
+  const lastItemRef = useRef<HTMLDivElement | null>(null);
+  const [lastStickyTop, setLastStickyTop] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -169,39 +171,20 @@ const SearchingSmarter = () => {
 
     const calculatePadding = () => {
       const first = itemRefs.current[0];
-      const last = itemRefs.current[BENEFITS.length - 1];
       const col = columnRef.current;
-      if (!first || !last || !col || window.innerWidth < 1024) {
+      if (!first || !col || window.innerWidth < 1024) {
         setPadTop(0);
-        setPadBottom(0);
         return;
       }
 
       // Sticky image center in viewport coordinates (accounts for navbar)
       const stickyMidVp = navOffset + (window.innerHeight - navOffset) / 2;
-
-      // Measure base content height of the column with no top/bottom padding
-      const prevTop = col.style.paddingTop;
-      const prevBottom = col.style.paddingBottom;
-      col.style.paddingTop = "0px";
-      col.style.paddingBottom = "0px";
-      const baseHeight = col.scrollHeight;
-      col.style.paddingTop = prevTop;
-      col.style.paddingBottom = prevBottom;
-
-      // Centers of first/last relative to column top (without padding)
+      // First center relative to column top (no padding dependency)
       const firstCenterNoPad = first.offsetTop + first.offsetHeight / 2;
-      const lastCenterNoPad = last.offsetTop + last.offsetHeight / 2;
-
-      // Exact paddings so first starts centered and last ends centered
       const newPadTop = Math.max(0, Math.round(stickyMidVp - firstCenterNoPad));
-      const newPadBottom = Math.max(
-        0,
-        Math.round(window.innerHeight + lastCenterNoPad - stickyMidVp - baseHeight)
-      );
-
       setPadTop(newPadTop);
-      setPadBottom(newPadBottom);
+      // We do not add extra bottom padding; last item handles centering via sticky top
+      setPadBottom(0);
     };
 
     calculatePadding();
@@ -214,6 +197,28 @@ const SearchingSmarter = () => {
       ro.disconnect();
       window.removeEventListener("resize", calculatePadding);
       window.removeEventListener("orientationchange", calculatePadding);
+    };
+  }, [navOffset]);
+
+  // Compute sticky top for the last benefit so its center aligns with the image center
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const update = () => {
+      const el = lastItemRef.current;
+      if (!el) return;
+      const h = el.offsetHeight || 0;
+      const stickyTop = navOffset + (window.innerHeight - navOffset) / 2 - h / 2;
+      setLastStickyTop(Math.max(navOffset, Math.round(stickyTop)));
+    };
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("orientationchange", update);
+    const ro = new ResizeObserver(update);
+    if (lastItemRef.current) ro.observe(lastItemRef.current);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+      ro.disconnect();
     };
   }, [navOffset]);
 
@@ -263,23 +268,30 @@ const SearchingSmarter = () => {
               paddingBottom: padBottom > 0 ? `${padBottom}px` : undefined,
             }}
           >
-            {BENEFITS.map((benefit, index) => (
-              <div
-                key={benefit.title}
-                ref={(node) => {
-                  itemRefs.current[index] = node;
-                }}
-                className={clsx(
-                  "scroll-mt-32 flex items-center justify-center transition-transform duration-300"
-                )}
-                style={{ minHeight: `calc(100vh - ${navOffset}px)` }}
-              >
+            {BENEFITS.map((benefit, index) => {
+              const isLast = index === BENEFITS.length - 1;
+              return (
                 <div
+                  key={benefit.title}
+                  ref={(node) => {
+                    itemRefs.current[index] = node;
+                    if (isLast) lastItemRef.current = node;
+                  }}
                   className={clsx(
-                    "w-full transition-all duration-300",
-                    activeIndex === index && "scale-105"
+                    "scroll-mt-32 flex items-center justify-center transition-transform duration-300",
+                    isLast && "lg:sticky"
                   )}
+                  style={{
+                    minHeight: `calc(100vh - ${navOffset}px)`,
+                    top: isLast ? lastStickyTop : undefined,
+                  }}
                 >
+                  <div
+                    className={clsx(
+                      "w-full transition-all duration-300",
+                      activeIndex === index && "scale-105"
+                    )}
+                  >
                   <div className="flex flex-col gap-4 text-left">
                     <span className={iconBackground}>
                       <benefit.icon className="h-6 w-6" aria-hidden />
@@ -290,8 +302,9 @@ const SearchingSmarter = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+                </div>
+              );
+            })}
           </div>
 
           <div className="order-1 lg:order-2 lg:col-span-1 lg:self-stretch">
