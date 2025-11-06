@@ -143,48 +143,20 @@ const SearchingSmarter = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const calculatePadding = () => {
-      const firstBenefit = itemRefs.current[0];
-      const lastBenefit = itemRefs.current[BENEFITS.length - 1];
-      
-      if (!firstBenefit || !lastBenefit || window.innerWidth < 1024) {
-        setPadTop(0);
-        setPadBottom(0);
-        return;
-      }
-
-      const vh = window.innerHeight / 100;
-      // Sticky container uses lg:top-[12vh] and lg:h-[60vh], so center is at 12vh + 30vh = 42vh
-      const targetCenter = 42 * vh;
-
-      // Position of the column relative to the viewport top
-      const colTop = columnRef.current?.getBoundingClientRect().top ?? 0;
-      
-      const firstHeight = firstBenefit.offsetHeight;
-      const lastHeight = lastBenefit.offsetHeight;
-      
-      // Align centers in viewport: colTop + pad + (itemHeight/2) ~= targetCenter
-      const calculatedPadTop = Math.max(0, targetCenter - colTop - firstHeight / 2);
-      const calculatedPadBottom = Math.max(0, targetCenter - colTop - lastHeight / 2);
-      
-      setPadTop(calculatedPadTop);
-      setPadBottom(calculatedPadBottom);
+    // We keep zero top/bottom padding so extra space appears only between benefits
+    const applyNoColumnPadding = () => {
+      setPadTop(0);
+      setPadBottom(0);
     };
 
-    calculatePadding();
-    
-    const resizeObserver = new ResizeObserver(calculatePadding);
-    itemRefs.current.forEach(ref => {
-      if (ref) resizeObserver.observe(ref);
-    });
-    
-    window.addEventListener("resize", calculatePadding);
-    window.addEventListener("orientationchange", calculatePadding);
+    applyNoColumnPadding();
+
+    window.addEventListener("resize", applyNoColumnPadding);
+    window.addEventListener("orientationchange", applyNoColumnPadding);
 
     return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener("resize", calculatePadding);
-      window.removeEventListener("orientationchange", calculatePadding);
+      window.removeEventListener("resize", applyNoColumnPadding);
+      window.removeEventListener("orientationchange", applyNoColumnPadding);
     };
   }, []);
 
@@ -241,7 +213,7 @@ const SearchingSmarter = () => {
                   itemRefs.current[index] = node;
                 }}
                 className={clsx(
-                  "scroll-mt-32 flex items-center transition-transform duration-300 min-h-[30vh]"
+                  "scroll-mt-32 flex items-center transition-transform duration-300"
                 )}
               >
                 <div
