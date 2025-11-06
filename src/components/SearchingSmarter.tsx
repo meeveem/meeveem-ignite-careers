@@ -42,8 +42,6 @@ const BENEFITS: { icon: LucideIcon; title: string; body: string; image: string }
     body: "Preview team culture, projects, and goals before you ever hit apply.",
     image: dashboardStep5,
   },
-  {
-  },
 ];
 
 const SearchingSmarter = () => {
@@ -205,7 +203,7 @@ const SearchingSmarter = () => {
         <div className="lg:hidden flex flex-col gap-5">
           {BENEFITS.map((benefit) => (
             <div key={benefit.title} className="flex flex-col gap-4">
-              <div className="relative w-full aspect-[16/9] overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+              <div className="relative w-full aspect-square overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
                 <img
                   src={benefit.image}
                   alt={`${benefit.title} illustration`}
@@ -269,7 +267,7 @@ const SearchingSmarter = () => {
             <div className="mx-auto w-full lg:sticky lg:top-[12vh] lg:h-[60vh] flex items-center">
               <div
                 ref={imageContainerRef}
-                className="relative w-full max-w-[1100px] aspect-[16/9] overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"
+                className="relative mx-auto h-[60vh] w-[60vh] max-w-full aspect-square overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"
               >
                 {BENEFITS.map((benefit, index) => (
                   <div
