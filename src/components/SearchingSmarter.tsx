@@ -237,7 +237,7 @@ const SearchingSmarter = () => {
           </div>
 
           <div className="order-1 lg:order-2 lg:col-span-1 lg:self-stretch">
-            <div className="mx-auto w-full lg:sticky lg:top-[12vh] lg:h-[60vh] flex items-center">
+            <div className="mx-auto w-full lg:sticky lg:top-0 lg:h-screen flex items-center justify-center">
               <div
                 ref={imageContainerRef}
                 className="relative mx-auto h-[60vh] w-[60vh] max-w-full aspect-square overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"
