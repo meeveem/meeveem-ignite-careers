@@ -269,7 +269,7 @@ const SearchingSmarter = () => {
         <div className="hidden lg:grid grid-cols-2 gap-12">
           <div
             ref={columnRef}
-            className="order-2 flex flex-col space-y-[35vh] lg:order-1"
+            className="order-2 flex flex-col space-y-8 lg:order-1"
             style={{
               paddingTop: padTop > 0 ? `${padTop}px` : undefined,
               paddingBottom: padBottom > 0 ? `${padBottom}px` : undefined,
@@ -282,8 +282,9 @@ const SearchingSmarter = () => {
                   itemRefs.current[index] = node;
                 }}
                 className={clsx(
-                  "scroll-mt-32 flex items-center transition-transform duration-300"
+                  "scroll-mt-32 flex items-center justify-center transition-transform duration-300"
                 )}
+                style={{ minHeight: `calc(100vh - ${navOffset}px)` }}
               >
                 <div
                   className={clsx(
