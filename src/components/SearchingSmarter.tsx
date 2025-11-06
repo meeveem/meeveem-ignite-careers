@@ -56,10 +56,6 @@ const SearchingSmarter = () => {
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
   const columnRef = useRef<HTMLDivElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const stickyWrapperRef = useRef<HTMLDivElement>(null);
-  const firstWrapperRef = useRef<HTMLDivElement>(null);
-  const firstCardRef = useRef<HTMLDivElement>(null);
-  const lastCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -140,72 +136,6 @@ const SearchingSmarter = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const updateLayout = () => {
-      const imageEl = imageContainerRef.current;
-      const columnEl = columnRef.current;
-      const firstWrapperEl = firstWrapperRef.current;
-      const firstCardEl = firstCardRef.current;
-      const lastCardEl = lastCardRef.current;
-      const stickyEl = stickyWrapperRef.current;
-
-      if (firstWrapperEl && !firstWrapperEl.style.paddingTop) {
-        firstWrapperEl.style.paddingTop = "3rem";
-      }
-
-      if (imageEl && firstCardEl && firstWrapperEl) {
-        const offset = Math.max(0, (imageEl.offsetHeight - firstCardEl.offsetHeight) / 2);
-        firstWrapperEl.style.paddingTop = `${offset}px`;
-      }
-
-      if (columnEl) {
-        columnEl.style.paddingBottom = "";
-      }
-
-      if (imageEl && lastCardEl && columnEl) {
-        const rawOffset = Math.max(0, (imageEl.offsetHeight - lastCardEl.offsetHeight) / 2);
-        const offset = Math.min(rawOffset, 12);
-        columnEl.style.paddingBottom = `${offset}px`;
-      }
-
-      if (imageEl && stickyEl) {
-        const viewportHeight = window.innerHeight || 0;
-        const topValue = Math.max(0, viewportHeight / 2 - imageEl.offsetHeight / 2);
-        stickyEl.style.top = `${topValue}px`;
-      }
-    };
-
-    let frame = 0;
-
-    const schedule = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(() => {
-        frame = 0;
-        updateLayout();
-      });
-    };
-
-    updateLayout();
-
-    let resizeObserver: ResizeObserver | null = null;
-    if (typeof ResizeObserver !== "undefined") {
-      resizeObserver = new ResizeObserver(schedule);
-      if (imageContainerRef.current) resizeObserver.observe(imageContainerRef.current);
-      if (firstCardRef.current) resizeObserver.observe(firstCardRef.current);
-      if (lastCardRef.current) resizeObserver.observe(lastCardRef.current);
-      if (columnRef.current) resizeObserver.observe(columnRef.current);
-    }
-
-    window.addEventListener("resize", schedule);
-
-    return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      resizeObserver?.disconnect();
-      window.removeEventListener("resize", schedule);
-    };
-  }, []);
 
   return (
     <section id="searching-smarter" className="w-full bg-white">
@@ -221,31 +151,24 @@ const SearchingSmarter = () => {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
           <div
             ref={columnRef}
-            className="order-2 flex flex-col space-y-16 md:space-y-20 lg:order-1"
+            className="order-2 flex flex-col space-y-12 lg:order-1 lg:pt-[35vh]"
           >
             {BENEFITS.map((benefit, index) => (
               <div
                 key={benefit.title}
                 ref={(node) => {
                   itemRefs.current[index] = node;
-                  if (index === 0) {
-                    firstWrapperRef.current = node;
-                  }
                 }}
                 className={clsx(
                   "scroll-mt-32 flex items-center transition-transform duration-300",
-                  index === 0 ? "pt-12 md:pt-16 lg:pt-20" : undefined,
-                  index === BENEFITS.length - 1 ? "min-h-[32vh] md:min-h-[36vh] lg:min-h-[40vh]" : "min-h-[55vh] md:min-h-[60vh] lg:min-h-[64vh]",
+                  index === BENEFITS.length - 1 ? "pb-[50vh]" : "min-h-[65vh]",
                   activeIndex === index ? "scale-[1.01]" : "scale-100"
                 )}
               >
                 <div
-                  ref={
-                    index === 0 ? firstCardRef : index === BENEFITS.length - 1 ? lastCardRef : undefined
-                  }
                   className={clsx(
-                    "w-full max-w-xl rounded-2xl border border-neutral-200 bg-neutral-50 p-6 shadow-sm transition-all duration-300",
-                    activeIndex === index && "ring-1 ring-primary/30"
+                    "w-full max-w-xl transition-all duration-300",
+                    activeIndex === index && "scale-105"
                   )}
                 >
                   <div className="flex flex-col gap-4 text-left">
@@ -263,7 +186,7 @@ const SearchingSmarter = () => {
           </div>
 
           <div className="order-1 lg:order-2 lg:col-span-1 lg:self-stretch">
-            <div ref={stickyWrapperRef} className="mx-auto w-full lg:sticky" style={{ top: "20vh" }}>
+            <div className="mx-auto w-full lg:sticky lg:top-[15vh] lg:h-[70vh] flex items-center">
               <div
                 ref={imageContainerRef}
                 className="relative w-full max-w-[1100px] aspect-[16/9] overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"

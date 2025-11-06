@@ -73,7 +73,7 @@ const HowItWorksSection = () => {
         </div>
 
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 lg:items-center">
             {/* Steps Column */}
             <div className="space-y-8">
               {steps.map((step, index) => {
@@ -110,7 +110,7 @@ const HowItWorksSection = () => {
             </div>
 
             {/* Carousel Column */}
-            <div className="lg:sticky lg:top-24">
+            <div className="lg:sticky lg:top-32 lg:self-center">
               <StepsCarousel />
             </div>
           </div>
