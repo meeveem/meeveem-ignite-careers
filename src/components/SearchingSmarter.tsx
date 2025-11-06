@@ -143,8 +143,8 @@ const SearchingSmarter = () => {
       if (closestDist === Number.POSITIVE_INFINITY) return;
       // Update the image only when the text card's center comes close
       // to the image center ("dead zone" prevents early switches).
-      // Switch a bit earlier so the image changes before the next benefit fully appears
-      const threshold = Math.min(closestHeight * 0.55, imageRect.height * 0.5, 220);
+      // Switch earlier so the image changes before the next benefit fully appears
+      const threshold = Math.min(closestHeight * 0.6, imageRect.height * 0.55, 260);
       setActiveIndex((prev) => (closestDist <= threshold ? closestIdx : prev));
     };
 
@@ -168,23 +168,43 @@ const SearchingSmarter = () => {
     if (typeof window === "undefined") return;
 
     const calculatePadding = () => {
-      const firstBenefit = itemRefs.current[0];
-      const lastBenefit = itemRefs.current[BENEFITS.length - 1];
-      if (!firstBenefit || !lastBenefit || window.innerWidth < 1024) {
+      const first = itemRefs.current[0];
+      const last = itemRefs.current[BENEFITS.length - 1];
+      const col = columnRef.current;
+      if (!first || !last || !col || window.innerWidth < 1024) {
         setPadTop(0);
         setPadBottom(0);
         return;
       }
 
-      const viewportH = window.innerHeight;
-      const targetCenter = viewportH / 2 + navOffset / 2; // sticky center in viewport
-      const colTop = columnRef.current?.getBoundingClientRect().top ?? 0;
+      // Sticky image vertical center relative to viewport
+      const stickyMidVp = navOffset + (window.innerHeight - navOffset) / 2;
+      // Column top relative to viewport
+      const colTopVp = col.getBoundingClientRect().top;
+      // Sticky center relative to column top
+      const stickyMidRel = stickyMidVp - colTopVp;
 
-      const firstHeight = firstBenefit.offsetHeight;
-      const newPadTop = Math.max(0, targetCenter - colTop - firstHeight / 2);
+      // Measure base height of the column without padding so we can solve for padBottom exactly
+      const prevTop = col.style.paddingTop;
+      const prevBottom = col.style.paddingBottom;
+      col.style.paddingTop = "0px";
+      col.style.paddingBottom = "0px";
+      const baseHeight = col.scrollHeight; // includes gaps between items
+      // Restore immediately (no layout flash since it's sync)
+      col.style.paddingTop = prevTop;
+      col.style.paddingBottom = prevBottom;
 
-      const lastHeight = lastBenefit.offsetHeight;
-      const newPadBottom = Math.max(0, targetCenter - colTop - lastHeight / 2);
+      // First card center relative to column
+      const firstCenter = first.offsetTop + first.offsetHeight / 2;
+      const newPadTop = Math.max(0, Math.round(stickyMidRel - firstCenter));
+
+      // Last card center relative to column without padding
+      const lastCenterNoPad = last.offsetTop + last.offsetHeight / 2;
+      // Solve for padBottom so that when scrolled to the end, last center sits at sticky center
+      const newPadBottom = Math.max(
+        0,
+        Math.round(window.innerHeight + lastCenterNoPad - stickyMidRel - baseHeight)
+      );
 
       setPadTop(newPadTop);
       setPadBottom(newPadBottom);
