@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { DoorOpen, Eye, Radar, Scale, SearchX, Target, type LucideIcon } from "lucide-react";
+import { DoorOpen, Eye, Radar, Scale, SearchX, type LucideIcon } from "lucide-react";
 
 import dashboardStep1 from "@/assets/dashboard-step1.png";
 import dashboardStep2 from "@/assets/dashboard-step2.png";
 import dashboardStep3 from "@/assets/dashboard-step3.png";
 import dashboardStep4 from "@/assets/dashboard-step4.png";
 import dashboardStep5 from "@/assets/dashboard-step5.png";
-import dashboardStep6 from "@/assets/dashboard-step6.png";
 
 const iconBackground =
   "inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary";
@@ -44,10 +43,6 @@ const BENEFITS: { icon: LucideIcon; title: string; body: string; image: string }
     image: dashboardStep5,
   },
   {
-    icon: Target,
-    title: "Stay in control.",
-    body: "Keep your inbox relevant with alerts that only surface the right roles.",
-    image: dashboardStep6,
   },
 ];
 
