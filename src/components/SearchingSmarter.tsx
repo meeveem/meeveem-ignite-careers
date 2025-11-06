@@ -219,7 +219,7 @@ const SearchingSmarter = () => {
           ))}
         </div>
 
-        {/* Desktop: sticky image on the right, text list on the left */}
+        {/* Desktop: sticky image on the right, text list on the left (50/50 columns) */}
         <div className="hidden lg:grid grid-cols-2 gap-12">
           <div
             ref={columnRef}
@@ -241,7 +241,7 @@ const SearchingSmarter = () => {
               >
                 <div
                   className={clsx(
-                    "w-full max-w-xl transition-all duration-300",
+                    "w-full transition-all duration-300",
                     activeIndex === index && "scale-105"
                   )}
                 >
@@ -266,7 +266,7 @@ const SearchingSmarter = () => {
             >
               <div
                 ref={imageContainerRef}
-                className="relative mx-auto h-[60vh] w-[60vh] max-w-full aspect-square overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"
+                className="relative mx-auto w-full max-w-[80vh] aspect-square overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"
               >
                 {BENEFITS.map((benefit, index) => (
                   <div
