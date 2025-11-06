@@ -196,15 +196,21 @@ const SearchingSmarter = () => {
 
       // First card center relative to column
       const firstCenter = first.offsetTop + first.offsetHeight / 2;
-      const newPadTop = Math.max(0, Math.round(stickyMidRel - firstCenter));
+      const newPadTopRaw = Math.max(0, Math.round(stickyMidRel - firstCenter));
 
       // Last card center relative to column without padding
       const lastCenterNoPad = last.offsetTop + last.offsetHeight / 2;
       // Solve for padBottom so that when scrolled to the end, last center sits at sticky center
-      const newPadBottom = Math.max(
+      const newPadBottomRaw = Math.max(
         0,
         Math.round(window.innerHeight + lastCenterNoPad - stickyMidRel - baseHeight)
       );
+
+      // Clamp to avoid excessive whitespace due to extreme layouts/gaps
+      const clamp = (v: number) => Math.min(v, Math.round(window.innerHeight * 0.8));
+
+      const newPadTop = clamp(newPadTopRaw);
+      const newPadBottom = clamp(newPadBottomRaw);
 
       setPadTop(newPadTop);
       setPadBottom(newPadBottom);
@@ -263,7 +269,7 @@ const SearchingSmarter = () => {
         <div className="hidden lg:grid grid-cols-2 gap-12">
           <div
             ref={columnRef}
-            className="order-2 flex flex-col space-y-[60vh] lg:order-1"
+            className="order-2 flex flex-col space-y-[35vh] lg:order-1"
             style={{
               paddingTop: padTop > 0 ? `${padTop}px` : undefined,
               paddingBottom: padBottom > 0 ? `${padBottom}px` : undefined,
