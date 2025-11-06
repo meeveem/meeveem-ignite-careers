@@ -97,6 +97,9 @@ const SearchingSmarter = () => {
 
     let frame = 0;
 
+    // Only run the scroll-driven highlight on desktop (lg and up)
+    if (window.innerWidth < 1024) return;
+
     const measure = () => {
       frame = 0;
       const imageEl = imageContainerRef.current;
@@ -193,7 +196,32 @@ const SearchingSmarter = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+        {/* Mobile & tablet: image followed by its benefit text */}
+        <div className="lg:hidden flex flex-col gap-10">
+          {BENEFITS.map((benefit) => (
+            <div key={benefit.title} className="flex flex-col gap-4">
+              <div className="relative w-full aspect-[16/9] overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
+                <img
+                  src={benefit.image}
+                  alt={`${benefit.title} illustration`}
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <div className="flex flex-col gap-4 text-left">
+                <span className={iconBackground}>
+                  <benefit.icon className="h-6 w-6" aria-hidden />
+                </span>
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-xl md:text-2xl font-semibold text-slate-900">{benefit.title}</h3>
+                  <p className="text-base md:text-lg leading-relaxed text-slate-600">{benefit.body}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: sticky image on the right, text list on the left */}
+        <div className="hidden lg:grid grid-cols-2 gap-12">
           <div
             ref={columnRef}
             className="order-2 flex flex-col space-y-12 lg:order-1"
