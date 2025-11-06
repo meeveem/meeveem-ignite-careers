@@ -52,6 +52,7 @@ const SearchingSmarter = () => {
   const columnRef = useRef<HTMLDivElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const [navOffset, setNavOffset] = useState(0);
+  const [stickyHeight, setStickyHeight] = useState<number | undefined>(undefined);
   const lastItemRef = useRef<HTMLDivElement | null>(null);
   const [lastStickyTop, setLastStickyTop] = useState<number | undefined>(undefined);
 
@@ -110,6 +111,24 @@ const SearchingSmarter = () => {
       ro.disconnect();
     };
   }, []);
+
+  // Compute a capped sticky height to avoid large bottom gaps on very tall screens
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const calc = () => {
+      const avail = Math.max(0, window.innerHeight - navOffset);
+      // Cap the sticky area to avoid huge whitespace on very tall screens
+      const capped = Math.min(avail, 900); // 900px cap; adjust if needed
+      setStickyHeight(capped);
+    };
+    calc();
+    window.addEventListener("resize", calc);
+    window.addEventListener("orientationchange", calc);
+    return () => {
+      window.removeEventListener("resize", calc);
+      window.removeEventListener("orientationchange", calc);
+    };
+  }, [navOffset]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -279,7 +298,7 @@ const SearchingSmarter = () => {
                     isLast && "lg:sticky"
                   )}
                   style={{
-                    minHeight: `calc(100vh - ${navOffset}px - 72px)`, // allow a small bottom peek of next card
+                    minHeight: stickyHeight ? Math.max(0, stickyHeight - 72) : undefined,
                     top: isLast ? lastStickyTop : undefined,
                   }}
                 >
@@ -307,7 +326,7 @@ const SearchingSmarter = () => {
           <div className="order-1 lg:order-2 lg:col-span-1 lg:self-stretch">
             <div
               className="mx-auto w-full lg:sticky flex items-center justify-center"
-              style={{ top: navOffset, height: `calc(100vh - ${navOffset}px)` }}
+              style={{ top: navOffset, height: stickyHeight ? `${stickyHeight}px` : undefined }}
             >
               <div
                 ref={imageContainerRef}
