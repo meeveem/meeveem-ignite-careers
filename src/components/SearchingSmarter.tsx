@@ -177,40 +177,28 @@ const SearchingSmarter = () => {
         return;
       }
 
-      // Sticky image vertical center relative to viewport
+      // Sticky image center in viewport coordinates (accounts for navbar)
       const stickyMidVp = navOffset + (window.innerHeight - navOffset) / 2;
-      // Column top relative to viewport
-      const colTopVp = col.getBoundingClientRect().top;
-      // Sticky center relative to column top
-      const stickyMidRel = stickyMidVp - colTopVp;
 
-      // Measure base height of the column without padding so we can solve for padBottom exactly
+      // Measure base content height of the column with no top/bottom padding
       const prevTop = col.style.paddingTop;
       const prevBottom = col.style.paddingBottom;
       col.style.paddingTop = "0px";
       col.style.paddingBottom = "0px";
-      const baseHeight = col.scrollHeight; // includes gaps between items
-      // Restore immediately (no layout flash since it's sync)
+      const baseHeight = col.scrollHeight;
       col.style.paddingTop = prevTop;
       col.style.paddingBottom = prevBottom;
 
-      // First card center relative to column
-      const firstCenter = first.offsetTop + first.offsetHeight / 2;
-      const newPadTopRaw = Math.max(0, Math.round(stickyMidRel - firstCenter));
-
-      // Last card center relative to column without padding
+      // Centers of first/last relative to column top (without padding)
+      const firstCenterNoPad = first.offsetTop + first.offsetHeight / 2;
       const lastCenterNoPad = last.offsetTop + last.offsetHeight / 2;
-      // Solve for padBottom so that when scrolled to the end, last center sits at sticky center
-      const newPadBottomRaw = Math.max(
+
+      // Exact paddings so first starts centered and last ends centered
+      const newPadTop = Math.max(0, Math.round(stickyMidVp - firstCenterNoPad));
+      const newPadBottom = Math.max(
         0,
-        Math.round(window.innerHeight + lastCenterNoPad - stickyMidRel - baseHeight)
+        Math.round(window.innerHeight + lastCenterNoPad - stickyMidVp - baseHeight)
       );
-
-      // Clamp to avoid excessive whitespace due to extreme layouts/gaps
-      const clamp = (v: number) => Math.min(v, Math.round(window.innerHeight * 0.8));
-
-      const newPadTop = clamp(newPadTopRaw);
-      const newPadBottom = clamp(newPadBottomRaw);
 
       setPadTop(newPadTop);
       setPadBottom(newPadBottom);
