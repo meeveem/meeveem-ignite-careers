@@ -7,6 +7,7 @@ import dashboardStep2 from "@/assets/dashboard-step2.png";
 import dashboardStep3 from "@/assets/dashboard-step3.png";
 import dashboardStep4 from "@/assets/dashboard-step4.png";
 import dashboardStep5 from "@/assets/dashboard-step5.png";
+import customImage from "@/assets/image.png";
 
 const iconBackground =
   "inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary";
@@ -40,7 +41,7 @@ const BENEFITS: { icon: LucideIcon; title: string; body: string; image: string }
     icon: DoorOpen,
     title: "Peek inside the role.",
     body: "Preview team culture, projects, and goals before you ever hit apply.",
-    image: dashboardStep5,
+    image: customImage,
   },
 ];
 
@@ -200,7 +201,7 @@ const SearchingSmarter = () => {
         </div>
 
         {/* Mobile & tablet: image followed by its benefit text */}
-        <div className="lg:hidden flex flex-col gap-5">
+        <div className="lg:hidden flex flex-col gap-10">
           {BENEFITS.map((benefit) => (
             <div key={benefit.title} className="flex flex-col gap-4">
               <div className="relative w-full aspect-square overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
@@ -227,7 +228,7 @@ const SearchingSmarter = () => {
         <div className="hidden lg:grid grid-cols-2 gap-12">
           <div
             ref={columnRef}
-            className="order-2 flex flex-col space-y-6 lg:order-1"
+            className="order-2 flex flex-col space-y-12 lg:order-1"
             style={{
               paddingTop: padTop > 0 ? `${padTop}px` : undefined,
               paddingBottom: padBottom > 0 ? `${padBottom}px` : undefined,
