@@ -160,7 +160,8 @@ const SearchingSmarter = () => {
       }
 
       const vh = window.innerHeight / 100;
-      const targetCenter = 50 * vh; // Center of sticky image at 50vh
+      // Sticky container uses lg:top-[12vh] and lg:h-[60vh], so center is at 12vh + 30vh = 42vh
+      const targetCenter = 42 * vh;
       
       const firstHeight = firstBenefit.offsetHeight;
       const lastHeight = lastBenefit.offsetHeight;
