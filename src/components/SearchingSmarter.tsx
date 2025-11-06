@@ -162,12 +162,16 @@ const SearchingSmarter = () => {
       const vh = window.innerHeight / 100;
       // Sticky container uses lg:top-[12vh] and lg:h-[60vh], so center is at 12vh + 30vh = 42vh
       const targetCenter = 42 * vh;
+
+      // Position of the column relative to the viewport top
+      const colTop = columnRef.current?.getBoundingClientRect().top ?? 0;
       
       const firstHeight = firstBenefit.offsetHeight;
       const lastHeight = lastBenefit.offsetHeight;
       
-      const calculatedPadTop = Math.max(0, targetCenter - firstHeight / 2);
-      const calculatedPadBottom = Math.max(0, targetCenter - lastHeight / 2);
+      // Align centers in viewport: colTop + pad + (itemHeight/2) ~= targetCenter
+      const calculatedPadTop = Math.max(0, targetCenter - colTop - firstHeight / 2);
+      const calculatedPadBottom = Math.max(0, targetCenter - colTop - lastHeight / 2);
       
       setPadTop(calculatedPadTop);
       setPadBottom(calculatedPadBottom);
