@@ -187,7 +187,7 @@ const SearchingSmarter = () => {
 
   return (
     <section id="searching-smarter" className="w-full bg-white">
-      <div className="container mx-auto px-4 pt-8 md:pt-10 lg:pt-12 pb-4 md:pb-6 lg:pb-8">
+      <div className="container mx-auto px-4 pt-8 md:pt-10 lg:pt-12 pb-2 md:pb-4 lg:pb-6">
         <div className="mx-auto mb-8 md:mb-10 max-w-3xl text-center">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">Searching Smarter Starts Here</h2>
           <p className="text-xl text-muted-foreground">

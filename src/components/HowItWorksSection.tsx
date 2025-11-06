@@ -58,7 +58,7 @@ const HowItWorksSection = () => {
   return (
     <section
       id="how-it-works"
-      className="pt-10 md:pt-12 lg:pt-14 pb-12 md:pb-16 lg:pb-20 bg-white relative z-0 overflow-hidden"
+      className="pt-8 md:pt-10 lg:pt-12 pb-12 md:pb-16 lg:pb-20 bg-white relative z-0 overflow-hidden"
     >
       {/* Decorative blob */}
       <div className="absolute top-20 right-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
