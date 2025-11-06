@@ -53,6 +53,8 @@ const BENEFITS: { icon: LucideIcon; title: string; body: string; image: string }
 
 const SearchingSmarter = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [padTop, setPadTop] = useState(0);
+  const [padBottom, setPadBottom] = useState(0);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
   const columnRef = useRef<HTMLDivElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
@@ -136,11 +138,54 @@ const SearchingSmarter = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const calculatePadding = () => {
+      const firstBenefit = itemRefs.current[0];
+      const lastBenefit = itemRefs.current[BENEFITS.length - 1];
+      
+      if (!firstBenefit || !lastBenefit || window.innerWidth < 1024) {
+        setPadTop(0);
+        setPadBottom(0);
+        return;
+      }
+
+      const vh = window.innerHeight / 100;
+      const targetCenter = 50 * vh; // Center of sticky image at 50vh
+      
+      const firstHeight = firstBenefit.offsetHeight;
+      const lastHeight = lastBenefit.offsetHeight;
+      
+      const calculatedPadTop = Math.max(0, targetCenter - firstHeight / 2);
+      const calculatedPadBottom = Math.max(0, targetCenter - lastHeight / 2);
+      
+      setPadTop(calculatedPadTop);
+      setPadBottom(calculatedPadBottom);
+    };
+
+    calculatePadding();
+    
+    const resizeObserver = new ResizeObserver(calculatePadding);
+    itemRefs.current.forEach(ref => {
+      if (ref) resizeObserver.observe(ref);
+    });
+    
+    window.addEventListener("resize", calculatePadding);
+    window.addEventListener("orientationchange", calculatePadding);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", calculatePadding);
+      window.removeEventListener("orientationchange", calculatePadding);
+    };
+  }, []);
+
 
   return (
     <section id="searching-smarter" className="w-full bg-white">
-      <div className="container mx-auto px-4 pt-16 md:pt-20 lg:pt-24 pb-12 md:pb-16 lg:pb-20">
-        <div className="mx-auto mb-16 max-w-3xl text-center">
+      <div className="container mx-auto px-4 pt-16 md:pt-20 lg:pt-24 pb-8 md:pb-12 lg:pb-14">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">Searching Smarter Starts Here</h2>
           <p className="text-xl text-muted-foreground">
             Endless scrolling, vague job descriptions, and slow responses stop here. Meeveem AI removes the guesswork so
@@ -151,7 +196,11 @@ const SearchingSmarter = () => {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
           <div
             ref={columnRef}
-            className="order-2 flex flex-col space-y-12 lg:order-1 lg:pt-[35vh]"
+            className="order-2 flex flex-col space-y-12 lg:order-1"
+            style={{
+              paddingTop: padTop > 0 ? `${padTop}px` : undefined,
+              paddingBottom: padBottom > 0 ? `${padBottom}px` : undefined,
+            }}
           >
             {BENEFITS.map((benefit, index) => (
               <div
@@ -160,9 +209,7 @@ const SearchingSmarter = () => {
                   itemRefs.current[index] = node;
                 }}
                 className={clsx(
-                  "scroll-mt-32 flex items-center transition-transform duration-300",
-                  index === BENEFITS.length - 1 ? "pb-[50vh]" : "min-h-[65vh]",
-                  activeIndex === index ? "scale-[1.01]" : "scale-100"
+                  "scroll-mt-32 flex items-center transition-transform duration-300 min-h-[60vh]"
                 )}
               >
                 <div
@@ -186,7 +233,7 @@ const SearchingSmarter = () => {
           </div>
 
           <div className="order-1 lg:order-2 lg:col-span-1 lg:self-stretch">
-            <div className="mx-auto w-full lg:sticky lg:top-[15vh] lg:h-[70vh] flex items-center">
+            <div className="mx-auto w-full lg:sticky lg:top-[20vh] lg:h-[60vh] flex items-center">
               <div
                 ref={imageContainerRef}
                 className="relative w-full max-w-[1100px] aspect-[16/9] overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"
@@ -195,8 +242,8 @@ const SearchingSmarter = () => {
                   <div
                     key={benefit.title}
                     className={clsx(
-                      "absolute inset-0 transition-all duration-400 ease-out",
-                      activeIndex === index ? "opacity-100 scale-100" : "opacity-0 scale-[0.98]"
+                      "absolute inset-0 transition-opacity duration-700 ease-out",
+                      activeIndex === index ? "opacity-100" : "opacity-0 pointer-events-none"
                     )}
                   >
                     <img

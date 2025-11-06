@@ -65,7 +65,7 @@ const HowItWorksSection = () => {
       <div className="absolute bottom-20 left-20 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-in">
+        <div className="text-center max-w-3xl mx-auto mb-12 animate-fade-in">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">Here's how it works</h2>
           <p className="text-xl text-muted-foreground">
             Meeveem instantly powers up your search, matching you with hyper relevant roles and companies that fit you.
