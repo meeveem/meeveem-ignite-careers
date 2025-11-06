@@ -53,13 +53,11 @@ const BENEFITS: { icon: LucideIcon; title: string; body: string; image: string }
 
 const SearchingSmarter = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [padTop, setPadTop] = useState(0);
+  const [padBottom, setPadBottom] = useState(0);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
   const columnRef = useRef<HTMLDivElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const stickyWrapperRef = useRef<HTMLDivElement>(null);
-  const firstWrapperRef = useRef<HTMLDivElement>(null);
-  const firstCardRef = useRef<HTMLDivElement>(null);
-  const lastCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -143,74 +141,51 @@ const SearchingSmarter = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const updateLayout = () => {
-      const imageEl = imageContainerRef.current;
-      const columnEl = columnRef.current;
-      const firstWrapperEl = firstWrapperRef.current;
-      const firstCardEl = firstCardRef.current;
-      const lastCardEl = lastCardRef.current;
-      const stickyEl = stickyWrapperRef.current;
-
-      if (firstWrapperEl && !firstWrapperEl.style.paddingTop) {
-        firstWrapperEl.style.paddingTop = "3rem";
+    const calculatePadding = () => {
+      const firstBenefit = itemRefs.current[0];
+      const lastBenefit = itemRefs.current[BENEFITS.length - 1];
+      
+      if (!firstBenefit || !lastBenefit || window.innerWidth < 1024) {
+        setPadTop(0);
+        setPadBottom(0);
+        return;
       }
 
-      if (imageEl && firstCardEl && firstWrapperEl) {
-        const offset = Math.max(0, (imageEl.offsetHeight - firstCardEl.offsetHeight) / 2);
-        firstWrapperEl.style.paddingTop = `${offset}px`;
-      }
-
-      if (columnEl) {
-        columnEl.style.paddingBottom = "";
-      }
-
-      if (imageEl && lastCardEl && columnEl) {
-        const rawOffset = Math.max(0, (imageEl.offsetHeight - lastCardEl.offsetHeight) / 2);
-        const offset = Math.min(rawOffset, 12);
-        columnEl.style.paddingBottom = `${offset}px`;
-      }
-
-      if (imageEl && stickyEl) {
-        const viewportHeight = window.innerHeight || 0;
-        const topValue = Math.max(0, viewportHeight / 2 - imageEl.offsetHeight / 2);
-        stickyEl.style.top = `${topValue}px`;
-      }
+      const vh = window.innerHeight / 100;
+      const targetCenter = 50 * vh; // Center of sticky image at 50vh
+      
+      const firstHeight = firstBenefit.offsetHeight;
+      const lastHeight = lastBenefit.offsetHeight;
+      
+      const calculatedPadTop = Math.max(0, targetCenter - firstHeight / 2);
+      const calculatedPadBottom = Math.max(0, targetCenter - lastHeight / 2);
+      
+      setPadTop(calculatedPadTop);
+      setPadBottom(calculatedPadBottom);
     };
 
-    let frame = 0;
-
-    const schedule = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(() => {
-        frame = 0;
-        updateLayout();
-      });
-    };
-
-    updateLayout();
-
-    let resizeObserver: ResizeObserver | null = null;
-    if (typeof ResizeObserver !== "undefined") {
-      resizeObserver = new ResizeObserver(schedule);
-      if (imageContainerRef.current) resizeObserver.observe(imageContainerRef.current);
-      if (firstCardRef.current) resizeObserver.observe(firstCardRef.current);
-      if (lastCardRef.current) resizeObserver.observe(lastCardRef.current);
-      if (columnRef.current) resizeObserver.observe(columnRef.current);
-    }
-
-    window.addEventListener("resize", schedule);
+    calculatePadding();
+    
+    const resizeObserver = new ResizeObserver(calculatePadding);
+    itemRefs.current.forEach(ref => {
+      if (ref) resizeObserver.observe(ref);
+    });
+    
+    window.addEventListener("resize", calculatePadding);
+    window.addEventListener("orientationchange", calculatePadding);
 
     return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      resizeObserver?.disconnect();
-      window.removeEventListener("resize", schedule);
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", calculatePadding);
+      window.removeEventListener("orientationchange", calculatePadding);
     };
   }, []);
 
+
   return (
     <section id="searching-smarter" className="w-full bg-white">
-      <div className="container mx-auto px-4 pt-16 md:pt-20 lg:pt-24 pb-12 md:pb-16 lg:pb-20">
-        <div className="mx-auto mb-16 max-w-3xl text-center">
+      <div className="container mx-auto px-4 pt-16 md:pt-20 lg:pt-24 pb-8 md:pb-12 lg:pb-14">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">Searching Smarter Starts Here</h2>
           <p className="text-xl text-muted-foreground">
             Endless scrolling, vague job descriptions, and slow responses stop here. Meeveem AI removes the guesswork so
@@ -221,31 +196,26 @@ const SearchingSmarter = () => {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
           <div
             ref={columnRef}
-            className="order-2 flex flex-col space-y-16 md:space-y-20 lg:order-1"
+            className="order-2 flex flex-col space-y-12 lg:order-1"
+            style={{
+              paddingTop: padTop > 0 ? `${padTop}px` : undefined,
+              paddingBottom: padBottom > 0 ? `${padBottom}px` : undefined,
+            }}
           >
             {BENEFITS.map((benefit, index) => (
               <div
                 key={benefit.title}
                 ref={(node) => {
                   itemRefs.current[index] = node;
-                  if (index === 0) {
-                    firstWrapperRef.current = node;
-                  }
                 }}
                 className={clsx(
-                  "scroll-mt-32 flex items-center transition-transform duration-300",
-                  index === 0 ? "pt-12 md:pt-16 lg:pt-20" : undefined,
-                  index === BENEFITS.length - 1 ? "min-h-[32vh] md:min-h-[36vh] lg:min-h-[40vh]" : "min-h-[55vh] md:min-h-[60vh] lg:min-h-[64vh]",
-                  activeIndex === index ? "scale-[1.01]" : "scale-100"
+                  "scroll-mt-32 flex items-center transition-transform duration-300 min-h-[60vh]"
                 )}
               >
                 <div
-                  ref={
-                    index === 0 ? firstCardRef : index === BENEFITS.length - 1 ? lastCardRef : undefined
-                  }
                   className={clsx(
-                    "w-full max-w-xl rounded-2xl border border-neutral-200 bg-neutral-50 p-6 shadow-sm transition-all duration-300",
-                    activeIndex === index && "ring-1 ring-primary/30"
+                    "w-full max-w-xl transition-all duration-300",
+                    activeIndex === index && "scale-105"
                   )}
                 >
                   <div className="flex flex-col gap-4 text-left">
@@ -263,7 +233,7 @@ const SearchingSmarter = () => {
           </div>
 
           <div className="order-1 lg:order-2 lg:col-span-1 lg:self-stretch">
-            <div ref={stickyWrapperRef} className="mx-auto w-full lg:sticky" style={{ top: "20vh" }}>
+            <div className="mx-auto w-full lg:sticky lg:top-[20vh] lg:h-[60vh] flex items-center">
               <div
                 ref={imageContainerRef}
                 className="relative w-full max-w-[1100px] aspect-[16/9] overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"
@@ -272,8 +242,8 @@ const SearchingSmarter = () => {
                   <div
                     key={benefit.title}
                     className={clsx(
-                      "absolute inset-0 transition-all duration-400 ease-out",
-                      activeIndex === index ? "opacity-100 scale-100" : "opacity-0 scale-[0.98]"
+                      "absolute inset-0 transition-opacity duration-700 ease-out",
+                      activeIndex === index ? "opacity-100" : "opacity-0 pointer-events-none"
                     )}
                   >
                     <img
