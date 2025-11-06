@@ -168,39 +168,20 @@ const SearchingSmarter = () => {
 
     const calculatePadding = () => {
       const first = itemRefs.current[0];
-      const last = itemRefs.current[BENEFITS.length - 1];
       const col = columnRef.current;
-      if (!first || !last || !col || window.innerWidth < 1024) {
+      if (!first || !col || window.innerWidth < 1024) {
         setPadTop(0);
-        setPadBottom(0);
         return;
       }
 
       // Sticky image center in viewport coordinates (accounts for navbar)
       const stickyMidVp = navOffset + (window.innerHeight - navOffset) / 2;
-
-      // Measure base content height of the column with no top/bottom padding
-      const prevTop = col.style.paddingTop;
-      const prevBottom = col.style.paddingBottom;
-      col.style.paddingTop = "0px";
-      col.style.paddingBottom = "0px";
-      const baseHeight = col.scrollHeight;
-      col.style.paddingTop = prevTop;
-      col.style.paddingBottom = prevBottom;
-
-      // Centers of first/last relative to column top (without padding)
+      // First center relative to column top (no padding dependency)
       const firstCenterNoPad = first.offsetTop + first.offsetHeight / 2;
-      const lastCenterNoPad = last.offsetTop + last.offsetHeight / 2;
-
-      // Exact paddings so first starts centered and last ends centered
       const newPadTop = Math.max(0, Math.round(stickyMidVp - firstCenterNoPad));
-      const newPadBottom = Math.max(
-        0,
-        Math.round(window.innerHeight + lastCenterNoPad - stickyMidVp - baseHeight)
-      );
-
       setPadTop(newPadTop);
-      setPadBottom(newPadBottom);
+      // We do not add extra bottom padding; last item handles centering via sticky top
+      setPadBottom(0);
     };
 
     calculatePadding();
