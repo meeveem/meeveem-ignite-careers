@@ -121,25 +121,30 @@ const SearchingSmarter = () => {
 
     const measure = () => {
       frame = 0;
-      const imageEl = imageContainerRef.current;
-      if (!imageEl) return;
-      const viewportTop = navOffset; // exclude navbar area
-      const viewportBottom = window.innerHeight;
-      const appearThreshold = 0.1; // 10% of the card must be visible
-      let enteredIdx = -1; // last (newest) visible benefit
+      const viewportTop = navOffset;
+      const viewportBottom = window.innerHeight - 1;
+      const appearThreshold = 0.2; // 20% of the card must be visible
 
-      itemRefs.current.forEach((node, idx) => {
-        if (!node) return;
+      const ratioAtIndex = (idx: number) => {
+        const node = itemRefs.current[idx];
+        if (!node) return 0;
         const rect = node.getBoundingClientRect();
         const overlap = Math.min(rect.bottom, viewportBottom) - Math.max(rect.top, viewportTop);
         const visible = Math.max(0, overlap);
-        const ratio = rect.height > 0 ? visible / rect.height : 0;
-        if (ratio >= appearThreshold) {
-          enteredIdx = idx; // choose newest visible card
-        }
-      });
+        return rect.height > 0 ? visible / rect.height : 0;
+      };
 
-      if (enteredIdx !== -1) setActiveIndex(enteredIdx);
+      const nextIdx = Math.min(activeIndex + 1, BENEFITS.length - 1);
+      const prevIdx = Math.max(activeIndex - 1, 0);
+
+      if (nextIdx !== activeIndex && ratioAtIndex(nextIdx) >= appearThreshold) {
+        setActiveIndex(nextIdx);
+        return;
+      }
+      if (prevIdx !== activeIndex && ratioAtIndex(prevIdx) >= appearThreshold) {
+        setActiveIndex(prevIdx);
+        return;
+      }
     };
 
     const handleScroll = () => {
@@ -156,7 +161,7 @@ const SearchingSmarter = () => {
       window.removeEventListener("resize", handleScroll);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [navOffset]);
+  }, [navOffset, activeIndex]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
