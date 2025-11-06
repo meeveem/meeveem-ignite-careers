@@ -123,42 +123,23 @@ const SearchingSmarter = () => {
       frame = 0;
       const imageEl = imageContainerRef.current;
       if (!imageEl) return;
-      const imageRect = imageEl.getBoundingClientRect();
-      const midY = imageRect.top + imageRect.height / 2;
-
-      let closestIdx = 0;
-      let closestDist = Number.POSITIVE_INFINITY;
-      let closestHeight = 0;
-      const viewportTop = navOffset;
+      const viewportTop = navOffset; // exclude navbar area
       const viewportBottom = window.innerHeight;
-      let enteredIdx = -1;
+      const appearThreshold = 0.1; // 10% of the card must be visible
+      let enteredIdx = -1; // last (newest) visible benefit
 
       itemRefs.current.forEach((node, idx) => {
         if (!node) return;
         const rect = node.getBoundingClientRect();
-        const cardMid = rect.top + rect.height / 2;
-        const dist = Math.abs(cardMid - midY);
-        if (dist < closestDist) {
-          closestDist = dist;
-          closestIdx = idx;
-          closestHeight = rect.height;
-        }
-
-        // As soon as an item is visible in viewport, mark it as the current one.
-        if (rect.top <= viewportBottom && rect.bottom >= viewportTop) {
-          enteredIdx = idx; // choose the last visible (newest entering) item
+        const overlap = Math.min(rect.bottom, viewportBottom) - Math.max(rect.top, viewportTop);
+        const visible = Math.max(0, overlap);
+        const ratio = rect.height > 0 ? visible / rect.height : 0;
+        if (ratio >= appearThreshold) {
+          enteredIdx = idx; // choose newest visible card
         }
       });
 
-      if (enteredIdx !== -1) {
-        setActiveIndex(enteredIdx);
-        return;
-      }
-
-      if (closestDist === Number.POSITIVE_INFINITY) return;
-      // Fallback to nearest-to-center logic
-      const threshold = Math.min(closestHeight * 0.6, imageRect.height * 0.55, 260);
-      setActiveIndex((prev) => (closestDist <= threshold ? closestIdx : prev));
+      if (enteredIdx !== -1) setActiveIndex(enteredIdx);
     };
 
     const handleScroll = () => {
