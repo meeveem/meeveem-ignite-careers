@@ -140,9 +140,10 @@ const SearchingSmarter = () => {
 
     const measure = () => {
       frame = 0;
-      const viewportTop = navOffset;
-      const viewportBottom = window.innerHeight - 1;
-      const appearThreshold = 0.15; // 15% visibility feels snappier but avoids flicker
+      const viewportTop = navOffset; // exclude navbar
+      const viewportBottom = window.innerHeight; // full viewport bottom
+      const appearRatioThreshold = 0.0; // any visibility
+      const appearPixelThreshold = 1; // at least 1px visible
 
       const ratioAtIndex = (idx: number) => {
         const node = itemRefs.current[idx];
@@ -156,11 +157,33 @@ const SearchingSmarter = () => {
       const nextIdx = Math.min(activeIndex + 1, BENEFITS.length - 1);
       const prevIdx = Math.max(activeIndex - 1, 0);
 
-      if (nextIdx !== activeIndex && ratioAtIndex(nextIdx) >= appearThreshold) {
+      if (
+        nextIdx !== activeIndex &&
+        (() => {
+          const node = itemRefs.current[nextIdx];
+          if (!node) return false;
+          const r = node.getBoundingClientRect();
+          const overlap = Math.min(r.bottom, viewportBottom) - Math.max(r.top, viewportTop);
+          const visible = Math.max(0, overlap);
+          const ratio = r.height > 0 ? visible / r.height : 0;
+          return visible >= appearPixelThreshold || ratio > appearRatioThreshold;
+        })()
+      ) {
         setActiveIndex(nextIdx);
         return;
       }
-      if (prevIdx !== activeIndex && ratioAtIndex(prevIdx) >= appearThreshold) {
+      if (
+        prevIdx !== activeIndex &&
+        (() => {
+          const node = itemRefs.current[prevIdx];
+          if (!node) return false;
+          const r = node.getBoundingClientRect();
+          const overlap = Math.min(r.bottom, viewportBottom) - Math.max(r.top, viewportTop);
+          const visible = Math.max(0, overlap);
+          const ratio = r.height > 0 ? visible / r.height : 0;
+          return visible >= appearPixelThreshold || ratio > appearRatioThreshold;
+        })()
+      ) {
         setActiveIndex(prevIdx);
         return;
       }
