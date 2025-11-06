@@ -123,7 +123,7 @@ const SearchingSmarter = () => {
       frame = 0;
       const viewportTop = navOffset;
       const viewportBottom = window.innerHeight - 1;
-      const appearThreshold = 0.2; // 20% of the card must be visible
+      const appearThreshold = 0.15; // 15% visibility feels snappier but avoids flicker
 
       const ratioAtIndex = (idx: number) => {
         const node = itemRefs.current[idx];
@@ -279,7 +279,7 @@ const SearchingSmarter = () => {
                     isLast && "lg:sticky"
                   )}
                   style={{
-                    minHeight: `calc(100vh - ${navOffset}px)`,
+                    minHeight: `calc(100vh - ${navOffset}px - 72px)`, // allow a small bottom peek of next card
                     top: isLast ? lastStickyTop : undefined,
                   }}
                 >
