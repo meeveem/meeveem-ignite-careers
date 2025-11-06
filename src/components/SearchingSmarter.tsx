@@ -187,8 +187,8 @@ const SearchingSmarter = () => {
 
   return (
     <section id="searching-smarter" className="w-full bg-white">
-      <div className="container mx-auto px-4 pt-16 md:pt-20 lg:pt-24 pb-8 md:pb-12 lg:pb-14">
-        <div className="mx-auto mb-12 max-w-3xl text-center">
+      <div className="container mx-auto px-4 pt-8 md:pt-10 lg:pt-12 pb-8 md:pb-12 lg:pb-14">
+        <div className="mx-auto mb-8 md:mb-10 max-w-3xl text-center">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">Searching Smarter Starts Here</h2>
           <p className="text-xl text-muted-foreground">
             Endless scrolling, vague job descriptions, and slow responses stop here. Meeveem AI removes the guesswork so
@@ -261,7 +261,7 @@ const SearchingSmarter = () => {
           </div>
 
           <div className="order-1 lg:order-2 lg:col-span-1 lg:self-stretch">
-            <div className="mx-auto w-full lg:sticky lg:top-[20vh] lg:h-[60vh] flex items-center">
+            <div className="mx-auto w-full lg:sticky lg:top-[12vh] lg:h-[60vh] flex items-center">
               <div
                 ref={imageContainerRef}
                 className="relative w-full max-w-[1100px] aspect-[16/9] overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm"
