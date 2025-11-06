@@ -8,8 +8,7 @@ import dashboardStep3 from "@/assets/dashboard-step3.png";
 import dashboardStep4 from "@/assets/dashboard-step4.png";
 import dashboardStep5 from "@/assets/dashboard-step5.png";
 
-const iconBackground =
-  "inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary";
+const iconBackground = "inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary";
 
 const BENEFITS: { icon: LucideIcon; title: string; body: string; image: string }[] = [
   {
@@ -20,13 +19,13 @@ const BENEFITS: { icon: LucideIcon; title: string; body: string; image: string }
   },
   {
     icon: Radar,
-    title: "Discover the hidden fits.",
-    body: "Surface tailored opportunities that align with your strengths and ambitions.",
+    title: "Unlock new careers.",
+    body: "Your experience is the key to careers you didn't know existed'.",
     image: dashboardStep2,
   },
   {
     icon: Eye,
-    title: "Show the full picture.",
+    title: "Reveal your true value.",
     body: "Let employers see beyond job titles and understand the value you bring.",
     image: dashboardStep3,
   },
@@ -38,7 +37,7 @@ const BENEFITS: { icon: LucideIcon; title: string; body: string; image: string }
   },
   {
     icon: DoorOpen,
-    title: "Peek inside the role.",
+    title: "Peek inside the company.",
     body: "Preview team culture, projects, and goals before you ever hit apply.",
     image: "/custom-image.png",
   },
@@ -66,9 +65,7 @@ const SearchingSmarter = () => {
     const sectionEl = document.getElementById("searching-smarter");
     if (!sectionEl || typeof sectionEl.scrollIntoView !== "function") return;
 
-    const anchors = Array.from(
-      document.querySelectorAll<HTMLAnchorElement>('a[href="#searching-smarter"]')
-    );
+    const anchors = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[href="#searching-smarter"]'));
 
     if (!anchors.length) return;
 
@@ -94,20 +91,20 @@ const SearchingSmarter = () => {
     if (typeof window === "undefined") return;
 
     const measureNav = () => {
-      const nav = document.querySelector('nav');
+      const nav = document.querySelector("nav");
       const h = nav ? (nav as HTMLElement).getBoundingClientRect().height : 0;
       setNavOffset(Math.max(0, Math.round(h)));
     };
 
     measureNav();
-    window.addEventListener('resize', measureNav);
-    window.addEventListener('orientationchange', measureNav);
+    window.addEventListener("resize", measureNav);
+    window.addEventListener("orientationchange", measureNav);
     const ro = new ResizeObserver(measureNav);
-    const navEl = document.querySelector('nav');
+    const navEl = document.querySelector("nav");
     if (navEl) ro.observe(navEl);
     return () => {
-      window.removeEventListener('resize', measureNav);
-      window.removeEventListener('orientationchange', measureNav);
+      window.removeEventListener("resize", measureNav);
+      window.removeEventListener("orientationchange", measureNav);
       ro.disconnect();
     };
   }, []);
@@ -261,7 +258,6 @@ const SearchingSmarter = () => {
     };
   }, [navOffset]);
 
-
   return (
     <section id="searching-smarter" className="w-full bg-white">
       <div className="container mx-auto px-4 pt-8 md:pt-10 lg:pt-12 pb-2 md:pb-4 lg:pb-6">
@@ -318,29 +314,24 @@ const SearchingSmarter = () => {
                   }}
                   className={clsx(
                     "scroll-mt-32 flex items-center justify-center transition-transform duration-300",
-                    isLast && "lg:sticky"
+                    isLast && "lg:sticky",
                   )}
                   style={{
                     minHeight: stickyHeight ? Math.max(0, stickyHeight - 72) : undefined,
                     top: isLast ? lastStickyTop : undefined,
                   }}
                 >
-                  <div
-                    className={clsx(
-                      "w-full transition-all duration-300",
-                      activeIndex === index && "scale-105"
-                    )}
-                  >
-                  <div className="flex flex-col gap-4 text-left">
-                    <span className={iconBackground}>
-                      <benefit.icon className="h-6 w-6" aria-hidden />
-                    </span>
-                    <div className="flex flex-col gap-2">
-                      <h3 className="text-xl md:text-2xl font-semibold text-slate-900">{benefit.title}</h3>
-                      <p className="text-base md:text-lg leading-relaxed text-slate-600">{benefit.body}</p>
+                  <div className={clsx("w-full transition-all duration-300", activeIndex === index && "scale-105")}>
+                    <div className="flex flex-col gap-4 text-left">
+                      <span className={iconBackground}>
+                        <benefit.icon className="h-6 w-6" aria-hidden />
+                      </span>
+                      <div className="flex flex-col gap-2">
+                        <h3 className="text-xl md:text-2xl font-semibold text-slate-900">{benefit.title}</h3>
+                        <p className="text-base md:text-lg leading-relaxed text-slate-600">{benefit.body}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
                 </div>
               );
             })}
@@ -360,7 +351,7 @@ const SearchingSmarter = () => {
                     key={benefit.title}
                     className={clsx(
                       "absolute inset-0 transition-opacity duration-700 ease-out",
-                      activeIndex === index ? "opacity-100" : "opacity-0 pointer-events-none"
+                      activeIndex === index ? "opacity-100" : "opacity-0 pointer-events-none",
                     )}
                   >
                     <img
