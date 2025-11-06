@@ -129,6 +129,9 @@ const SearchingSmarter = () => {
       let closestIdx = 0;
       let closestDist = Number.POSITIVE_INFINITY;
       let closestHeight = 0;
+      const viewportTop = navOffset;
+      const viewportBottom = window.innerHeight;
+      let enteredIdx = -1;
 
       itemRefs.current.forEach((node, idx) => {
         if (!node) return;
@@ -140,12 +143,20 @@ const SearchingSmarter = () => {
           closestIdx = idx;
           closestHeight = rect.height;
         }
+
+        // As soon as an item is visible in viewport, mark it as the current one.
+        if (rect.top <= viewportBottom && rect.bottom >= viewportTop) {
+          enteredIdx = idx; // choose the last visible (newest entering) item
+        }
       });
 
+      if (enteredIdx !== -1) {
+        setActiveIndex(enteredIdx);
+        return;
+      }
+
       if (closestDist === Number.POSITIVE_INFINITY) return;
-      // Update the image only when the text card's center comes close
-      // to the image center ("dead zone" prevents early switches).
-      // Switch earlier so the image changes before the next benefit fully appears
+      // Fallback to nearest-to-center logic
       const threshold = Math.min(closestHeight * 0.6, imageRect.height * 0.55, 260);
       setActiveIndex((prev) => (closestDist <= threshold ? closestIdx : prev));
     };
@@ -164,7 +175,7 @@ const SearchingSmarter = () => {
       window.removeEventListener("resize", handleScroll);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [navOffset]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
