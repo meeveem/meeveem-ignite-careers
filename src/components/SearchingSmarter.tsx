@@ -7,7 +7,6 @@ import dashboardStep2 from "@/assets/dashboard-step2.png";
 import dashboardStep3 from "@/assets/dashboard-step3.png";
 import dashboardStep4 from "@/assets/dashboard-step4.png";
 import dashboardStep5 from "@/assets/dashboard-step5.png";
-import customImage from "@/assets/image.png";
 
 const iconBackground =
   "inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary";
@@ -41,7 +40,7 @@ const BENEFITS: { icon: LucideIcon; title: string; body: string; image: string }
     icon: DoorOpen,
     title: "Peek inside the role.",
     body: "Preview team culture, projects, and goals before you ever hit apply.",
-    image: customImage,
+    image: "/custom-image.png",
   },
 ];
 
