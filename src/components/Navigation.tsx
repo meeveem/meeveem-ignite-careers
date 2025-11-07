@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import EarlyAccessDialog from "./EarlyAccessDialog";
-import logoFull from "@/assets/logo-full.png";
+import logoFull from "@/assets/logo-full.webp";
 
 const Navigation = () => {
   const [dialogOpen, setDialogOpen] = useState(false);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CountdownTimer from "./CountdownTimer";
-import heroImage from "@/assets/hero-candidate.jpg";
+import heroImage from "@/assets/hero-candidate.webp";
 import { Sparkles, CheckCircle2 } from "lucide-react";
 import EarlyAccessDialog from "./EarlyAccessDialog";
 

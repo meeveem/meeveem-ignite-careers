@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { DoorOpen, Eye, Radar, Scale, SearchX, type LucideIcon } from "lucide-react";
 
-import StopScrollingEndlessly from "@/assets/Stop Scrolling endlessly.png";
-import UncoverCareersYouAlreadyQualifyFor from "@/assets/Uncover careers you already qualify for.png";
-import ShowTheFullPicture from "@/assets/Show the full picture.png";
-import LeaveBiasBehind from "@/assets/Leave Bias Behind.png";
-import PeekInside from "@/assets/Peek Inside.png";
+import StopScrollingEndlessly from "@/assets/Stop Scrolling endlessly.webp";
+import UncoverCareersYouAlreadyQualifyFor from "@/assets/Uncover careers you already qualify for.webp";
+import ShowTheFullPicture from "@/assets/Show the full picture.webp";
+import LeaveBiasBehind from "@/assets/Leave Bias Behind.webp";
+import PeekInside from "@/assets/Peek Inside.webp";
 
 const iconBackground = "inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary";
 

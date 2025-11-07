@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import dashboardPreview from "@/assets/dashboard-preview.png";
-import companiesPreview from "@/assets/companies-preview.png";
+import dashboardPreview from "@/assets/dashboard-preview.webp";
+import companiesPreview from "@/assets/companies-preview.webp";
 import {
   Dialog,
   DialogContent,
