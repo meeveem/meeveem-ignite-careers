@@ -92,7 +92,7 @@ const HeroSection = () => {
               {[
                 { title: "Personalised AI Matches", subtitle: "Roles that fit your skills and goals" },
                 { title: "Company Insights", subtitle: "Know each company before you apply" },
-                { title: "Verified HealthTech Employers", subtitle: "Let smart matches come to you" },
+                { title: "Verified HealthTech Employers", subtitle: "Every company verified to ensure real opportunities" },
                 { title: "No Endless Searching", subtitle: "Let smart matches come to you" }
               ].map((feature, index) => (
                 <div 
