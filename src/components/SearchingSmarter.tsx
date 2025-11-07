@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { DoorOpen, Eye, Radar, Scale, SearchX, type LucideIcon } from "lucide-react";
 
 import StopScrollingEndlessly from "@/assets/Stop Scrolling endlessly.webp";
-import UncoverCareersYouAlreadyQualifyFor from "@/assets/Uncover careers you already qualify for.webp";
+import UncoverCareersYouAlreadyQualifyFor from "@/assets/Uncover Careers.webp";
 import ShowTheFullPicture from "@/assets/Show the full picture.webp";
 import LeaveBiasBehind from "@/assets/Leave Bias Behind.webp";
 import PeekInside from "@/assets/Peek Inside.webp";
