@@ -127,6 +127,14 @@ const SearchingSmarter = () => {
     };
   }, [navOffset]);
 
+  // Preload all images to avoid blank frames during cross-fades
+  useEffect(() => {
+    BENEFITS.forEach((b) => {
+      const img = new Image();
+      img.src = b.image;
+    });
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -137,53 +145,43 @@ const SearchingSmarter = () => {
 
     const measure = () => {
       frame = 0;
-      const viewportTop = navOffset; // exclude navbar
+      const viewportTop = navOffset; // exclude navbar area
       const viewportBottom = window.innerHeight; // full viewport bottom
-      const appearRatioThreshold = 0.0; // any visibility
-      const appearPixelThreshold = 1; // at least 1px visible
 
-      const ratioAtIndex = (idx: number) => {
-        const node = itemRefs.current[idx];
-        if (!node) return 0;
+      let bestIdx = activeIndex;
+      let bestRatio = -1;
+
+      for (let i = 0; i < BENEFITS.length; i++) {
+        const node = itemRefs.current[i];
+        if (!node) continue;
         const rect = node.getBoundingClientRect();
         const overlap = Math.min(rect.bottom, viewportBottom) - Math.max(rect.top, viewportTop);
         const visible = Math.max(0, overlap);
-        return rect.height > 0 ? visible / rect.height : 0;
-      };
-
-      const nextIdx = Math.min(activeIndex + 1, BENEFITS.length - 1);
-      const prevIdx = Math.max(activeIndex - 1, 0);
-
-      if (
-        nextIdx !== activeIndex &&
-        (() => {
-          const node = itemRefs.current[nextIdx];
-          if (!node) return false;
-          const r = node.getBoundingClientRect();
-          const overlap = Math.min(r.bottom, viewportBottom) - Math.max(r.top, viewportTop);
-          const visible = Math.max(0, overlap);
-          const ratio = r.height > 0 ? visible / r.height : 0;
-          return visible >= appearPixelThreshold || ratio > appearRatioThreshold;
-        })()
-      ) {
-        setActiveIndex(nextIdx);
-        return;
+        const ratio = rect.height > 0 ? visible / rect.height : 0;
+        if (ratio > bestRatio) {
+          bestRatio = ratio;
+          bestIdx = i;
+        }
       }
-      if (
-        prevIdx !== activeIndex &&
-        (() => {
-          const node = itemRefs.current[prevIdx];
-          if (!node) return false;
+
+      // Fallback when nothing intersects (very fast scroll): choose item closest to center
+      if (bestRatio <= 0) {
+        const center = viewportTop + (window.innerHeight - viewportTop) / 2;
+        let closest = Number.POSITIVE_INFINITY;
+        for (let i = 0; i < BENEFITS.length; i++) {
+          const node = itemRefs.current[i];
+          if (!node) continue;
           const r = node.getBoundingClientRect();
-          const overlap = Math.min(r.bottom, viewportBottom) - Math.max(r.top, viewportTop);
-          const visible = Math.max(0, overlap);
-          const ratio = r.height > 0 ? visible / r.height : 0;
-          return visible >= appearPixelThreshold || ratio > appearRatioThreshold;
-        })()
-      ) {
-        setActiveIndex(prevIdx);
-        return;
+          const mid = r.top + r.height / 2;
+          const dist = Math.abs(mid - center);
+          if (dist < closest) {
+            closest = dist;
+            bestIdx = i;
+          }
+        }
       }
+
+      if (bestIdx !== activeIndex) setActiveIndex(bestIdx);
     };
 
     const handleScroll = () => {
@@ -353,11 +351,14 @@ const SearchingSmarter = () => {
                       "absolute inset-0 transition-opacity duration-700 ease-out",
                       activeIndex === index ? "opacity-100" : "opacity-0 pointer-events-none",
                     )}
+                    style={{ willChange: "opacity" }}
                   >
                     <img
                       src={benefit.image}
                       alt={`${benefit.title} illustration`}
                       className="h-full w-full object-contain"
+                      loading="eager"
+                      decoding="async"
                     />
                   </div>
                 ))}
