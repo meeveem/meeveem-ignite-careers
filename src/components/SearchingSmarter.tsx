@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { DoorOpen, Eye, Radar, Scale, SearchX, type LucideIcon } from "lucide-react";
 
-import dashboardStep1 from "@/assets/dashboard-step1.png";
-import dashboardStep2 from "@/assets/dashboard-step2.png";
-import dashboardStep3 from "@/assets/dashboard-step3.png";
-import dashboardStep4 from "@/assets/dashboard-step4.png";
-import dashboardStep5 from "@/assets/dashboard-step5.png";
+import StopScrollingEndlessly from "@/assets/Stop Scrolling endlessly.png";
+import UncoverCareersYouAlreadyQualifyFor from "@/assets/Uncover careers you already qualify for.png";
+import ShowTheFullPicture from "@/assets/Show the full picture.png";
+import LeaveBiasBehind from "@/assets/Leave Bias Behind.png";
+import PeekInside from "@/assets/Peek Inside.png";
 
 const iconBackground = "inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary";
 
@@ -15,31 +15,31 @@ const BENEFITS: { icon: LucideIcon; title: string; body: string; image: string }
     icon: SearchX,
     title: "Stop scrolling endlessly.",
     body: "We highlight roles that match your skills so your search stays focused and fast.",
-    image: dashboardStep1,
+    image: StopScrollingEndlessly,
   },
   {
     icon: Radar,
     title: "Unlock new careers.",
-    body: "Your experience is the key to careers you didn't know existed'.",
-    image: dashboardStep2,
+    body: "Your experience is the key to careers you didn't know existed.",
+    image: UncoverCareersYouAlreadyQualifyFor,
   },
   {
     icon: Eye,
     title: "Reveal your true value.",
     body: "Let employers see beyond job titles and understand the value you bring.",
-    image: dashboardStep3,
+    image: ShowTheFullPicture,
   },
   {
     icon: Scale,
     title: "Leave bias behind.",
     body: "Experience matches based on ability, not buzzwords or outdated filters.",
-    image: dashboardStep4,
+    image: LeaveBiasBehind,
   },
   {
     icon: DoorOpen,
     title: "Peek inside the company.",
     body: "Preview team culture, projects, and goals before you ever hit apply.",
-    image: "/custom-image.png",
+    image: PeekInside,
   },
 ];
 
