@@ -44,13 +44,13 @@ const HeroSection = () => {
           {/* Left Content */}
           <div className="space-y-8 animate-slide-up">
             <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight">
-              <span className="text-foreground">Find your perfect role in HealthTech</span>
+              <span className="text-foreground">Your Career in HealthTech,</span>
               <br />
-              <span className="text-primary">powered by AI</span>
+              <span className="text-blue-600">Intelligently Matched</span>
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
-              Our advanced AI matches you with HealthTech roles that truly fit your skills, goals and values.
+              AI trained by recruiters, matching you with roles that fit your skills, goals and values.
             </p>
 
             {/* CTA Button */}
