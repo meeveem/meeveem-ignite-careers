@@ -43,10 +43,10 @@ const HeroSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
           {/* Left Content */}
           <div className="space-y-8 animate-slide-up">
-            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight">
+            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight max-w-[36rem] md:max-w-[40rem] xl:max-w-[42rem]">
               <span className="text-foreground">Your Career in HealthTech</span>
               <br />
-              <span className="text-blue-600 text-[0.95em] md:text-[0.98em] lg:whitespace-nowrap">Intelligently Matched</span>
+              <span className="block text-blue-600 text-[0.9em] md:text-[0.95em] lg:text-[0.9em] leading-tight">Intelligently Matched</span>
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
