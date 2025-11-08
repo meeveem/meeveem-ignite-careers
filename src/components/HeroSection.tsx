@@ -46,7 +46,12 @@ const HeroSection = () => {
             <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight max-w-[36rem] md:max-w-[40rem] xl:max-w-[42rem]">
               <span className="text-foreground">Your Career in HealthTech</span>
               <br />
-              <span className="block text-blue-600 text-[0.9em] md:text-[0.95em] lg:text-[0.9em] leading-tight">Intelligently Matched</span>
+              <span
+                className="block text-blue-600 leading-tight lg:whitespace-nowrap
+                text-[clamp(1.9rem,5.2vw,3.4rem)] md:text-[clamp(2.1rem,4.6vw,3.8rem)]"
+              >
+                Intelligently Matched
+              </span>
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
