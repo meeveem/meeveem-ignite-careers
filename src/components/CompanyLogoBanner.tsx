@@ -22,7 +22,7 @@ const CompanyLogoBanner = () => {
       <div className="container mx-auto px-4">
         <p className="text-center text-xl text-muted-foreground mb-8">The HealthTech companies shaping tomorrow</p>
         <div className="relative">
-          <div className="flex animate-[scroll_10s_linear_infinite] md:animate-[scroll_14s_linear_infinite] lg:animate-[scroll_16s_linear_infinite]">
+          <div className="flex w-max will-change-transform animate-[scroll_8s_linear_infinite] md:animate-[scroll_12s_linear_infinite] lg:animate-[scroll_14s_linear_infinite]">
             {/* First set of logos */}
             {companies.map((company, index) => (
               <div key={`first-${index}`} className="flex-shrink-0 mx-8 flex items-center justify-center h-12">
@@ -35,7 +35,7 @@ const CompanyLogoBanner = () => {
             ))}
             {/* Duplicate set for seamless loop */}
             {companies.map((company, index) => (
-              <div key={`second-${index}`} className="flex-shrink-0 mx-8 flex items-center justify-center h-12">
+              <div key={`second-${index}`} aria-hidden className="flex-shrink-0 mx-8 flex items-center justify-center h-12">
                 <img
                   src={company.logo}
                   alt={company.name}
