@@ -44,9 +44,9 @@ const HeroSection = () => {
           {/* Left Content */}
           <div className="space-y-8 animate-slide-up">
             <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight">
-              <span className="text-foreground">Your Career in HealthTech,</span>
+              <span className="text-foreground">Your Career in HealthTech</span>
               <br />
-              <span className="text-blue-600">Intelligently Matched</span>
+              <span className="text-blue-600 text-[0.95em] md:text-[0.98em] lg:whitespace-nowrap">Intelligently Matched</span>
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
