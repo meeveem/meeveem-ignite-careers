@@ -22,7 +22,7 @@ const CompanyLogoBanner = () => {
       <div className="container mx-auto px-4">
         <p className="text-center text-xl text-muted-foreground mb-8">The HealthTech companies shaping tomorrow</p>
         <div className="relative">
-          <div className="flex animate-scroll">
+          <div className="flex animate-[scroll_10s_linear_infinite] md:animate-[scroll_14s_linear_infinite] lg:animate-[scroll_16s_linear_infinite]">
             {/* First set of logos */}
             {companies.map((company, index) => (
               <div key={`first-${index}`} className="flex-shrink-0 mx-8 flex items-center justify-center h-12">
