@@ -1,0 +1,48 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Deploy via Vercel CLI (as meeveem) if token provided
+        if: env.VERCEL_TOKEN != '' && env.VERCEL_ORG_ID != '' && env.VERCEL_PROJECT_ID != ''
+        run: |
+          npm ci
+          npm run build
+          npm i -g vercel@latest
+          vercel deploy --prod --yes \
+            --token "$VERCEL_TOKEN" \
+            --org "$VERCEL_ORG_ID" \
+            --project "$VERCEL_PROJECT_ID" \
+            --prebuilt || true
+
+      - name: Trigger Vercel Deploy Hook (fallback)
+        if: env.VERCEL_TOKEN == '' && env.VERCEL_DEPLOY_HOOK_URL != ''
+        run: |
+          curl -X POST "$VERCEL_DEPLOY_HOOK_URL"
+
+      - name: Fail if no deploy method configured
+        if: env.VERCEL_TOKEN == '' && env.VERCEL_DEPLOY_HOOK_URL == ''
+        run: |
+          echo "No Vercel secrets configured. Provide VERCEL_TOKEN/ORG/PROJECT or VERCEL_DEPLOY_HOOK_URL." 1>&2
+          exit 1
+

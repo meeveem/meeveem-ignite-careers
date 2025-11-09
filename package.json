@@ -11,7 +11,8 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "vercel:trigger": "node -e \"fetch(process.env.VERCEL_DEPLOY_HOOK_URL,{method:'POST'}).then(r=>console.log('Vercel hook status',r.status)).catch(e=>{console.error(e);process.exit(1)})\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
