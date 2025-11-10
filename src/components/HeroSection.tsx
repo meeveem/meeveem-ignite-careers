@@ -8,7 +8,7 @@ import EarlyAccessDialog from "./EarlyAccessDialog";
 const HeroSection = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   return (
-    <section className="relative pt-32 pb-16 overflow-hidden">
+    <section className="relative pt-28 md:pt-32 pb-16 overflow-hidden">
       {/* Diagonal Gradient Background */}
       <div 
         className="absolute inset-0 bg-gradient-to-br from-[#F4FAFF] via-[#E8F4FF] to-[#E2F1FF]"
@@ -18,8 +18,8 @@ const HeroSection = () => {
       />
       
       {/* AI Network Lines - Bottom Right */}
-      <div className="absolute bottom-0 right-0 w-1/2 h-1/2 opacity-10">
-        <svg className="w-full h-full" viewBox="0 0 400 400">
+      <div className="absolute bottom-0 right-0 w-1/2 h-1/2 opacity-10" aria-hidden="true">
+        <svg className="w-full h-full" viewBox="0 0 400 400" role="presentation" focusable="false">
           <defs>
             <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
               <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-primary"/>
@@ -42,15 +42,15 @@ const HeroSection = () => {
 
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
           {/* Left Content */}
-          <div className="space-y-8 animate-slide-up">
+          <div className="space-y-8 motion-safe:animate-slide-up">
             <h1
-              className="font-extrabold leading-tight text-balance
+              className="font-extrabold leading-tight tracking-tight text-balance
               text-[clamp(2rem,6.5vw,3.75rem)] md:text-[clamp(2.75rem,5vw,4.25rem)] xl:text-[clamp(3rem,4vw,4.5rem)]
               max-w-[34rem] md:max-w-[40rem] xl:max-w-[42rem]"
             >
               <span className="block">
                 <span className="text-foreground">Your </span>
-                <span className="text-blue-600">HealthTech</span>
+                <span className="text-gradient">HealthTech</span>
               </span>
               <span className="block text-foreground">journey starts here</span>
             </h1>
@@ -75,7 +75,7 @@ const HeroSection = () => {
 
           {/* Right Image and Features */}
           <div className="space-y-8">
-            <div className="relative animate-scale-in" style={{ animationDelay: '0.3s' }}>
+            <div className="relative motion-safe:animate-scale-in" style={{ animationDelay: '0.3s' }}>
               {/* Subtle radial glow behind image */}
               <div 
                 className="absolute inset-0 rounded-3xl opacity-15 blur-3xl"
@@ -84,7 +84,7 @@ const HeroSection = () => {
                 }}
               />
               
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-card/50">
+              <div className="relative rounded-3xl overflow-hidden shadow-xl border-2 border-card/60">
                 <img
                   src={heroImage}
                   alt="Healthcare professional working with technology"
@@ -92,7 +92,7 @@ const HeroSection = () => {
                   loading="eager"
                   fetchpriority="high"
                   decoding="async"
-                  sizes="(min-width: 1024px) 560px, 100vw"
+                  sizes="(min-width: 1536px) 720px, (min-width: 1280px) 640px, (min-width: 1024px) 560px, 100vw"
                 />
               </div>
             </div>
