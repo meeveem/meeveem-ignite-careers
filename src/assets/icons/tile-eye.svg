@@ -1,0 +1,17 @@
+<svg width="56" height="56" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <defs>
+    <linearGradient id="grad-eye" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="hsl(217 91% 58%)"/>
+      <stop offset="100%" stop-color="hsl(217 91% 68%)"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="56" height="56" rx="12" fill="url(#grad-eye)"/>
+  <g transform="translate(16,16)" style="color:#fff">
+    <!-- lucide eye.svg exact -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  </g>
+</svg>
+

@@ -1,0 +1,17 @@
+<svg width="56" height="56" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <defs>
+    <linearGradient id="grad-compass" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="hsl(217 91% 58%)"/>
+      <stop offset="100%" stop-color="hsl(217 91% 68%)"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="56" height="56" rx="12" fill="url(#grad-compass)"/>
+  <g transform="translate(16,16)" style="color:#fff">
+    <!-- lucide compass.svg exact -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z" />
+      <circle cx="12" cy="12" r="10" />
+    </svg>
+  </g>
+</svg>
+
