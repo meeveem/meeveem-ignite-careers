@@ -48,6 +48,9 @@ const SearchingSmarter = () => {
   const [padTop, setPadTop] = useState(0);
   const [padBottom, setPadBottom] = useState(0);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
+  // Mobile-specific refs and visibility state for scroll-in animation
+  const mobileItemRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const [mobileInView, setMobileInView] = useState<boolean[]>(() => BENEFITS.map(() => false));
   const columnRef = useRef<HTMLDivElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const [navOffset, setNavOffset] = useState(0);
@@ -203,6 +206,46 @@ const SearchingSmarter = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // Mobile-only: animate items when they enter the viewport
+    if (window.innerWidth >= 1024) return;
+
+    // Respect user reduced motion preference
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (media.matches) {
+      setMobileInView(BENEFITS.map(() => true));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const target = entry.target as HTMLElement;
+          const idxAttr = target.getAttribute("data-index");
+          const idx = idxAttr ? parseInt(idxAttr, 10) : NaN;
+          if (Number.isNaN(idx)) return;
+          if (entry.isIntersecting) {
+            setMobileInView((prev) => {
+              if (prev[idx]) return prev;
+              const next = prev.slice();
+              next[idx] = true;
+              return next;
+            });
+          }
+        });
+      },
+      { threshold: 0.2 },
+    );
+
+    mobileItemRefs.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const calculatePadding = () => {
       const first = itemRefs.current[0];
       const col = columnRef.current;
@@ -267,28 +310,46 @@ const SearchingSmarter = () => {
           </p>
         </div>
 
-        {/* Mobile & tablet: image followed by its benefit text */}
-        <div className="lg:hidden flex flex-col gap-14">
-          {BENEFITS.map((benefit) => (
-            <div key={benefit.title} className="flex flex-col gap-4">
-              <div className="relative w-full aspect-square overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-                <img
-                  src={benefit.image}
-                  alt={`${benefit.title} illustration`}
-                  className="h-full w-full object-contain"
-                />
-              </div>
-              <div className="flex flex-col gap-4 text-left">
-                <span className={iconBackground}>
-                  <benefit.icon className="h-6 w-6" aria-hidden />
-                </span>
-                <div className="flex flex-col gap-2">
-                  <h3 className="text-xl md:text-2xl font-semibold text-slate-900">{benefit.title}</h3>
-                  <p className="text-base md:text-lg leading-relaxed text-slate-600">{benefit.body}</p>
+        {/* Mobile & tablet: side-by-side with alternating order + scroll-in effect */}
+        <div className="lg:hidden flex flex-col gap-10">
+          {BENEFITS.map((benefit, index) => {
+            const inView = mobileInView[index];
+            const baseMotion = "transition-all duration-500 ease-out will-change-transform";
+            const hiddenDir = index % 2 === 0 ? "-translate-x-6" : "translate-x-6";
+            return (
+              <div
+                key={benefit.title}
+                ref={(el) => (mobileItemRefs.current[index] = el)}
+                data-index={index}
+                className={clsx(
+                  "flex items-center gap-4",
+                  index % 2 === 0 ? "flex-row" : "flex-row-reverse",
+                  baseMotion,
+                  inView ? "opacity-100 translate-x-0" : clsx("opacity-0", hiddenDir),
+                )}
+              >
+                <div className="relative basis-5/12 shrink-0 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm aspect-square active:scale-95 transition-transform">
+                  <img
+                    src={benefit.image}
+                    alt={`${benefit.title} illustration`
+                    }
+                    className="h-full w-full object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div className="basis-7/12 flex flex-col gap-3 text-left">
+                  <span className={iconBackground}>
+                    <benefit.icon className="h-6 w-6" aria-hidden />
+                  </span>
+                  <div className="flex flex-col gap-1.5">
+                    <h3 className="text-lg md:text-xl font-semibold text-slate-900">{benefit.title}</h3>
+                    <p className="text-sm md:text-base leading-relaxed text-slate-600">{benefit.body}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Desktop: sticky image on the right, text list on the left (50/50 columns) */}
