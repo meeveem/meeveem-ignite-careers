@@ -25,6 +25,7 @@ const CompanyLogoBanner = () => {
           <div
             className="flex w-max will-change-transform
             motion-reduce:animate-none
+            animate-[scroll_12s_linear_infinite]
             md:animate-[scroll_16s_linear_infinite]
             lg:animate-[scroll_18s_linear_infinite]
             hover:[animation-play-state:paused]"
