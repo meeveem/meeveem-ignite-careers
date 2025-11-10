@@ -44,18 +44,13 @@ const HeroSection = () => {
           {/* Left Content */}
           <div className="space-y-8 animate-slide-up">
             <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight max-w-[36rem] md:max-w-[40rem] xl:max-w-[42rem]">
-              <span className="text-foreground">Your Career in HealthTech</span>
-              <br />
-              <span
-                className="block text-blue-600 leading-tight lg:whitespace-nowrap
-                text-[clamp(1.9rem,5.2vw,3.4rem)] md:text-[clamp(2.1rem,4.6vw,3.8rem)]"
-              >
-                Intelligently Matched
-              </span>
+              <span className="text-foreground">Your </span>
+              <span className="text-blue-600">HealthTech</span>
+              <span className="text-foreground"> journey starts here</span>
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
-              AI trained by recruiters, matching you with roles that fit your skills, goals and values.
+              Built by recruiters. AI precision. Perfect matches.
             </p>
 
             {/* CTA Button */}
