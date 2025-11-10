@@ -1,10 +1,10 @@
-import floLogo from "@/assets/company-logos/flo.png";
-import thrivaLogo from "@/assets/company-logos/thriva.jpg";
+import floLogo from "@/assets/company-logos/flo.webp";
+import thrivaLogo from "@/assets/company-logos/thriva.webp";
 import babylonLogo from "@/assets/company-logos/babylon.webp";
-import ceraLogo from "@/assets/company-logos/cera.png";
+import ceraLogo from "@/assets/company-logos/cera.webp";
 import doctorlinkLogo from "@/assets/company-logos/doctorlink.webp";
-import healxLogo from "@/assets/company-logos/healx.png";
-import exscientiaLogo from "@/assets/company-logos/exscientia.png";
+import healxLogo from "@/assets/company-logos/healx.webp";
+import exscientiaLogo from "@/assets/company-logos/exscientia.webp";
 
 const companies = [
   { name: "Flo Health", logo: floLogo },
@@ -25,7 +25,6 @@ const CompanyLogoBanner = () => {
           <div
             className="flex w-max will-change-transform
             motion-reduce:animate-none
-            animate-[scroll_12s_linear_infinite]
             md:animate-[scroll_16s_linear_infinite]
             lg:animate-[scroll_18s_linear_infinite]
             hover:[animation-play-state:paused]"
