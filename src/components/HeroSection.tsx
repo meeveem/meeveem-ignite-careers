@@ -41,15 +41,15 @@ const HeroSection = () => {
       <div className="container mx-auto px-6 relative z-10">
 
         <div className="grid items-center max-w-7xl mx-auto
-          gap-8 md:gap-10 lg:gap-10 xl:gap-12
-          lg:grid-cols-2 lg:[grid-template-columns:1.25fr_1fr]
-          xl:[grid-template-columns:1.25fr_1fr]">
+          gap-6 md:gap-8 lg:gap-8 xl:gap-10
+          lg:grid-cols-2 lg:[grid-template-columns:1.15fr_1fr]
+          xl:[grid-template-columns:1.1fr_1fr]">
           {/* Left Content */}
           <div className="space-y-6 md:space-y-7 lg:space-y-8 motion-safe:animate-slide-up">
             <h1
               className="font-extrabold leading-tight tracking-tight text-balance xl:leading-[1.05]
               text-[clamp(2rem,6.5vw,3.75rem)] md:text-[clamp(2.75rem,5vw,4.25rem)] xl:text-[clamp(3.25rem,3.8vw,4.75rem)] 2xl:text-[4.75rem]
-              max-w-[34rem] md:max-w-[24ch] xl:max-w-[26ch]"
+              max-w-none"
             >
               <span className="block">
                 <span className="text-foreground">Your </span>
@@ -79,7 +79,7 @@ const HeroSection = () => {
           </div>
 
           {/* Right Image and Features */}
-          <div className="space-y-8 w-full lg:justify-self-end lg:max-w-[520px] xl:max-w-[600px] 2xl:max-w-[680px]">
+          <div className="space-y-8 w-full lg:justify-self-start lg:max-w-[560px] xl:max-w-[620px] 2xl:max-w-[680px]">
             <div className="relative motion-safe:animate-scale-in" style={{ animationDelay: '0.3s' }}>
               {/* Subtle radial glow behind image */}
               <div 
