@@ -169,6 +169,7 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
+  .text-balance { text-wrap: balance; }
   .gradient-hero {
     background: var(--gradient-hero);
   }

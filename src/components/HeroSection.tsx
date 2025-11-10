@@ -43,10 +43,16 @@ const HeroSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
           {/* Left Content */}
           <div className="space-y-8 animate-slide-up">
-            <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight max-w-[36rem] md:max-w-[40rem] xl:max-w-[42rem]">
-              <span className="text-foreground">Your </span>
-              <span className="text-blue-600">HealthTech</span>
-              <span className="text-foreground"> journey starts here</span>
+            <h1
+              className="font-extrabold leading-tight text-balance
+              text-[clamp(2rem,6.5vw,3.75rem)] md:text-[clamp(2.75rem,5vw,4.25rem)] xl:text-[clamp(3rem,4vw,4.5rem)]
+              max-w-[34rem] md:max-w-[40rem] xl:max-w-[42rem]"
+            >
+              <span className="block">
+                <span className="text-foreground">Your </span>
+                <span className="text-blue-600">HealthTech</span>
+              </span>
+              <span className="block text-foreground">journey starts here</span>
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
@@ -83,6 +89,10 @@ const HeroSection = () => {
                   src={heroImage}
                   alt="Healthcare professional working with technology"
                   className="w-full h-auto object-cover"
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
+                  sizes="(min-width: 1024px) 560px, 100vw"
                 />
               </div>
             </div>
