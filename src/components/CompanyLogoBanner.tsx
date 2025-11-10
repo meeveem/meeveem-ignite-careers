@@ -20,8 +20,8 @@ const CompanyLogoBanner = () => {
   return (
     <section className="py-12 bg-white overflow-hidden">
       <div className="container mx-auto px-4">
-        <p className="text-center md:text-left text-sm md:text-base font-medium text-muted-foreground tracking-wide mb-6">The HealthTech companies shaping tomorrow</p>
-        <div className="relative">
+        <p className="text-center text-sm md:text-base font-medium text-muted-foreground tracking-wide mb-6">The HealthTech companies shaping tomorrow</p>
+        <div className="relative flex justify-center">
           <div
             className="flex w-max will-change-transform
             motion-reduce:animate-none
