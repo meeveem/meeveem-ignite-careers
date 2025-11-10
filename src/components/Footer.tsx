@@ -12,7 +12,7 @@ const Footer = () => {
             Building the bridge between talented professionals and innovative HealthTech companies.
           </p>
           <div className="pt-4 text-sm text-white">
-            <p>&copy; 2025 Meeveem. All rights reserved.</p>
+            <p className="text-white">&copy; 2025 Meeveem. All rights reserved.</p>
           </div>
         </div>
       </div>
