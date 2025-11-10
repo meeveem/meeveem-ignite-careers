@@ -40,9 +40,12 @@ const HeroSection = () => {
 
       <div className="container mx-auto px-6 relative z-10">
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
+        <div className="grid items-center max-w-7xl mx-auto
+          gap-8 md:gap-10 lg:gap-12 xl:gap-16
+          lg:grid-cols-2 lg:[grid-template-columns:1.15fr_1fr]
+          xl:[grid-template-columns:1.2fr_1fr]">
           {/* Left Content */}
-          <div className="space-y-8 motion-safe:animate-slide-up">
+          <div className="space-y-6 md:space-y-7 lg:space-y-8 motion-safe:animate-slide-up">
             <h1
               className="font-extrabold leading-tight tracking-tight text-balance
               text-[clamp(2rem,6.5vw,3.75rem)] md:text-[clamp(2.75rem,5vw,4.25rem)] xl:text-[clamp(3rem,4vw,4.5rem)]
@@ -60,11 +63,13 @@ const HeroSection = () => {
             </p>
 
             {/* CTA Button */}
-            <div className="flex justify-center pt-6">
+            <div className="flex justify-center md:justify-start pt-4 md:pt-6">
               <Button 
                 variant="hero" 
                 size="xl" 
-                className="animate-scale-in text-lg px-12 py-8 animate-pulse shadow-2xl hover:shadow-primary/50" 
+                className="animate-scale-in text-lg px-10 md:px-12 py-7 md:py-8
+                transition-all duration-200 shadow-lg hover:shadow-primary/40
+                hover:translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0" 
                 style={{ animationDelay: '0.6s' }}
                 onClick={() => setDialogOpen(true)}
               >
@@ -74,7 +79,7 @@ const HeroSection = () => {
           </div>
 
           {/* Right Image and Features */}
-          <div className="space-y-8">
+          <div className="space-y-8 w-full lg:justify-self-end lg:max-w-[560px] xl:max-w-[640px] 2xl:max-w-[720px]">
             <div className="relative motion-safe:animate-scale-in" style={{ animationDelay: '0.3s' }}>
               {/* Subtle radial glow behind image */}
               <div 
