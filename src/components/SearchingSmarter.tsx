@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { DoorOpen, Eye, Radar, Scale, SearchX, type LucideIcon } from "lucide-react";
 
-import StopScrollingEndlessly from "@/assets/Stop Scrolling endlessly.webp";
+import StopScrollingEndlessly from "@/assets/Stop Scrolling V2.webp";
 import UncoverCareersYouAlreadyQualifyFor from "@/assets/Uncover Careers.webp";
 import ShowTheFullPicture from "@/assets/Show the full picture.webp";
 import LeaveBiasBehind from "@/assets/Leave Bias Behind.webp";
