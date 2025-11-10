@@ -92,8 +92,8 @@ const HeroSection = () => {
               </div>
             </div>
 
-            {/* Key Features Grid */}
-            <div className="grid sm:grid-cols-2 gap-6">
+            {/* Key Features Grid (hidden on mobile) */}
+            <div className="hidden md:grid md:grid-cols-2 gap-6">
               {[
                 { title: "Personalised AI Matches", subtitle: "Roles that fit your skills and goals" },
                 { title: "Company Insights", subtitle: "Know each company before you apply" },
