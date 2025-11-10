@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import dashboardPreview from "@/assets/dashboard-preview.webp";
 import companiesPreview from "@/assets/companies-preview.webp";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const images = [dashboardPreview, companiesPreview];
 
 const StepsCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [enableLightbox, setEnableLightbox] = useState(false);
 
   useEffect(() => {
     if (isPaused) return;
@@ -18,6 +21,24 @@ const StepsCarousel = () => {
 
     return () => clearInterval(interval);
   }, [isPaused]);
+
+  // Enable lightbox only on desktop (>= 1024px) and precise pointer
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mql = window.matchMedia("(min-width: 1024px) and (pointer: fine)");
+    const update = () => setEnableLightbox(mql.matches);
+    update();
+    const handler = (e: MediaQueryListEvent) => setEnableLightbox(e.matches);
+    // Support older browsers
+    // @ts-ignore
+    if (mql.addEventListener) mql.addEventListener("change", handler);
+    else mql.addListener(handler);
+    return () => {
+      // @ts-ignore
+      if (mql.removeEventListener) mql.removeEventListener("change", handler);
+      else mql.removeListener(handler);
+    };
+  }, []);
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
@@ -39,8 +60,15 @@ const StepsCarousel = () => {
     <>
       <div className="relative w-full">
         {/* Image Container */}
-        <div 
-          className="relative aspect-[16/10] rounded-2xl overflow-hidden shadow-2xl bg-card"
+        <div
+          className={`relative aspect-[16/10] rounded-2xl overflow-hidden shadow-2xl bg-card ${
+            enableLightbox ? "cursor-zoom-in" : ""
+          }`}
+          onClick={() => {
+            if (enableLightbox) setIsLightboxOpen(true);
+          }}
+          role={enableLightbox ? "button" : undefined}
+          aria-label={enableLightbox ? "Open image in viewer" : undefined}
         >
           {images.map((image, index) => (
             <div
@@ -98,7 +126,20 @@ const StepsCarousel = () => {
       </div>
     </div>
 
-    {/* Lightbox removed for simpler UX: images are no longer clickable */}
+    {/* Desktop-only lightbox */}
+    {enableLightbox && (
+      <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
+        <DialogContent className="max-w-7xl w-[95vw] h-[95vh] p-0 bg-black/95 border-none">
+          <div className="w-full h-full flex items-center justify-center p-8">
+            <img
+              src={images[currentIndex]}
+              alt={`Preview ${currentIndex + 1} - Full size`}
+              className="max-w-full max-h-full object-contain rounded-lg"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
+    )}
     </>
   );
 };
