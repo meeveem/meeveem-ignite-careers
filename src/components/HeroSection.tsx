@@ -51,11 +51,11 @@ const HeroSection = () => {
               text-[clamp(2rem,6.5vw,3.75rem)] md:text-[clamp(2.75rem,5vw,4.25rem)] xl:text-[clamp(3.25rem,3.8vw,4.75rem)] 2xl:text-[4.75rem]
               max-w-none"
             >
-              <span className="block">
+              <span className="block md:whitespace-nowrap">
                 <span className="text-foreground">Your </span>
                 <span className="text-gradient">HealthTech</span>
               </span>
-              <span className="block text-foreground">journey starts here</span>
+              <span className="block text-foreground md:whitespace-nowrap">journey starts here</span>
             </h1>
 
             <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
