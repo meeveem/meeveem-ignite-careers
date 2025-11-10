@@ -29,3 +29,13 @@ jobs:
             exit 0
           fi
           echo "Deploy hook triggered successfully."
+
+  noop:
+    if: ${{ secrets.VERCEL_DEPLOY_HOOK_URL == '' }}
+    name: Skip deploy (no hook configured)
+    runs-on: ubuntu-latest
+    steps:
+      - name: No-op success
+        run: |
+          echo "VERCEL_DEPLOY_HOOK_URL is not configured."
+          echo "Skipping external deploy hook and marking workflow as success."
