@@ -8,6 +8,7 @@ on:
 
 jobs:
   trigger:
+    if: ${{ secrets.VERCEL_DEPLOY_HOOK_URL != '' }}
     name: Call Vercel Deploy Hook
     runs-on: ubuntu-latest
     steps:
@@ -15,10 +16,6 @@ jobs:
         env:
           VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
         run: |
-          if [ -z "$VERCEL_DEPLOY_HOOK_URL" ]; then
-            echo "VERCEL_DEPLOY_HOOK_URL secret is not set. Add it in GitHub > Settings > Secrets and variables > Actions."
-            exit 1
-          fi
           echo "Triggering Vercel deploy..."
           code=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$VERCEL_DEPLOY_HOOK_URL")
           echo "Vercel hook response code: $code"
