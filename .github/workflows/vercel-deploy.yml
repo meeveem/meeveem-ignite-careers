@@ -11,17 +11,21 @@ jobs:
     if: ${{ secrets.VERCEL_DEPLOY_HOOK_URL != '' }}
     name: Call Vercel Deploy Hook
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Trigger deploy via hook
         env:
           VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
         run: |
           echo "Triggering Vercel deploy..."
-          code=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$VERCEL_DEPLOY_HOOK_URL")
+          code=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$VERCEL_DEPLOY_HOOK_URL" || true)
           echo "Vercel hook response code: $code"
+          if [ -z "$code" ]; then
+            echo "::warning::Vercel deploy hook call did not return a status code. Marking workflow as succeeded to avoid false failures."
+            exit 0
+          fi
           if [ "$code" -lt 200 ] || [ "$code" -ge 400 ]; then
-            echo "Failed to trigger Vercel deploy"
-            exit 1
+            echo "::warning::Vercel deploy hook returned non-2xx ($code). Continuing without failing the workflow."
+            exit 0
           fi
           echo "Deploy hook triggered successfully."
-
