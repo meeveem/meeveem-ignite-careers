@@ -107,18 +107,35 @@ const StepsCarousel = () => {
 
     {/* Lightbox Dialog */}
     <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
-      <DialogContent className="max-w-7xl w-[95vw] h-[95vh] p-0 bg-black/95 border-none">
-        <DialogClose className="absolute right-4 top-4 z-50 rounded-full bg-white/10 backdrop-blur-sm p-2 hover:bg-white/20 transition-colors">
-          <X className="h-6 w-6 text-white" />
-          <span className="sr-only">Close</span>
-        </DialogClose>
-        <div className="w-full h-full flex items-center justify-center p-8">
+      <DialogContent
+        className="max-w-7xl p-0 bg-black/95 border-none !left-0 !top-0 !translate-x-0 !translate-y-0 !w-screen !h-screen sm:!w-[95vw] sm:!h-[90vh] sm:!left-1/2 sm:!top-1/2 sm:!-translate-x-1/2 sm:!-translate-y-1/2"
+      >
+        {/* Tap anywhere to close (mobile-friendly) */}
+        <button
+          type="button"
+          aria-label="Close image"
+          className="absolute inset-0 block cursor-zoom-out sm:cursor-default"
+          onClick={() => setIsLightboxOpen(false)}
+        />
+        <div className="w-full h-full flex items-center justify-center p-4 sm:p-8">
           <img
             src={images[currentIndex]}
             alt={`Preview ${currentIndex + 1} - Full size`}
-            className="max-w-full max-h-full object-contain rounded-lg"
+            className="max-w-full max-h-full object-contain rounded-lg pointer-events-none"
           />
         </div>
+
+        {/* Bottom, thumb‑reachable Close on small screens; top‑right handled by default close too */}
+        <DialogClose asChild>
+          <button
+            type="button"
+            className="absolute left-1/2 -translate-x-1/2 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 rounded-full bg-white/12 text-white backdrop-blur-md px-4 py-3 flex items-center gap-2 hover:bg-white/20 active:bg-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 sm:hidden"
+            aria-label="Close image viewer"
+          >
+            <X className="h-5 w-5" />
+            <span className="text-sm font-medium">Close</span>
+          </button>
+        </DialogClose>
       </DialogContent>
     </Dialog>
     </>
