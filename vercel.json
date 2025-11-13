@@ -22,4 +22,13 @@
       ]
     }
   ]
+  ,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "meeveem.com" }],
+      "destination": "https://www.meeveem.com/:path*",
+      "permanent": true
+    }
+  ]
 }
